@@ -12,7 +12,8 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $songs = \App\Song::all();
+    return view('welcome', ['songs' => $songs]);
 });
 
 Auth::routes();
