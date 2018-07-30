@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'My Sounds'),
 
     /*
     |--------------------------------------------------------------------------
@@ -154,11 +154,11 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        MySounds\Providers\AppServiceProvider::class,
+        MySounds\Providers\AuthServiceProvider::class,
+        // MySounds\Providers\BroadcastServiceProvider::class,
+        MySounds\Providers\EventServiceProvider::class,
+        MySounds\Providers\RouteServiceProvider::class,
 
     ],
 

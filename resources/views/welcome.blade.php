@@ -47,10 +47,11 @@
 
             .title {
                 font-size: 84px;
+                color: white;
             }
 
             .links > a {
-                color: #636b6f;
+                color: white;
                 padding: 0 25px;
                 font-size: 12px;
                 font-weight: 600;
@@ -64,12 +65,13 @@
             }
         </style>
     </head>
-    <body>
+    <body background='storage/nightswimming.jpg'>
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
                         <a href="{{ url('/home') }}">Home</a>
+                        <a href="{{ url('/songs') }}">Songs</a>
                     @else
                         <a href="{{ route('login') }}">Login</a>
                         <a href="{{ route('register') }}">Register</a>
@@ -81,12 +83,6 @@
                 <div class="title m-b-md">
                     Music
                 </div>
-                <div class="songs">
-                @foreach ($songs as $song)
-                    {{ $song->title }}
-                   {{ $song->album }}
-                @endforeach
-                 </div>
             </div>
         </div>
     </body>
