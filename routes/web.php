@@ -24,29 +24,31 @@ Route::get('/songs', function () {
 });
 
 Route::get('/song', function () {
-	$songs = \MySounds\Song::all();
-	return view('song', ['songs' => $songs]);
+	$artists = \MySounds\Artist::all( [ 'id', 'artist']);
+	return view('song', ['artists' => $artists]);
 });
 
 /**
  * Add A New Song
  */
 Route::post('/song', function (Request $request) {
-//    $data = $request->validate([
-  //      'title' => 'required|max:255',
-    //	]);
+    $validator = $request->validate([
+        'title' => 'required|max:255',
+        'album' => 'required|max:255',
+        'year' => 'required|integer|between:1700,2100'
+    ]);
 
-  //  if ($validator->fails()) {
-    //    return redirect('/')
-      //      ->withInput()
-        //    ->withErrors($validator);
-    //}
+    if ($validator->fails()) {
+        return redirect('/')
+            ->withInput()
+            ->withErrors($validator);
+    }
 
     $song = new \MySounds\Song;
     $song->title = $request->title;
     $song->album = $request->album;
     $song->year = $request->year;
-    $song->artist_id = 1;
+    $song->artist_id = $request->artist_id;
     $song->save();
 
     return redirect('/');

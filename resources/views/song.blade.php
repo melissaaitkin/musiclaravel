@@ -5,13 +5,8 @@
     <!-- Bootstrap Boilerplate... -->
 
     <div class="panel-body">
-        <!-- Display Validation Errors -->
 
-        @if ($errors->any())
-            <div class="alert alert-danger" role="alert">
-                Please fix the following errors
-            </div>
-        @endif
+        @include('common.errors')
 
         <!-- New song Form -->
         <form action="/song" method="POST" class="form-horizontal">
@@ -41,6 +36,17 @@
                     <input type="text" name="year" id="song-year" class="form-control">
                 </div>
             </div>
+
+            <div class="form-group">
+                <label for="artist" class="col-sm-3 control-label">Artist</label>
+                <div class="col-sm-3">
+                    <select class="form-control" name="artist_id">
+                        @foreach($artists as $artist)
+                            <option value="{{$artist->id}}">{{$artist->artist}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>            
 
             <!-- Add song Button -->
             <div class="form-group">

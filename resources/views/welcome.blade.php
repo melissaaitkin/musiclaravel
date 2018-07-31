@@ -20,6 +20,10 @@
                 height: 100vh;
                 margin: 0;
             }
+            body {
+                background: url(/storage/nightswimming.jpg);
+                background-size: cover;
+            }
 
             .full-height {
                 height: 100vh;
@@ -65,7 +69,7 @@
             }
         </style>
     </head>
-    <body background='storage/nightswimming.jpg'>
+    <body>
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">
