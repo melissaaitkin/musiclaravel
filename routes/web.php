@@ -38,12 +38,6 @@ Route::post('/song', function (Request $request) {
         'year' => 'required|integer|between:1700,2100'
     ]);
 
-    if ($validator->fails()) {
-        return redirect('/')
-            ->withInput()
-            ->withErrors($validator);
-    }
-
     $song = new \MySounds\Song;
     $song->title = $request->title;
     $song->album = $request->album;
@@ -51,14 +45,54 @@ Route::post('/song', function (Request $request) {
     $song->artist_id = $request->artist_id;
     $song->save();
 
-    return redirect('/');
+    return redirect('/songs');
 });
 
 /**
  * Delete An Existing Song
  */
 Route::delete('/song/{id}', function ($id) {
-    //
+    \MySounds\Song::findOrFail($id)->delete();
+    return redirect('/songs');
+});
+
+Route::get('/artist', function () {
+    // TODO add to cache
+    $countries = json_decode( file_get_contents( "https://restcountries.eu/rest/v2/all") );
+    $country_names = [ 'Please Select' ];
+    foreach( $countries as $country ) {
+        $country_names[] = $country->name;
+    }
+    return view('artist', [ 'countries' => $country_names ]);
+});
+
+/**
+ * Add A New Artist
+ */
+Route::post('/artist', function (Request $request) {
+    $validator = $request->validate([
+        'artist' => 'required|max:255',
+    ]);
+    $artist = new \MySounds\Artist;
+    $artist->artist = $request->artist;
+    $artist->is_group = isset( $request->is_group );
+    $artist->country = $request->country;
+    $artist->save();
+
+    return redirect('/artists');
+});
+
+Route::get('/artists', function () {
+    $artists = \MySounds\Artist::all();
+    return view('artists', ['artists' => $artists]);
+});
+
+/**
+ * Delete An Existing Artist
+ */
+Route::delete('/artist/{id}', function ($id) {
+    \MySounds\Artist::findOrFail($id)->delete();
+    return redirect('/artists');
 });
 
 Auth::routes();

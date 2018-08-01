@@ -3,7 +3,6 @@
 @section('content')
 
     <div class="panel-body">
-        <!-- Display Validation Errors -->
 
         @if ($errors->any())
             <div class="alert alert-danger" role="alert">
@@ -11,42 +10,37 @@
             </div>
         @endif
 
-
         <div class="col-sm-3">
-            <h2>Current Songs</h2>
+            <h3>Current Artists</h3>
         </div>
 
-    @if (count($songs) > 0)
+    @if (count($artists) > 0)
         <div class="panel panel-default">
             <div class="panel-body">
-                <table class="table table-striped song-table">
+                <table class="table table-striped artist-table">
 
                     <!-- Table Headings -->
                     <thead>
-                        <th>Title</th>
-                        <th>Album</th>
-                        <th>Year</th>
+                        <th>Artist</th>
+                        <th>Country</th>
                         <th>&nbsp;</th>
                     </thead>
 
                     <!-- Table Body -->
                     <tbody>
-                        @foreach ($songs as $song)
+                        @foreach ($artists as $artist)
                             <tr>
                                 <td class="table-text">
-                                    <div>{{ $song->title }}</div>
+                                    <div>{{ $artist->artist }}</div>
                                 </td>
                                 <td class="table-text">
-                                    <div>{{ $song->album }}</div>
-                                </td>
-                                <td class="table-text">
-                                    <div>{{ $song->year }}</div>
-                                </td>                 
+                                    <div>{{ $artist->country }}</div>
+                                </td>             
                                 <td>
-                                    <form action="/song/{{ $song->id }}" method="POST">
+                                    <form action="/artist/{{ $artist->id }}" method="POST">
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
-                                        <button>Delete Song</button>
+                                        <button>Delete Artist</button>
                                     </form>
                                 </td>
                             </tr>
@@ -62,7 +56,7 @@
             @if (Route::has('login'))
                 <div class="col-sm-3">
                     @auth
-                        <a href="{{ url('/song') }}">Add</a>
+                        <a href="{{ url('/artist') }}">Add</a>
                     @endauth
                 </div>
             @endif

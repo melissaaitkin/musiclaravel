@@ -6,7 +6,10 @@
 
     <div class="panel-body">
 
+        <h2 class="col-sm-3">Add New Song</h2>
+
         @include('common.errors')
+
 
         <!-- New song Form -->
         <form action="/song" method="POST" class="form-horizontal">
@@ -52,10 +55,21 @@
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-6">
                     <button type="submit" class="btn btn-default">
-                        <i class="fa fa-plus"></i> Add song
+                        <i class="fa fa-plus"></i> Add Song
                     </button>
-                </div>
+                </div>              
             </div>
         </form>
+
+        <form action="/artist" class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-6">
+                     <button type="submit" class="btn btn-default">
+                        <i class="fa fa-plus"></i> Add Artist
+                    </button>
+                </div>              
+            </div>
+        </form>
+
     </div>
 @endsection

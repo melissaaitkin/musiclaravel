@@ -20,6 +20,7 @@ class CreateSongsTable extends Migration
             $table->smallInteger('year');
             $table->integer('artist_id');   
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -19,6 +19,11 @@ class CreateArtistsTable extends Migration
             $table->boolean('is_group');
             $table->string('country');            
             $table->timestamps();
+            $table->softDeletes();
+            // TODO add foreign keys and casacding deletes
+            //$table->foreign('user_id')
+              //  ->references('id')->on('users')
+                //->onDelete('cascade');
         });
     }
 
