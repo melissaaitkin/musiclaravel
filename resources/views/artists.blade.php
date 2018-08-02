@@ -17,7 +17,7 @@
     @if (count($artists) > 0)
         <div class="panel panel-default">
             <div class="panel-body">
-                <table class="table table-striped artist-table">
+                <table class="table table-striped mysounds-table">
 
                     <!-- Table Headings -->
                     <thead>

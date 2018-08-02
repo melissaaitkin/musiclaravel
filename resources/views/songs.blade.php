@@ -13,13 +13,13 @@
 
 
         <div class="col-sm-3">
-            <h2>Current Songs</h2>
+            <h3>Current Songs</h3>
         </div>
 
     @if (count($songs) > 0)
         <div class="panel panel-default">
             <div class="panel-body">
-                <table class="table table-striped song-table">
+                <table class="table table-striped mysounds-table">
 
                     <!-- Table Headings -->
                     <thead>

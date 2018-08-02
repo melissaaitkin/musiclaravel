@@ -14,13 +14,13 @@ class CreateSongsTable extends Migration
     public function up()
     {
         Schema::create('songs', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('title');
             $table->text('album');
             $table->smallInteger('year');
-            $table->integer('artist_id');   
-            $table->timestamps();
-            $table->softDeletes();
+            $table->integer('artist_id')->unsigned();
+            $table->timestamps();       
         });
     }
 

@@ -14,16 +14,12 @@ class CreateArtistsTable extends Migration
     public function up()
     {
         Schema::create('artists', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('artist');
             $table->boolean('is_group');
             $table->string('country');            
             $table->timestamps();
-            $table->softDeletes();
-            // TODO add foreign keys and casacding deletes
-            //$table->foreign('user_id')
-              //  ->references('id')->on('users')
-                //->onDelete('cascade');
         });
     }
 
