@@ -77,6 +77,9 @@
                         <a href="{{ url('/home') }}">Home</a>
                         <a href="{{ url('/songs') }}">Songs</a>
                         <a href="{{ url('/artists') }}">Artists</a>
+                        @if ( Auth::user()->id == 1)
+                            <a href="{{ url('/utilities') }}">Utilities</a>
+                        @endif
                     @else
                         <a href="{{ route('login') }}">Login</a>
                         <a href="{{ route('register') }}">Register</a>

@@ -18,6 +18,15 @@ Route::get('/', function () {
 	return view('welcome', ['songs' => $songs]);
 });
 
+Route::get('/utilities', function () {
+    if ( Auth::user()->id != 1 ) {
+        abort(404);
+    }
+    return view('utilities');
+});
+
+Route::post('/load', 'UtilitiesController@load_songs');
+
 Route::get('/songs', function () {
 	$songs = \MySounds\Song::all();
 	return view('songs', ['songs' => $songs]);
