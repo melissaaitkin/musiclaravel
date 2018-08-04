@@ -4,7 +4,7 @@
 
     <!-- Bootstrap Boilerplate... -->
 
-    <div class="panel-body">
+    <div class="panel-body mysound-submit-form-div">
 
         <h2 class="col-sm-3">Add New Song</h2>
 
