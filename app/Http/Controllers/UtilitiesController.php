@@ -35,7 +35,7 @@ class UtilitiesController extends Controller
 			abort(404);
 		}
 		if ( is_dir( $request->directory ) ) {
-			$this->scanner($request->directory);
+			$this->process_media_directory($request->directory);
 		} else {
 			$error = \Illuminate\Validation\ValidationException::withMessages([
 				'directory' => ['This is not a valid directory'],
@@ -45,41 +45,59 @@ class UtilitiesController extends Controller
 		return view('utilities', ['msg' => 'Songs have been loaded']);
 	}
 
-	private function scanner($path) {
+	/**
+	 * Loop over sub directories and insert artists and songs
+	 *
+	 * @param  string $path
+	 * @return Result
+	 */
+	private process_media_directory scanner($path) {
+		/* TODO
+		- Split song on final fullstop
+		- Get file info - year, track no,
+		- Strip track no
+		- Check artists and songs exist
+		- Add file type array
+		- Add pagination to arts and song displays
+		*/
 		$result = [];
 		$scan_artitsts = glob($path . '/*');
 		foreach($scan_artitsts as $artist){
 			if (is_dir($artist)) {
-				echo "ARTIST - " . basename($artist) . "</br>";
+				$artist_arr = [ basename($artist), 1, 'To Set' ];
+				$artist_id = app('MySounds\Http\Controllers\ArtistController')->dynamic_store($artist_arr);
 				$scan_albums = glob($artist . '/*');
 				foreach($scan_albums as $album){
 					if (is_dir($album)) {
-						echo "ALBUM - " . basename($album) . "</br>";
+						$album_name = basename($album);
 						$scan_songs = glob($album . '/*');
 						foreach($scan_songs as $song){
 							if (is_dir($song)) {
-								echo "SOMETHING WEIRD IS HAPPENINGALBUM - " . basename($song) . "</br>";
+								error_log( "Something Weird Is Happening - " . basename($song) );
 						  	} else {
 								if ( $this->is_song( $song ) ) {
-									echo "ALBUM SONG - " . basename($song) . "</br>";
+									$song_parts = explode( '.', basename($song) );
+									$song_arr = [ $song_parts[0], $album_name, 9999, $song_parts[1], $artist_id ];
+									app('MySounds\Http\Controllers\SongController')->dynamic_store($song_arr);
 							  	}
 						  	}
 						}
 				  	} else {
 						if ( $this->is_song( $album ) ) {
-							echo "ARTIST SONG - " . basename($album) . "</br>";
+							$song_parts = explode( '.', basename($album) );
+							$song_arr = [ $song_parts[0], 'To Set', 9999, $song_parts[1], $artist_id ];
+							app('MySounds\Http\Controllers\SongController')->dynamic_store($song_arr);							
 					  	}
 				  	}
 				}
 			} else {
 				if ( $this->is_song( $artist ) ) {
-					echo "STRAY SONG - " . basename($artist) . "</br>";
+					$song_parts = explode( '.', basename($artist) );
+					$song_arr = [ $song_parts[0], 'To Set', 9999, $song_parts[1], 1 ];
+					app('MySounds\Http\Controllers\SongController')->dynamic_store($song_arr);
 				}
-				//echo " is a " . pathinfo( $item, PATHINFO_EXTENSION ). "</br>";
-				//echo "filesize " . filesize($item). "</br>";
 			}
 		}
-		var_dump($this->others);
 		return $result;
 	}
 

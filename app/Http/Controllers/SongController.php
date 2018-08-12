@@ -32,6 +32,7 @@ class SongController extends Controller
     /**
      * Store a newly created song in the database
      *
+     * @param Request request
      * @return Response
      */
     public function store(Request $request)
@@ -43,13 +44,32 @@ class SongController extends Controller
 	    ]);
 
 	    $song = new \MySounds\Song;
-	    $song->title = $request->title;
-	    $song->album = $request->album;
-	    $song->year = $request->year;
-	    $song->artist_id = $request->artist_id;
+	    $song->title       = $request->title;
+	    $song->album       = $request->album;
+	    $song->year        = $request->year;
+        $song->file_type   = $request->file_type;
+	    $song->artist_id   = $request->artist_id;
 	    $song->save();
 
 	    return redirect('/songs');
+    }
+
+    /**
+     * Store an dynamically created song in the database
+     *
+     * @param array song
+     * @return integer Song id
+     */
+    public function dynamic_store(array $song)
+    {
+        $_song = new \MySounds\Song;
+        $_song->title = $song[0];
+        $_song->album = $song[1];
+        $_song->year = $song[2];
+        $_song->file_type = $song[3];
+        $_song->artist_id = $song[4];
+        $_song->save();
+        return $_song->id;
     }
 
     /**

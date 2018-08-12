@@ -37,6 +37,7 @@ class ArtistController extends Controller
     /**
      * Store a newly created artist in the database
      *
+     * @param Request $request
      * @return Response
      */
     public function store(Request $request)
@@ -51,6 +52,22 @@ class ArtistController extends Controller
         $artist->save();
 
         return redirect('/artists');
+    }
+
+    /**
+     * Store an dynamically created artist in the database
+     *
+     * @param array $artist
+     * @return integer Artist id
+     */
+    public function dynamic_store(array $artist)
+    {
+        $_artist = new \MySounds\Artist;
+        $_artist->artist = $artist[0];
+        $_artist->is_group = $artist[1];
+        $_artist->country = $artist[2];
+        $_artist->save();
+        return $_artist->id;
     }
 
     /**

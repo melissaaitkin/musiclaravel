@@ -49,13 +49,21 @@
                         @endforeach
                     </select>
                 </div>
-            </div>            
+            </div>
+
+            <div class="form-group">
+                <label for="file_type" class="col-sm-3 control-label">File Type</label>
+
+                <div class="col-sm-3">
+                    <input type="text" name="file_type" id="song-file_type" class="form-control">
+                </div>
+            </div>
 
             <!-- Add song Button -->
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-6">
                     <button type="submit" class="btn btn-primary">Add Song</button>
-                </div>              
+                </div>
             </div>
         </form>
 
