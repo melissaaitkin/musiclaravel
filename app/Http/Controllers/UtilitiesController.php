@@ -51,14 +51,12 @@ class UtilitiesController extends Controller
 	 * @param  string $path
 	 * @return Result
 	 */
-	private process_media_directory scanner($path) {
+	private function process_media_directory($path) {
 		/* TODO
-		- Split song on final fullstop
 		- Get file info - year, track no,
 		- Strip track no
 		- Check artists and songs exist
 		- Add file type array
-		- Add pagination to arts and song displays
 		*/
 		$result = [];
 		$scan_artitsts = glob($path . '/*');
@@ -76,9 +74,13 @@ class UtilitiesController extends Controller
 								error_log( "Something Weird Is Happening - " . basename($song) );
 						  	} else {
 								if ( $this->is_song( $song ) ) {
-									$song_parts = explode( '.', basename($song) );
-									$song_arr = [ $song_parts[0], $album_name, 9999, $song_parts[1], $artist_id ];
-									app('MySounds\Http\Controllers\SongController')->dynamic_store($song_arr);
+									$idx = strrpos( basename($song), '.' );
+									if ( $idx !== false ) {
+										$title = substr(basename($song), 0, $idx );
+										$file_type = substr(basename($song), $idx + 1 );
+										$song_arr = [ $title, $album_name, 9999, $file_type, $artist_id ];
+										app('MySounds\Http\Controllers\SongController')->dynamic_store($song_arr);
+									}
 							  	}
 						  	}
 						}

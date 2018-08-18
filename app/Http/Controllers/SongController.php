@@ -14,7 +14,7 @@ class SongController extends Controller
      */
     public function index()
     {
-		$songs = \MySounds\Song::all();
+		$songs = \MySounds\Song::paginate(10);
 		return view('songs', ['songs' => $songs]);
     }
 
