@@ -5,6 +5,7 @@ namespace MySounds\Http\Controllers;
 use MySounds\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use LaravelMP3;
 
 class UtilitiesController extends Controller
 {
@@ -53,7 +54,7 @@ class UtilitiesController extends Controller
 	 */
 	private function process_media_directory($path) {
 		/* TODO
-		- Get file info - year, track no,
+		- Get file info - year, track no - LaravelMP3::load($song)) mp4 (and wav) Format not supported, module "module.audio-video.quicktime.php
 		- Strip track no
 		- Check artists and songs exist
 		- Add file type array
