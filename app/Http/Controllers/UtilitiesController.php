@@ -75,29 +75,19 @@ class UtilitiesController extends Controller
 								error_log( "Something Weird Is Happening - " . basename($song) );
 						  	} else {
 								if ( $this->is_song( $song ) ) {
-									$idx = strrpos( basename($song), '.' );
-									if ( $idx !== false ) {
-										$title = substr(basename($song), 0, $idx );
-										$file_type = substr(basename($song), $idx + 1 );
-										$song_arr = [ $title, $album_name, 9999, $file_type, $artist_id ];
-										app('MySounds\Http\Controllers\SongController')->dynamic_store($song_arr);
-									}
+									app('MySounds\Http\Controllers\SongController')->dynamic_store($song, basename($song), $album_name, $artist_id);
 							  	}
 						  	}
 						}
 				  	} else {
 						if ( $this->is_song( $album ) ) {
-							$song_parts = explode( '.', basename($album) );
-							$song_arr = [ $song_parts[0], 'To Set', 9999, $song_parts[1], $artist_id ];
-							app('MySounds\Http\Controllers\SongController')->dynamic_store($song_arr);							
+							app('MySounds\Http\Controllers\SongController')->dynamic_store($album, basename($album), 'To Set', $artist_id);					
 					  	}
 				  	}
 				}
 			} else {
 				if ( $this->is_song( $artist ) ) {
-					$song_parts = explode( '.', basename($artist) );
-					$song_arr = [ $song_parts[0], 'To Set', 9999, $song_parts[1], 1 ];
-					app('MySounds\Http\Controllers\SongController')->dynamic_store($song_arr);
+					app('MySounds\Http\Controllers\SongController')->dynamic_store($artist, basename($artist), 'To Set', 1);
 				}
 			}
 		}

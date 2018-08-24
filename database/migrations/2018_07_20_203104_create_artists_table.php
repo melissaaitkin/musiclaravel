@@ -18,7 +18,7 @@ class CreateArtistsTable extends Migration
             $table->increments('id');
             $table->string('artist');
             $table->boolean('is_group');
-            $table->string('country');            
+            $table->string('country')->nullable();
             $table->timestamps();
         });
     }

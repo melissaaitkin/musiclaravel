@@ -17,9 +17,12 @@ class CreateSongsTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('title');
-            $table->text('album');
-            $table->smallInteger('year');
-            $table->string('file_type');
+            $table->text('album')->nullable();
+            $table->smallInteger('year')->nullable();
+            $table->char('file_type', 4);
+            $table->string('track_no')->nullable();
+            $table->string('genre')->nullable();
+            $table->string('location');
             $table->integer('artist_id')->unsigned();
             $table->timestamps();       
         });

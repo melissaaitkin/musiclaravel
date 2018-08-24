@@ -3,6 +3,7 @@
 namespace MySounds\Http\Controllers;
 
 use Illuminate\Http\Request;
+use LaravelMP3;
 
 class SongController extends Controller
 {
@@ -40,7 +41,7 @@ class SongController extends Controller
 	    $validator = $request->validate([
 	        'title' => 'required|max:255',
 	        'album' => 'required|max:255',
-	        'year' => 'required|integer|between:1700,2100'
+	        'year' => 'required|integer'
 	    ]);
 
 	    $song = new \MySounds\Song;
@@ -48,6 +49,8 @@ class SongController extends Controller
 	    $song->album       = $request->album;
 	    $song->year        = $request->year;
         $song->file_type   = $request->file_type;
+        $song->track_no    = $request->track_no;
+        $song->genre       = $request->genre;
 	    $song->artist_id   = $request->artist_id;
 	    $song->save();
 
@@ -60,16 +63,23 @@ class SongController extends Controller
      * @param array song
      * @return integer Song id
      */
-    public function dynamic_store(array $song)
+    public function dynamic_store($path, $filename, $album_name, $artist_id)
     {
+        $song_info = $this->retrieve_song_info($path, $filename);
         $_song = new \MySounds\Song;
-        $_song->title = $song[0];
-        $_song->album = $song[1];
-        $_song->year = $song[2];
-        $_song->file_type = $song[3];
-        $_song->artist_id = $song[4];
-        $_song->save();
-        return $_song->id;
+        $_song->title = $song_info['title'] ?? '';
+        $_song->album = $album_name;
+        $_song->year = $song_info['year'] ?? '9999';
+        $_song->file_type = $song_info['file_type'] ?? '';
+        $_song->track_no = $song_info['track_no'] ?? '';
+        $_song->genre = $song_info['genre'] ?? '';
+        $_song->location = $path;
+        $_song->artist_id = $artist_id;
+        try {
+            $_song->save();
+        } catch ( Exception $e ) {
+            error_log( 'An exception occured adding song: ' . $path );
+        }
     }
 
     /**
@@ -115,6 +125,42 @@ class SongController extends Controller
     {
 	    \MySounds\Song::findOrFail($id)->delete();
 	    return redirect('/songs');
+    }
+
+    /**
+     * Retrieve song info via ID3
+     *
+     * @param string $path Full file path
+     * @param string $filename Filename
+     * @return array;
+     */
+    private function retrieve_song_info($path, $filename) {
+        LaravelMP3::reset();
+        $song_info = [];
+
+        $idx = strrpos($filename, '.');
+        if ( $idx !== false ) {
+            $song_info['title'] = substr($filename, 0, $idx );
+            $song_info['file_type'] = substr($filename, $idx + 1 );
+        }
+
+        try {
+            $file_info = LaravelMP3::load($path);
+            if (!isset($file_info['error'])) {
+                $song_info['genre'] = LaravelMP3::getGenre($path)[0] ?? '';
+                $song_info['track_no'] = LaravelMP3::getTrackNo($path)[0] ?? '';
+                $song_info['year'] = LaravelMP3::getYear($path)[0] ?? '9999';
+            } else {
+                error_log( "Error occurred processing - " . $path );
+                foreach ( $file_info['error'] as $error) {
+                    error_log( $error );
+                }
+            }
+        } catch ( Exception $e ) {
+            error_log( "Exception occurred processing - " .  $path . " : " . $e->getMessage() );
+        }
+
+        return $song_info;
     }
 
 }
