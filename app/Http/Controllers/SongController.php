@@ -8,6 +8,8 @@ use LaravelMP3;
 class SongController extends Controller
 {
 
+    private $file_types = [ 'wav', 'm4a', 'mp3', 'wma' ];
+
   /**
      * Display songs
      *
@@ -77,8 +79,10 @@ class SongController extends Controller
         $_song->artist_id = $artist_id;
         try {
             $_song->save();
+        } catch (\Illuminate\Database\QueryException $ex){
+             error_log( 'An exception occured adding song: ' . $path . ' : ' . $ex->getMessage() );
         } catch ( Exception $e ) {
-            error_log( 'An exception occured adding song: ' . $path );
+            error_log( 'An exception occured adding song: ' . $path . ' : ' . $e->getMessage() );
         }
     }
 
@@ -161,6 +165,15 @@ class SongController extends Controller
         }
 
         return $song_info;
+    }
+
+    public function is_song( $file ) {
+        $result = false;
+        $extension = strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
+        if ( in_array( $extension, $this->file_types ) ) {
+          $result = true;
+        }
+        return $result;
     }
 
 }

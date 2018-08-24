@@ -10,7 +10,6 @@ use LaravelMP3;
 class UtilitiesController extends Controller
 {
 
-  private $others = [];
   /**
 	 * Display a listing of the resource.
 	 *
@@ -54,8 +53,6 @@ class UtilitiesController extends Controller
 	 */
 	private function process_media_directory($path) {
 		/* TODO
-		- Get file info - year, track no - LaravelMP3::load($song)) mp4 (and wav) Format not supported, module "module.audio-video.quicktime.php
-		- Strip track no
 		- Check artists and songs exist
 		- Add file type array
 		*/
@@ -74,35 +71,21 @@ class UtilitiesController extends Controller
 							if (is_dir($song)) {
 								error_log( "Something Weird Is Happening - " . basename($song) );
 						  	} else {
-								if ( $this->is_song( $song ) ) {
+								if ( app('MySounds\Http\Controllers\SongController')->is_song( $song ) ) {
 									app('MySounds\Http\Controllers\SongController')->dynamic_store($song, basename($song), $album_name, $artist_id);
 							  	}
 						  	}
 						}
 				  	} else {
-						if ( $this->is_song( $album ) ) {
+						if ( app('MySounds\Http\Controllers\SongController')->is_song( $album ) ) {
 							app('MySounds\Http\Controllers\SongController')->dynamic_store($album, basename($album), 'To Set', $artist_id);					
 					  	}
 				  	}
 				}
 			} else {
-				if ( $this->is_song( $artist ) ) {
+				if ( app('MySounds\Http\Controllers\SongController')->is_song( $artist ) ) {
 					app('MySounds\Http\Controllers\SongController')->dynamic_store($artist, basename($artist), 'To Set', 1);
 				}
-			}
-		}
-		return $result;
-	}
-
-	private function is_song( $file ) {
-		$result = false;
-		$types = [ 'wav', 'm4a', 'mp3', 'wma' ];
-		$extension = strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
-		if ( in_array( $extension, $types ) ) {
-		  $result = true;
-		} else {
-			if ( !in_array( $extension, $this->others)) {
-			  $this->others[] = $extension;
 			}
 		}
 		return $result;
