@@ -151,6 +151,10 @@ class SongController extends Controller
         try {
             $file_info = LaravelMP3::load($path);
             if (!isset($file_info['error'])) {
+                $title = LaravelMP3::getTitle($path)[0] ?? '';
+                if ( !empty( $title ) ) {
+                    $song_info['title'] = $title;
+                }
                 $song_info['genre'] = LaravelMP3::getGenre($path)[0] ?? '';
                 $song_info['track_no'] = LaravelMP3::getTrackNo($path)[0] ?? '';
                 $song_info['year'] = LaravelMP3::getYear($path)[0] ?? '9999';
