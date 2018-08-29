@@ -94,7 +94,6 @@ class SongController extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**
@@ -105,7 +104,9 @@ class SongController extends Controller
      */
     public function edit($id)
     {
-        //
+        $artists = \MySounds\Artist::all( [ 'id', 'artist']);
+        $song = \MySounds\Song::find($id);
+        return view('song', [ 'song' => $song, 'artists' => $artists]);
     }
 
     /**

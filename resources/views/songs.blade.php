@@ -3,7 +3,6 @@
 @section('content')
 
     <div class="panel-body">
-        <!-- Display Validation Errors -->
 
         @if ($errors->any())
             <div class="alert alert-danger" role="alert">
@@ -21,15 +20,15 @@
             <div class="panel-body">
                 <table class="table table-striped mysounds-table">
 
-                    <!-- Table Headings -->
                     <thead>
                         <th>Title</th>
                         <th>Album</th>
                         <th>Year</th>
+                        <th>Genre</th>
+                        <th>Track No</th>
                         <th>&nbsp;</th>
                     </thead>
 
-                    <!-- Table Body -->
                     <tbody>
                         @foreach ($songs as $song)
                             <tr>
@@ -41,7 +40,19 @@
                                 </td>
                                 <td class="table-text">
                                     <div>{{ $song->year }}</div>
-                                </td>                 
+                                </td>
+                                <td class="table-text">
+                                    <div>{{ $song->genre }}</div>
+                                </td>
+                                <td class="table-text">
+                                    <div>{{ $song->track_no }}</div>
+                                </td>
+                                <td>
+                                    <form action="/song/{{ $song->id }}" method="GET">
+                                        {{ csrf_field() }}
+                                        <button>Edit Song</button>
+                                    </form>
+                                </td>
                                 <td>
                                     <form action="/song/{{ $song->id }}" method="POST">
                                         {{ csrf_field() }}

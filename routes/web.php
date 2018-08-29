@@ -27,6 +27,8 @@ Route::get('/song', 'SongController@create');
 
 Route::post('/song', 'SongController@store');
 
+Route::get('/song/{id}', 'SongController@edit');
+
 Route::delete('/song/{id}', 'SongController@destroy');
 
 Route::get('/artists', 'ArtistController@index');
