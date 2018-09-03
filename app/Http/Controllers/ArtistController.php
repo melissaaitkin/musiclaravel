@@ -82,6 +82,18 @@ class ArtistController extends Controller
     }
 
     /**
+     * Does the artist exist
+     *
+     * @param  string $artist_name Artist name
+     * @return boolean
+     */
+    public function get_id($artist_name)
+    {
+        $artist = \MySounds\Artist::where("artist", $artist_name)->first();
+        return $artist->id ?? false;
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id

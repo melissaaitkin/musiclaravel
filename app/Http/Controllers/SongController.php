@@ -29,7 +29,7 @@ class SongController extends Controller
     public function create()
     {
 		$artists = \MySounds\Artist::all( [ 'id', 'artist']);
-		return view('song', ['artists' => $artists]);
+		return view('song', ['artists' => $artists, 'file_types' => $this->file_types]);
     }
 
     /**
@@ -106,7 +106,41 @@ class SongController extends Controller
     {
         $artists = \MySounds\Artist::all( [ 'id', 'artist']);
         $song = \MySounds\Song::find($id);
-        return view('song', [ 'song' => $song, 'artists' => $artists]);
+        return view('song', [ 'song' => $song, 'artists' => $artists, 'file_types' => $this->file_types ]);
+    }
+
+    /**
+     * Does the album exist
+     *
+     * @param integer $id Artist id
+     * @param  string $artist_name Album name
+     * @return boolean
+     */
+    public function does_album_exist($id, $album_name)
+    {
+        $song = \MySounds\Song::where(["artist_id" => $id, "album" => $album_name])->first();
+        $exists = false;
+        if (isset($song->id)) {
+            $exists = true;
+        }
+        return $exists;
+    }
+
+    /**
+     * Does the song exist
+     *
+     * @param integer $id Artist id
+     * @param  string $title Song title
+     * @return boolean
+     */
+    public function does_song_exist($id, $title)
+    {
+        $song = \MySounds\Song::where(["artist_id" => $id, "title" => $title])->first();
+        $exists = false;
+        if (isset($song->id)) {
+            $exists = true;
+        }
+        return $exists;
     }
 
     /**

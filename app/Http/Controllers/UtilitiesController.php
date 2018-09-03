@@ -52,39 +52,43 @@ class UtilitiesController extends Controller
 	 * @return Result
 	 */
 	private function process_media_directory($path) {
-		/* TODO
-		- Check artists and songs exist
-		- Add file type array
-		*/
 		$result = [];
 		$scan_artitsts = glob($path . '/*');
 		foreach($scan_artitsts as $artist){
 			if (is_dir($artist)) {
 				$artist_arr = [ basename($artist), 1, 'To Set' ];
-				$artist_id = app('MySounds\Http\Controllers\ArtistController')->dynamic_store($artist_arr);
+				$artist_id = app('MySounds\Http\Controllers\ArtistController')->get_id($artist_arr[0]);
+				if (!$artist_id) {
+					$artist_id = app('MySounds\Http\Controllers\ArtistController')->dynamic_store($artist_arr);
+				}
 				$scan_albums = glob($artist . '/*');
 				foreach($scan_albums as $album){
 					if (is_dir($album)) {
 						$album_name = basename($album);
-						$scan_songs = glob($album . '/*');
-						foreach($scan_songs as $song){
-							if (is_dir($song)) {
-								error_log( "Something Weird Is Happening - " . basename($song) );
-						  	} else {
+						$album_exists = app('MySounds\Http\Controllers\SongController')->does_album_exist($artist_id, $album_name);
+						if ( !$album_exists ) {
+							$scan_songs = glob($album . '/*');
+							foreach($scan_songs as $song){
 								if ( app('MySounds\Http\Controllers\SongController')->is_song( $song ) ) {
 									app('MySounds\Http\Controllers\SongController')->dynamic_store($song, basename($song), $album_name, $artist_id);
 							  	}
-						  	}
+							}
 						}
 				  	} else {
 						if ( app('MySounds\Http\Controllers\SongController')->is_song( $album ) ) {
-							app('MySounds\Http\Controllers\SongController')->dynamic_store($album, basename($album), 'To Set', $artist_id);					
+							$song_exists = app('MySounds\Http\Controllers\SongController')->does_song_exist($artist_id, $album);
+							if ( !$song_exists ) {
+								app('MySounds\Http\Controllers\SongController')->dynamic_store($album, basename($album), 'To Set', $artist_id);
+							}
 					  	}
 				  	}
 				}
 			} else {
 				if ( app('MySounds\Http\Controllers\SongController')->is_song( $artist ) ) {
-					app('MySounds\Http\Controllers\SongController')->dynamic_store($artist, basename($artist), 'To Set', 1);
+					$song_exists = app('MySounds\Http\Controllers\SongController')->does_song_exist(1, $artist);
+					if ( !$song_exists ) {
+						app('MySounds\Http\Controllers\SongController')->dynamic_store($artist, basename($artist), 'To Set', 1);
+					}
 				}
 			}
 		}

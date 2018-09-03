@@ -61,7 +61,6 @@
                 <div class="col-sm-3">
                     <select class="form-control" name="artist_id">
                         @foreach($artists as $artist)
-
                             <option value="{{$artist->id}}">{{$artist->artist}}</option>
                         @endforeach
                     </select>
@@ -72,7 +71,11 @@
                 <label for="file_type" class="col-sm-3 control-label">File Type</label>
 
                 <div class="col-sm-3">
-                    <input type="text" name="file_type" id="song-file_type" class="form-control">
+                    <select class="form-control" name="song-file_type">
+                        @foreach($file_types as $file_type)
+                            <option value="{{$file_type}}">{{$file_type}}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
 
