@@ -22,7 +22,7 @@ class CreateSongsTable extends Migration
             $table->char('file_type', 4);
             $table->string('track_no')->nullable();
             $table->string('genre')->nullable();
-            $table->string('location');
+            $table->string('location')->nullable();
             $table->integer('artist_id')->unsigned();
             $table->timestamps();       
         });

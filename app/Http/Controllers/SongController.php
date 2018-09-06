@@ -8,7 +8,7 @@ use LaravelMP3;
 class SongController extends Controller
 {
 
-    private $file_types = [ 'wav', 'm4a', 'mp3', 'wma' ];
+    private $file_types = [ 'mp3', 'm4a', 'wav', 'wma' ];
 
   /**
      * Display songs
@@ -29,7 +29,7 @@ class SongController extends Controller
     public function create()
     {
 		$artists = \MySounds\Artist::all( [ 'id', 'artist']);
-		return view('song', ['artists' => $artists, 'file_types' => $this->file_types]);
+		return view('song', ['title' => 'Add New Song', 'artists' => $artists, 'file_types' => $this->file_types]);
     }
 
     /**
@@ -46,13 +46,19 @@ class SongController extends Controller
 	        'year' => 'required|integer'
 	    ]);
 
-	    $song = new \MySounds\Song;
+        if ( isset($request->id)){
+            $song = \MySounds\Song::findOrFail($request->id);
+        } else {
+            $song = new \MySounds\Song;
+        }
+
 	    $song->title       = $request->title;
 	    $song->album       = $request->album;
 	    $song->year        = $request->year;
         $song->file_type   = $request->file_type;
         $song->track_no    = $request->track_no;
         $song->genre       = $request->genre;
+        $song->location    = $request->location;        
 	    $song->artist_id   = $request->artist_id;
 	    $song->save();
 
@@ -106,7 +112,7 @@ class SongController extends Controller
     {
         $artists = \MySounds\Artist::all( [ 'id', 'artist']);
         $song = \MySounds\Song::find($id);
-        return view('song', [ 'song' => $song, 'artists' => $artists, 'file_types' => $this->file_types ]);
+        return view('song', [ 'title' => 'Edit Song', 'song' => $song, 'artists' => $artists, 'file_types' => $this->file_types ]);
     }
 
     /**

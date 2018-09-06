@@ -6,7 +6,7 @@
 
     <div class="panel-body mysound-submit-form-div">
 
-        <h2 class="col-sm-3">Add New Song</h2>
+        <h2 class="col-sm-3">{{$title}}</h2>
 
         @include('common.errors')
 
@@ -71,11 +71,19 @@
                 <label for="file_type" class="col-sm-3 control-label">File Type</label>
 
                 <div class="col-sm-3">
-                    <select class="form-control" name="song-file_type">
+                    <select class="form-control" name="file_type">
                         @foreach($file_types as $file_type)
-                            <option value="{{$file_type}}">{{$file_type}}</option>
+                            <option value="{{$file_type}}" @if( ! empty($song->file_type) && ($song->file_type == $file_type)) selected @endif>{{$file_type}}</option>
                         @endforeach
                     </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="location" class="col-sm-3 control-label">Location</label>
+
+                <div class="col-sm-6">
+                    <input type="text" name="location" id="song-location" class="form-control" @if( ! empty($song->location)) value="{{$song->location}}" @endif>
                 </div>
             </div>
 
@@ -84,7 +92,7 @@
                 @if( ! empty($song->id))
                     <div class="col-sm-offset-3 col-sm-6">
                         <input type="hidden" name="id" id="song-id" value="{{$song->id}}">
-                        <button type="submit" class="btn btn-primary">Edit Song</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                 @else
                     <div class="col-sm-offset-3 col-sm-6">
