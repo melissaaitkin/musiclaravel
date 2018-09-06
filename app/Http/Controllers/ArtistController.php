@@ -105,14 +105,23 @@ class ArtistController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Search for artist.
      *
-     * @param  int  $id
+     * @param  string  $q
      * @return Response
      */
-    public function update($id)
+    public function search(Request $request)
     {
-        //
+        $q = $request->q;
+        $artists = [];
+        if ($q != "") {
+            $artists = \MySounds\Artist::where ( 'artist', 'LIKE', '%' . $q . '%' )->orWhere ( 'country', 'LIKE', '%' . $q . '%' )->paginate (10)->setPath ( '' );
+        }
+        if (count ( $artists ) > 0) {
+            return view('artists', ['artists' => $artists]);
+        } else {
+            return view('artists', ['artists' => $artists])->withMessage('No Details found. Try to search again !');
+        }
     }
 
     /**

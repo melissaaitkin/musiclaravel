@@ -10,12 +10,30 @@
             </div>
         @endif
 
+        @if (isset($message))
+            <p>{{ $message }}</p>
+        @endif        
+
         <div class="col-sm-3">
             <h3>Current Artists</h3>
         </div>
 
-    @if (count($artists) > 0)
         <div class="panel panel-default">
+
+            <div class="panel-body">
+                <form action="/artist/search" method="POST" role="search">
+                    {{ csrf_field() }}
+                    <div class="input-group col-sm-6">
+                        <input type="text" class="form-control" name="q"
+                            placeholder="Search artists"> <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div> 
+
             <div class="panel-body">
                 <table class="table table-striped mysounds-table">
 
@@ -50,8 +68,6 @@
                 {{ $artists->links() }} 
             </div>
         </div>
-    @endif
-
 
         <div>
             @if (Route::has('login'))

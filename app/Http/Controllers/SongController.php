@@ -150,14 +150,23 @@ class SongController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Search for song.
      *
-     * @param  int  $id
+     * @param  string  $q
      * @return Response
      */
-    public function update($id)
+    public function search(Request $request)
     {
-        //
+        $q = $request->q;
+        $songs = [];
+        if ($q != "") {
+            $songs = \MySounds\Song::where ( 'title', 'LIKE', '%' . $q . '%' )->orWhere ( 'album', 'LIKE', '%' . $q . '%' )->paginate (10)->setPath ( '' );
+        }
+        if (count ( $songs ) > 0) {
+            return view('songs', ['songs' => $songs]);
+        } else {
+            return view('songs', ['songs' => $songs])->withMessage('No Details found. Try to search again !');
+        }
     }
 
     /**

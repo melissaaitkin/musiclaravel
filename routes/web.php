@@ -31,6 +31,8 @@ Route::get('/song/{id}', 'SongController@edit');
 
 Route::delete('/song/{id}', 'SongController@destroy');
 
+Route::post('/song/search', 'SongController@search');
+
 Route::get('/artists', 'ArtistController@index');
 
 Route::get('/artist', 'ArtistController@create');
@@ -38,6 +40,8 @@ Route::get('/artist', 'ArtistController@create');
 Route::post('/artist', 'ArtistController@store');
 
 Route::delete('/artist/{id}', 'ArtistController@destroy');
+
+Route::post('/artist/search', 'ArtistController@search');
 
 Auth::routes();
 
