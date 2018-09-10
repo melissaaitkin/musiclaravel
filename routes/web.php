@@ -33,6 +33,8 @@ Route::delete('/song/{id}', 'SongController@destroy');
 
 Route::post('/song/search', 'SongController@search');
 
+Route::post('/song/admin-search', 'SongController@admin_search');
+
 Route::get('/artists', 'ArtistController@index');
 
 Route::get('/artist', 'ArtistController@create');

@@ -4,6 +4,7 @@ namespace MySounds\Http\Controllers;
 
 use Illuminate\Http\Request;
 use LaravelMP3;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class SongController extends Controller
 {
@@ -166,6 +167,38 @@ class SongController extends Controller
             return view('songs', ['songs' => $songs]);
         } else {
             return view('songs', ['songs' => $songs])->withMessage('No Details found. Try to search again !');
+        }
+    }
+
+     /**
+     * Perform admin search on songs
+     *
+     * @param  string  $q
+     * @return Response
+     */
+    public function admin_search(Request $request)
+    {
+        // TODO add AUTH
+        $q = $request->q;
+        $songs = [];
+        if ($q != "") {
+
+            if ( stripos( $q, 'DELETE') !== false || stripos( $q, 'UPDATE') ) {
+                abort(403, 'Unauthorized action.');
+            }
+
+            $songs = \DB::select( $q );
+
+            $paginate = new LengthAwarePaginator($songs, 10, 1, 1, [
+                'path' =>  request()->url(),
+                'query' => request()->query()
+            ]);
+
+        }
+        if (count ( $songs ) > 0) {
+            return view('songs', ['songs' => $paginate]);
+        } else {
+            return view('songs', ['songs' => $paginate])->withMessage('No Details found. Try to search again !');
         }
     }
 

@@ -31,7 +31,20 @@
                         </span>
                     </div>
                 </form>
-            </div>    
+                @if ( Auth::user()->id == 1)
+                    <form action="/song/admin-search" method="POST" role="search">
+                        {{ csrf_field() }}
+                        <div class="input-group col-sm-6">
+                            <input type="text" class="form-control" name="q"
+                                placeholder="Dynamic search songs"> <span class="input-group-btn">
+                                <button type="submit" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </form>
+                @endif
+            </div>
 
             <div class="panel-body">
                 <table class="table table-striped mysounds-table">
