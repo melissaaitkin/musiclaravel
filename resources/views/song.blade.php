@@ -61,7 +61,7 @@
                 <div class="col-sm-3">
                     <select class="form-control" name="artist_id">
                         @foreach($artists as $artist)
-                            <option value="{{$artist->id}}">{{$artist->artist}}</option>
+                            <option value="{{$artist->id}}" @if( ! empty($song->artist_id) && ($song->artist_id == $artist->id)) selected @endif>{{$artist->artist}}</option>
                         @endforeach
                     </select>
                 </div>
