@@ -23,6 +23,8 @@ Route::post('/load', 'UtilitiesController@load_songs');
 
 Route::get('/songs', 'SongController@index');
 
+Route::post('/songs', 'SongController@search');
+
 Route::get('/song', 'SongController@create');
 
 Route::post('/song', 'SongController@store');
@@ -31,19 +33,15 @@ Route::get('/song/{id}', 'SongController@edit');
 
 Route::delete('/song/{id}', 'SongController@destroy');
 
-Route::post('/song/search', 'SongController@search');
-
-Route::post('/song/admin-search', 'SongController@admin_search');
-
 Route::get('/artists', 'ArtistController@index');
+
+Route::post('/artists', 'ArtistController@search');
 
 Route::get('/artist', 'ArtistController@create');
 
 Route::post('/artist', 'ArtistController@store');
 
 Route::delete('/artist/{id}', 'ArtistController@destroy');
-
-Route::post('/artist/search', 'ArtistController@search');
 
 Auth::routes();
 

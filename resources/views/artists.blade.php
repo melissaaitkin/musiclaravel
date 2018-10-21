@@ -21,7 +21,7 @@
         <div class="panel panel-default">
 
             <div class="panel-body">
-                <form action="/artist/search" method="POST" role="search">
+                <form action="/artists" method="POST" role="search">
                     {{ csrf_field() }}
                     <div class="input-group col-sm-6">
                         <input type="text" class="form-control" name="q"

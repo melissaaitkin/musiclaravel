@@ -3,6 +3,7 @@
 namespace MySounds\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ArtistController extends Controller
 {
@@ -115,7 +116,11 @@ class ArtistController extends Controller
         $q = $request->q;
         $artists = [];
         if ($q != "") {
-            $artists = \MySounds\Artist::where ( 'artist', 'LIKE', '%' . $q . '%' )->orWhere ( 'country', 'LIKE', '%' . $q . '%' )->paginate (10)->setPath ( '' );
+            if ( stripos( $q, 'SELECT') === 0 ) {
+                return $this->admin_search($q);
+            } else {
+                $artists = \MySounds\Artist::where ( 'artist', 'LIKE', '%' . $q . '%' )->orWhere ( 'country', 'LIKE', '%' . $q . '%' )->paginate (10)->setPath ( '' );
+            }
         }
         if (count ( $artists ) > 0) {
             return view('artists', ['artists' => $artists]);
@@ -123,6 +128,36 @@ class ArtistController extends Controller
             return view('artists', ['artists' => $artists])->withMessage('No Details found. Try to search again !');
         }
     }
+
+     /**
+     * Perform admin search on artists
+     *
+     * @param  string $query
+     * @return Response
+     */
+    public function admin_search(string $query)
+    {
+        if ( stripos( $query, 'DELETE') !== false || stripos( $query, 'UPDATE') ) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        try {
+            $artists = \DB::select($query);
+        } catch (\Illuminate\Database\QueryException $ex) {
+            $artists = [];
+        }
+
+        $paginate = new LengthAwarePaginator($artists, 10, 1, 1, [
+            'path' =>  request()->url(),
+            'query' => request()->query()
+        ]);
+
+        if (count ( $artists ) > 0) {
+            return view('artists', ['artists' => $paginate]);
+        } else {
+            return view('artists', ['artists' => $paginate])->withMessage('No Details found. Try to search again !');
+        }
+    }    
 
     /**
      * Remove the artist and all their songs from the database

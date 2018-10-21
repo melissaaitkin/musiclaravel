@@ -161,7 +161,11 @@ class SongController extends Controller
         $q = $request->q;
         $songs = [];
         if ($q != "") {
-            $songs = \MySounds\Song::where ( 'title', 'LIKE', '%' . $q . '%' )->orWhere ( 'album', 'LIKE', '%' . $q . '%' )->paginate (10)->setPath ( '' );
+            if ( stripos( $q, 'SELECT') === 0 ) {
+                return $this->admin_search($q);
+            } else {
+                $songs = \MySounds\Song::where ( 'title', 'LIKE', '%' . $q . '%' )->orWhere ( 'album', 'LIKE', '%' . $q . '%' )->paginate (10)->setPath ( '' );
+            }
         }
         if (count ( $songs ) > 0) {
             return view('songs', ['songs' => $songs]);
@@ -173,28 +177,26 @@ class SongController extends Controller
      /**
      * Perform admin search on songs
      *
-     * @param  string  $q
+     * @param  string $query
      * @return Response
      */
-    public function admin_search(Request $request)
+    public function admin_search(string $query)
     {
-        // TODO add AUTH
-        $q = $request->q;
-        $songs = [];
-        if ($q != "") {
-
-            if ( stripos( $q, 'DELETE') !== false || stripos( $q, 'UPDATE') ) {
-                abort(403, 'Unauthorized action.');
-            }
-
-            $songs = \DB::select( $q );
-
-            $paginate = new LengthAwarePaginator($songs, 10, 1, 1, [
-                'path' =>  request()->url(),
-                'query' => request()->query()
-            ]);
-
+        if ( stripos( $query, 'DELETE') !== false || stripos( $query, 'UPDATE') ) {
+            abort(403, 'Unauthorized action.');
         }
+
+        try {
+            $songs = \DB::select($query);
+        } catch (\Illuminate\Database\QueryException $ex) {
+            $songs = [];
+        }
+
+        $paginate = new LengthAwarePaginator($songs, 10, 1, 1, [
+            'path' =>  request()->url(),
+            'query' => request()->query()
+        ]);
+
         if (count ( $songs ) > 0) {
             return view('songs', ['songs' => $paginate]);
         } else {
