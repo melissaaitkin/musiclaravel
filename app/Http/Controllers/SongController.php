@@ -3,13 +3,25 @@
 namespace MySounds\Http\Controllers;
 
 use Illuminate\Http\Request;
-use LaravelMP3;
 use Illuminate\Pagination\LengthAwarePaginator;
+
+use getID3;
 
 class SongController extends Controller
 {
-
     private $file_types = [ 'mp3', 'm4a', 'wav', 'wma' ];
+
+    private $ID3_extractor;
+
+    private $file_info;
+
+     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->ID3_extractor = new \getID3;
+    }
 
   /**
      * Display songs
@@ -224,29 +236,18 @@ class SongController extends Controller
      * @return array;
      */
     private function retrieve_song_info($path, $filename) {
-        LaravelMP3::reset();
-        $song_info = [];
+        // Analyze file and store returned data in $file_info
+        //TODO also retrieve composer, file size and $file_info["playtime_string"]
+        // TEST edge cases
+        $this->file_info = $this->ID3_extractor->analyze($path);
 
-        $idx = strrpos($filename, '.');
-        if ( $idx !== false ) {
-            $song_info['title'] = substr($filename, 0, $idx );
-            $song_info['file_type'] = substr($filename, $idx + 1 );
-        }
-
-        try {
-            $file_info = LaravelMP3::load($path);
-            if (!isset($file_info['error'])) {
-                $title = LaravelMP3::getTitle($path)[0] ?? '';
-                if ( !empty( $title ) ) {
-                    $song_info['title'] = $title;
-                }
-                $song_info['genre'] = LaravelMP3::getGenre($path)[0] ?? '';
-                $song_info['track_no'] = LaravelMP3::getTrackNo($path)[0] ?? '';
-                $song_info['year'] = LaravelMP3::getYear($path)[0] ?? '9999';
-            } else {
-                error_log( "Error occurred processing - " . $path );
-                foreach ( $file_info['error'] as $error) {
-                    error_log( $error );
+         try {
+            $song_info = $this->extract_tag_info();
+            if ( empty( $song_info['title'] ) ) {
+                $idx = strrpos($filename, '.');
+                if ( $idx !== false ) {
+                    $song_info['title'] = substr($filename, 0, $idx );
+                    $song_info['file_type'] = $this->file_info['fileformat'];
                 }
             }
         } catch ( Exception $e ) {
@@ -263,6 +264,27 @@ class SongController extends Controller
           $result = true;
         }
         return $result;
+    }
+
+    private function extract_tag_info() {
+        $song_info = [];
+        switch ( $this->file_info['fileformat'] ) {
+            case "mp3":
+                $song_info['title'] = $this->file_info["tags"]["id3v2"]["title"][0];
+                $song_info['genre'] = $this->file_info["tags"]["id3v2"]["genre"][0];
+                $song_info['track_no'] = $this->file_info["tags"]["id3v2"]["track_number"][0];
+                $song_info['year'] = $this->file_info["tags"]["id3v2"]["year"][0];
+                break;
+            case "mp4":
+                $song_info['title'] = $this->file_info["quicktime"]["comments"]["title"][0];
+                $song_info['genre'] = $this->file_info["quicktime"]["comments"]["genre"][0];
+                $song_info['track_no'] = $this->file_info["quicktime"]["comments"]["track_number"][0];
+                $song_info['year'] = $this->file_info["quicktime"]["comments"]["creation_date"][0];
+                break;   
+            default:
+                //no luck    
+        }
+        return $song_info;
     }
 
 }
