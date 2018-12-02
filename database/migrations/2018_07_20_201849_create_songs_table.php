@@ -23,6 +23,9 @@ class CreateSongsTable extends Migration
             $table->string('track_no')->nullable();
             $table->string('genre')->nullable();
             $table->string('location')->nullable();
+            $table->string('composer')->nullable();
+            $table->string('playtime')->nullable();
+            $table->integer('filesize')->nullable();
             $table->integer('artist_id')->unsigned();
             $table->timestamps();       
         });

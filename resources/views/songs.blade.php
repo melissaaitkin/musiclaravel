@@ -42,6 +42,8 @@
                         <th>Year</th>
                         <th>Genre</th>
                         <th>Track No</th>
+                        <th>Playtime</th>
+                        <th>Composer</th>
                         <th>&nbsp;</th>
                     </thead>
 
@@ -63,6 +65,12 @@
                                 <td class="table-text">
                                     <div>{{ $song->track_no }}</div>
                                 </td>
+                                <td class="table-text">
+                                    <div>{{ $song->playtime }}</div>
+                                </td>
+                                <td class="table-text">
+                                    <div>{{ $song->composer }}</div>
+                                </td>                                                                
                                 <td>
                                     <form action="/song/{{ $song->id }}" method="GET">
                                         {{ csrf_field() }}

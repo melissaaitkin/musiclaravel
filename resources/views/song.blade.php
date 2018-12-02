@@ -80,6 +80,30 @@
             </div>
 
             <div class="form-group">
+                <label for="playtime" class="col-sm-3 control-label">Playtime</label>
+
+                <div class="col-sm-3">
+                    <input type="text" name="playtime" id="song-playtime" class="form-control" @if( ! empty($song->playtime)) value="{{$song->playtime}}" @endif>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="filesize" class="col-sm-3 control-label">Filesize</label>
+
+                <div class="col-sm-3">
+                    <input type="text" name="filesize" id="song-filesize" class="form-control" @if( ! empty($song->filesize)) value="{{$song->filesize}}" @endif>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="composer" class="col-sm-3 control-label">Composer</label>
+
+                <div class="col-sm-3">
+                    <input type="text" name="composer" id="song-composer" class="form-control" @if( ! empty($song->composer)) value="{{$song->composer}}" @endif>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label for="location" class="col-sm-3 control-label">Location</label>
 
                 <div class="col-sm-6">

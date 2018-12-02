@@ -73,6 +73,9 @@ class SongController extends Controller
         $song->genre       = $request->genre;
         $song->location    = $request->location;        
 	    $song->artist_id   = $request->artist_id;
+        $song->filesize    = $request->filesize ?? 0;
+        $song->composer    = $request->composer;
+        $song->playtime    = $request->playtime;        
 	    $song->save();
 
 	    return redirect('/songs');
@@ -90,10 +93,13 @@ class SongController extends Controller
         $_song = new \MySounds\Song;
         $_song->title = $song_info['title'] ?? '';
         $_song->album = $album_name;
-        $_song->year = $song_info['year'] ?? '9999';
+        $_song->year = $song_info['year'] ?? 9999;
         $_song->file_type = $song_info['file_type'] ?? '';
         $_song->track_no = $song_info['track_no'] ?? '';
         $_song->genre = $song_info['genre'] ?? '';
+        $_song->filesize = $song_info['filesize'] ?? 0;
+        $_song->composer = $song_info['composer'] ?? '';
+        $_song->playtime = $song_info['playtime'] ?? 0;
         $_song->location = $path;
         $_song->artist_id = $artist_id;
         try {
@@ -247,7 +253,6 @@ class SongController extends Controller
                 $idx = strrpos($filename, '.');
                 if ( $idx !== false ) {
                     $song_info['title'] = substr($filename, 0, $idx );
-                    $song_info['file_type'] = $this->file_info['fileformat'];
                 }
             }
         } catch ( Exception $e ) {
@@ -268,18 +273,25 @@ class SongController extends Controller
 
     private function extract_tag_info() {
         $song_info = [];
+        $song_info['file_type'] = $this->file_info['fileformat'];
         switch ( $this->file_info['fileformat'] ) {
             case "mp3":
-                $song_info['title'] = $this->file_info["tags"]["id3v2"]["title"][0];
-                $song_info['genre'] = $this->file_info["tags"]["id3v2"]["genre"][0];
-                $song_info['track_no'] = $this->file_info["tags"]["id3v2"]["track_number"][0];
-                $song_info['year'] = $this->file_info["tags"]["id3v2"]["year"][0];
+                $song_info['title'] = $this->file_info["tags"]["id3v2"]["title"][0] ?? '';
+                $song_info['genre'] = $this->file_info["tags"]["id3v2"]["genre"][0] ?? '';
+                $song_info['track_no'] = $this->file_info["tags"]["id3v2"]["track_number"][0] ?? '';
+                $song_info['year'] = $this->file_info["tags"]["id3v2"]["year"][0] ?? 9999;
+                $song_info['filesize'] = $this->file_info["filesize"] ?? 0;
+                $song_info['composer'] = '';
+                $song_info['playtime'] = $this->file_info["playtime_string"] ?? '';     
                 break;
             case "mp4":
-                $song_info['title'] = $this->file_info["quicktime"]["comments"]["title"][0];
-                $song_info['genre'] = $this->file_info["quicktime"]["comments"]["genre"][0];
-                $song_info['track_no'] = $this->file_info["quicktime"]["comments"]["track_number"][0];
-                $song_info['year'] = $this->file_info["quicktime"]["comments"]["creation_date"][0];
+                $song_info['title'] = $this->file_info["quicktime"]["comments"]["title"][0] ?? '';
+                $song_info['genre'] = $this->file_info["quicktime"]["comments"]["genre"][0] ?? '';
+                $song_info['track_no'] = $this->file_info["quicktime"]["comments"]["track_number"][0] ?? '';
+                $song_info['year'] = $this->file_info["quicktime"]["comments"]["creation_date"][0] ?? 9999;
+                $song_info['filesize'] = $this->file_info["filesize"] ?? 0;
+                $song_info['composer'] = $this->file_info["quicktime"]["comments"]["composer"][0] ?? '';  
+                $song_info['playtime'] = $this->file_info["playtime_string"] ?? '';                
                 break;   
             default:
                 //no luck    
