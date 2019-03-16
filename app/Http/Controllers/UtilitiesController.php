@@ -52,6 +52,8 @@ class UtilitiesController extends Controller
 	 * @return Result
 	 */
 	private function process_media_directory($path) {
+		// FIXME loading new albums for existing artists
+		// FIXME loading at ARTIST level
 		$result = [];
 		$scan_artitsts = glob($path . '/*');
 		foreach($scan_artitsts as $artist){

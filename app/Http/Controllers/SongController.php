@@ -4,6 +4,7 @@ namespace MySounds\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 use getID3;
 
@@ -30,8 +31,11 @@ class SongController extends Controller
      */
     public function index()
     {
-		$songs = \MySounds\Song::paginate(10);
-		return view('songs', ['songs' => $songs]);
+        $songs = \DB::table('songs')
+        ->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
+        ->select('songs.*', 'artist')
+        ->paginate(10);
+        return view('songs', ['songs' =>$songs]);
     }
 
     /**
@@ -176,13 +180,20 @@ class SongController extends Controller
      */
     public function search(Request $request)
     {
+        // FIXME pagination fails
         $q = $request->q;
         $songs = [];
         if ($q != "") {
             if ( stripos( $q, 'SELECT') === 0 ) {
                 return $this->admin_search($q);
             } else {
-                $songs = \MySounds\Song::where ( 'title', 'LIKE', '%' . $q . '%' )->orWhere ( 'album', 'LIKE', '%' . $q . '%' )->paginate (10)->setPath ( '' );
+                $songs = \DB::table('songs')
+                ->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
+                ->select('songs.*', 'artist')
+                ->where ( 'title', 'LIKE', '%' . $q . '%' )
+                ->orWhere ( 'album', 'LIKE', '%' . $q . '%' )
+                ->paginate(10)
+                ->setPath('');
             }
         }
         if (count ( $songs ) > 0) {
@@ -239,12 +250,9 @@ class SongController extends Controller
      *
      * @param string $path Full file path
      * @param string $filename Filename
-     * @return array;
+     * @return array
      */
     private function retrieve_song_info($path, $filename) {
-        // Analyze file and store returned data in $file_info
-        //TODO also retrieve composer, file size and $file_info["playtime_string"]
-        // TEST edge cases
         $this->file_info = $this->ID3_extractor->analyze($path);
 
          try {
@@ -271,6 +279,7 @@ class SongController extends Controller
         return $result;
     }
 
+    // TODO CREATE mp3/mp4 songs objects
     private function extract_tag_info() {
         $song_info = [];
         $song_info['file_type'] = $this->file_info['fileformat'];

@@ -38,6 +38,7 @@
 
                     <thead>
                         <th>Title</th>
+                        <th>Artist</th>
                         <th>Album</th>
                         <th>Year</th>
                         <th>Genre</th>
@@ -52,6 +53,9 @@
                             <tr>
                                 <td class="table-text">
                                     <div>{{ $song->title }}</div>
+                                </td>
+                                <td class="table-text">
+                                    <div>{{ $song->artist }}</div>
                                 </td>
                                 <td class="table-text">
                                     <div>{{ $song->album }}</div>
@@ -72,16 +76,14 @@
                                     <div>{{ $song->composer }}</div>
                                 </td>                                                                
                                 <td>
-                                    <form action="/song/{{ $song->id }}" method="GET">
-                                        {{ csrf_field() }}
-                                        <button>Edit Song</button>
-                                    </form>
+                                    {{ csrf_field() }}
+                                    <a href="/song/{{ $song->id }}">edit</a>
                                 </td>
                                 <td>
                                     <form action="/song/{{ $song->id }}" method="POST">
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
-                                        <button>Delete Song</button>
+                                         <a href="javascript:;" onclick="parentNode.submit();">delete</a>
                                     </form>
                                 </td>
                             </tr>

@@ -58,7 +58,7 @@
                                     <form action="/artist/{{ $artist->id }}" method="POST">
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
-                                        <button>Delete Artist</button>
+                                        <a href="javascript:;" onclick="parentNode.submit();">delete</a>
                                     </form>
                                 </td>
                             </tr>
