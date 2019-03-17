@@ -25,6 +25,15 @@
                 </div>          
             </div>
 
+
+            <div class="form-group">
+                <label for="entire_library" class="col-sm-4 control-label">Entire Media Library</label>
+
+                <div class="col-sm-1">
+                    <input type="checkbox" name="entire_library" id="entire_library" class="form-control">
+                </div>
+            </div>
+
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-6">
                     <button type="submit" class="btn btn-primary">Load</button>

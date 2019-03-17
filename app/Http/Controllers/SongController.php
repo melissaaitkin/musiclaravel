@@ -5,7 +5,9 @@ namespace MySounds\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
+//use \DateTime;
 use getID3;
 
 class SongController extends Controller
@@ -108,10 +110,10 @@ class SongController extends Controller
         $_song->artist_id = $artist_id;
         try {
             $_song->save();
-        } catch (\Illuminate\Database\QueryException $ex){
-             error_log( 'An exception occured adding song: ' . $path . ' : ' . $ex->getMessage() );
-        } catch ( Exception $e ) {
-            error_log( 'An exception occured adding song: ' . $path . ' : ' . $e->getMessage() );
+        } catch (\Illuminate\Database\QueryException $ex) {
+            Log::error( 'An exception occured adding song: ' . $path . ' : ' . $ex->getMessage() );
+        } catch (\Exception $e ) {
+            Log::error( 'An exception occured adding song: ' . $path . ' : ' . $e->getMessage() );
         }
     }
 
@@ -164,6 +166,7 @@ class SongController extends Controller
      */
     public function does_song_exist($id, $title)
     {
+        // FIXME investigate processing of songs with no artists and remove duplication
         $song = \MySounds\Song::where(["artist_id" => $id, "title" => $title])->first();
         $exists = false;
         if (isset($song->id)) {
@@ -270,10 +273,10 @@ class SongController extends Controller
         return $song_info;
     }
 
-    public function is_song( $file ) {
+    public function is_song($file) {
         $result = false;
         $extension = strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
-        if ( in_array( $extension, $this->file_types ) ) {
+        if (in_array( $extension, $this->file_types)) {
           $result = true;
         }
         return $result;
@@ -297,7 +300,15 @@ class SongController extends Controller
                 $song_info['title'] = $this->file_info["quicktime"]["comments"]["title"][0] ?? '';
                 $song_info['genre'] = $this->file_info["quicktime"]["comments"]["genre"][0] ?? '';
                 $song_info['track_no'] = $this->file_info["quicktime"]["comments"]["track_number"][0] ?? '';
-                $song_info['year'] = $this->file_info["quicktime"]["comments"]["creation_date"][0] ?? 9999;
+                //1984-01-23T08:00:00Z
+                $date_str = $this->file_info["quicktime"]["comments"]["creation_date"][0] ?? '';
+                if (empty($date_str)) {
+                    $year = 9999;
+                } else {
+                    $date_time = new \DateTime($date_str);
+                    $year = $date_time->format('Y');
+                }
+                $song_info['year'] = $year;
                 $song_info['filesize'] = $this->file_info["filesize"] ?? 0;
                 $song_info['composer'] = $this->file_info["quicktime"]["comments"]["composer"][0] ?? '';  
                 $song_info['playtime'] = $this->file_info["playtime_string"] ?? '';                
