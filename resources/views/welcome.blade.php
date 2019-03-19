@@ -21,7 +21,7 @@
                 margin: 0;
             }
             body {
-                background: url(/storage/nightswimming.jpg);
+                background: url({{ asset('img/nightswimming.jpg') }});
                 background-size: cover;
             }
 
