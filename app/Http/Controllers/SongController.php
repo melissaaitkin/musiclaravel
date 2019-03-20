@@ -34,10 +34,10 @@ class SongController extends Controller
     public function index()
     {
         $songs = \DB::table('songs')
-        ->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
-        ->select('songs.*', 'artist')
-        ->paginate(10);
-        return view('songs', ['songs' =>$songs]);
+            ->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
+            ->select('songs.*', 'artist')
+            ->paginate(10);
+        return view('songs', ['songs' => $songs]);
     }
 
     /**
@@ -183,7 +183,6 @@ class SongController extends Controller
      */
     public function search(Request $request)
     {
-        // FIXME pagination fails
         $q = $request->q;
         $songs = [];
         if ($q != "") {
@@ -196,6 +195,7 @@ class SongController extends Controller
                 ->where ( 'title', 'LIKE', '%' . $q . '%' )
                 ->orWhere ( 'album', 'LIKE', '%' . $q . '%' )
                 ->paginate(10)
+                ->appends(['q' => $q])
                 ->setPath('');
             }
         }
@@ -214,6 +214,7 @@ class SongController extends Controller
      */
     public function admin_search(string $query)
     {
+        // FIX pagination or remove
         if ( stripos( $query, 'DELETE') !== false || stripos( $query, 'UPDATE') ) {
             abort(403, 'Unauthorized action.');
         }
@@ -226,7 +227,7 @@ class SongController extends Controller
 
         $paginate = new LengthAwarePaginator($songs, 10, 1, 1, [
             'path' =>  request()->url(),
-            'query' => request()->query()
+            'query' => $songs
         ]);
 
         if (count ( $songs ) > 0) {

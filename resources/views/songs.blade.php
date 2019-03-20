@@ -20,7 +20,7 @@
 
         <div class="panel panel-default">
             <div class="panel-body">
-                <form action="/songs" method="POST" role="search">
+                <form action="/songs/search" method="POST" role="search">
                     {{ csrf_field() }}
                     <div class="input-group col-sm-6">
                         <input type="text" class="form-control" name="q"
@@ -55,7 +55,7 @@
                                     <div>{{ $song->title }}</div>
                                 </td>
                                 <td class="table-text">
-                                    <div>{{ $song->artist }}</div>
+                                    <div>{{ $song->artist ?? '' }}</div>
                                 </td>
                                 <td class="table-text">
                                     <div>{{ $song->album }}</div>

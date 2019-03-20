@@ -119,7 +119,12 @@ class ArtistController extends Controller
             if ( stripos( $q, 'SELECT') === 0 ) {
                 return $this->admin_search($q);
             } else {
-                $artists = \MySounds\Artist::where ( 'artist', 'LIKE', '%' . $q . '%' )->orWhere ( 'country', 'LIKE', '%' . $q . '%' )->paginate (10)->setPath ( '' );
+                $artists = \DB::table('artists')
+                    ->where('artist', 'LIKE', '%' . $q . '%')
+                    ->orWhere('country', 'LIKE', '%' . $q . '%')
+                    ->paginate(10)
+                    ->appends(['q' => $q])
+                    ->setPath('');
             }
         }
         if (count ( $artists ) > 0) {
