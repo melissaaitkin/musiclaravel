@@ -186,9 +186,6 @@ class SongController extends Controller
         $q = $request->q;
         $songs = [];
         if ($q != "") {
-            if ( stripos( $q, 'SELECT') === 0 ) {
-                return $this->admin_search($q);
-            } else {
                 $songs = \DB::table('songs')
                 ->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
                 ->select('songs.*', 'artist')
@@ -197,43 +194,11 @@ class SongController extends Controller
                 ->paginate(10)
                 ->appends(['q' => $q])
                 ->setPath('');
-            }
         }
         if (count ( $songs ) > 0) {
             return view('songs', ['songs' => $songs]);
         } else {
             return view('songs', ['songs' => $songs])->withMessage('No Details found. Try to search again !');
-        }
-    }
-
-     /**
-     * Perform admin search on songs
-     *
-     * @param  string $query
-     * @return Response
-     */
-    public function admin_search(string $query)
-    {
-        // FIX pagination or remove
-        if ( stripos( $query, 'DELETE') !== false || stripos( $query, 'UPDATE') ) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        try {
-            $songs = \DB::select($query);
-        } catch (\Illuminate\Database\QueryException $ex) {
-            $songs = [];
-        }
-
-        $paginate = new LengthAwarePaginator($songs, 10, 1, 1, [
-            'path' =>  request()->url(),
-            'query' => $songs
-        ]);
-
-        if (count ( $songs ) > 0) {
-            return view('songs', ['songs' => $paginate]);
-        } else {
-            return view('songs', ['songs' => $paginate])->withMessage('No Details found. Try to search again !');
         }
     }
 
