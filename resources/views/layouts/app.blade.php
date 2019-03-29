@@ -27,6 +27,15 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
+                <div class="top-right links">
+                    @auth
+                        <a href="{{ url('/songs') }}">Songs</a>
+                        <a href="{{ url('/artists') }}">Artists</a>
+                        @if ( Auth::user()->id == 1)
+                            <a href="{{ url('/utilities') }}">Utilities</a>
+                        @endif
+                    @endauth
+                </div>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -63,12 +72,6 @@
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
-                                    <a class="dropdown-item" href="{{ url('/artists') }}">
-                                        {{ __('Artists') }}
-                                    </a>
-                                    <a class="dropdown-item" href="{{ url('/songs') }}">
-                                        {{ __('Songs') }}
-                                    </a>
                                 </div>
                             </li>
                         @endguest
