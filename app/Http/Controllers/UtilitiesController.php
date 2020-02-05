@@ -17,9 +17,6 @@ class UtilitiesController extends Controller
 	 */
 	public function index()
 	{
-		if ( Auth::user()->id != 1 ) {
-			abort(404);
-		}
 		return view('utilities');
 	}
 
@@ -31,9 +28,6 @@ class UtilitiesController extends Controller
 	 */
 	public function load_songs(Request $request)
 	{
-		if (Auth::user()->id != 1) {
-			abort(404);
-		}
 		if (is_dir( $request->directory)) {
 			if (isset($request->entire_library)) {
 				$this->process_media_directory($request->directory);

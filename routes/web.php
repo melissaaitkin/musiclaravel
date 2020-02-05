@@ -13,35 +13,40 @@
 
 use Illuminate\Http\Request;
 
+
 Route::get('/', function () {
 	return view('welcome');
 });
 
-Route::get('/utilities', 'UtilitiesController@index');
+Route::middleware(['auth'])->group(function () {
 
-Route::post('/load', 'UtilitiesController@load_songs');
+	Route::get("/utilities", ["uses" => "UtilitiesController@index", "middleware" => "admin"]);
 
-Route::get('/songs', 'SongController@index');
+	Route::post('/load', 'UtilitiesController@load_songs');
 
-Route::any('/songs/search', 'SongController@search');
+	Route::get('/songs', 'SongController@index');
 
-Route::get('/song', 'SongController@create');
+	Route::any('/songs/search', 'SongController@search');
 
-Route::post('/song', 'SongController@store');
+	Route::get('/song', 'SongController@create');
 
-Route::get('/song/{id}', 'SongController@edit');
+	Route::post('/song', 'SongController@store');
 
-Route::delete('/song/{id}', 'SongController@destroy');
+	Route::get('/song/{id}', 'SongController@edit');
 
-Route::get('/artists', 'ArtistController@index');
+	Route::delete('/song/{id}', 'SongController@destroy');
 
-Route::any('/artists/search', 'ArtistController@search');
+	Route::get('/artists', 'ArtistController@index');
 
-Route::get('/artist', 'ArtistController@create');
+	Route::any('/artists/search', 'ArtistController@search');
 
-Route::post('/artist', 'ArtistController@store');
+	Route::get('/artist', 'ArtistController@create');
 
-Route::delete('/artist/{id}', 'ArtistController@destroy');
+	Route::post('/artist', 'ArtistController@store');
+
+	Route::delete('/artist/{id}', 'ArtistController@destroy');
+
+});
 
 Auth::routes();
 
