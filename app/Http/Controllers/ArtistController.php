@@ -32,7 +32,7 @@ class ArtistController extends Controller
         foreach( $countries as $country ) {
             $country_names[] = $country->name;
         }
-        return view('artist', [ 'countries' => $country_names ]);
+        return view('artist', ['title' => 'Add Artist', 'countries' => $country_names]);
     }
 
     /**
@@ -46,9 +46,15 @@ class ArtistController extends Controller
         $validator = $request->validate([
             'artist' => 'required|max:255',
         ]);
-        $artist = new \MySounds\Artist;
+
+        if (isset($request->id)){
+            $artist = \MySounds\Artist::findOrFail($request->id);
+        } else {
+            $artist = new \MySounds\Artist;
+        }
+
         $artist->artist = $request->artist;
-        $artist->is_group = isset( $request->is_group );
+        $artist->is_group = isset($request->is_group);
         $artist->country = $request->country;
         $artist->save();
 
@@ -99,10 +105,18 @@ class ArtistController extends Controller
      *
      * @param  int  $id
      * @return Response
-     */
+     */ 
     public function edit($id)
     {
-        //
+        // TODO add to cache
+        $countries = json_decode( file_get_contents( "https://restcountries.eu/rest/v2/all") );
+        $country_names = [ 'Please Select' ];
+        foreach( $countries as $country ) {
+            $country_names[] = $country->name;
+        }
+
+        $artist = \MySounds\Artist::find($id);
+        return view('artist', ['title' => 'Edit Artist', 'artist' => $artist, 'countries' => $country_names]);
     }
 
     /**

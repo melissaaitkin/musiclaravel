@@ -44,6 +44,8 @@ Route::middleware(['auth'])->group(function () {
 
 	Route::post('/artist', 'ArtistController@store');
 
+	Route::get('/artist/{id}', 'ArtistController@edit');
+
 	Route::delete('/artist/{id}', 'ArtistController@destroy');
 
 });

@@ -42,6 +42,7 @@
                         <th>Artist</th>
                         <th>Country</th>
                         <th>&nbsp;</th>
+                        <th>&nbsp;</th>
                     </thead>
 
                     <!-- Table Body -->
@@ -53,7 +54,11 @@
                                 </td>
                                 <td class="table-text">
                                     <div>{{ $artist->country }}</div>
-                                </td>             
+                                </td>
+                                <td>
+                                    {{ csrf_field() }}
+                                    <a href="/artist/{{ $artist->id }}">edit</a>
+                                </td>
                                 <td>
                                     <form action="/artist/{{ $artist->id }}" method="POST">
                                         {{ csrf_field() }}
