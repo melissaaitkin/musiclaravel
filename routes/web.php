@@ -48,8 +48,8 @@ Route::middleware(['auth'])->group(function () {
 
 	Route::delete('/artist/{id}', 'ArtistController@destroy');
 
+	Route::get('/home', 'SongController@index');
+
 });
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
