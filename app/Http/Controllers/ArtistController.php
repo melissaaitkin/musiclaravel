@@ -58,7 +58,8 @@ class ArtistController extends Controller
         $artist->country = $request->country;
         $artist->save();
 
-        return redirect('/artists');
+        $url = $request->only('redirects_to');
+        return redirect()->to($url['redirects_to']);
     }
 
     /**

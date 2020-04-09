@@ -15,6 +15,10 @@
         <form action="/artist" method="POST" class="form-horizontal">
             {{ csrf_field() }}
 
+            <div>
+                 <input type="hidden" name="redirects_to" value="{{ URL::previous() }}"/>
+            </div>
+
             <!-- song Name -->
             <div class="form-group">
                 <label for="artist" class="col-sm-3 control-label">Artist</label>
