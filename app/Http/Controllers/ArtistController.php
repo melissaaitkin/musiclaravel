@@ -141,6 +141,9 @@ class ArtistController extends Controller
                     ->appends(['q' => $q])
                     ->setPath('');
             }
+        } else {
+            // TODO get previous search query.
+            $artists = \MySounds\Artist::orderBy('artist')->paginate(10);
         }
         if (count ( $artists ) > 0) {
             return view('artists', ['artists' => $artists]);
