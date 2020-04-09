@@ -190,6 +190,7 @@ class SongController extends Controller
                 ->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
                 ->select('songs.*', 'artist')
                 ->where ( 'title', 'LIKE', '%' . $q . '%' )
+                ->orWhere ( 'artist', 'LIKE', '%' . $q . '%' )
                 ->orWhere ( 'album', 'LIKE', '%' . $q . '%' )
                 ->paginate(10)
                 ->appends(['q' => $q])
