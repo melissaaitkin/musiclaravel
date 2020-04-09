@@ -55,7 +55,7 @@
                                     <div>{{ $song->title }}</div>
                                 </td>
                                 <td class="table-text">
-                                    <div>{{ $song->artist ?? '' }}</div>
+                                    <div><a href="/artist/{{ $song->artist_id }}">{{ $song->artist ?? '' }}</a></div>
                                 </td>
                                 <td class="table-text">
                                     <div>{{ $song->album }}</div>
