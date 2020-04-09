@@ -123,7 +123,7 @@ class ArtistController extends Controller
     /**
      * Search for artist.
      *
-     * @param  string  $q
+     * @param  Request request
      * @return Response
      */
     public function search(Request $request)
@@ -131,24 +131,38 @@ class ArtistController extends Controller
         $q = $request->q;
         $artists = [];
         if ($q != "") {
-            if ( stripos( $q, 'SELECT') === 0 ) {
-                return $this->admin_search($q);
-            } else {
-                $artists = \DB::table('artists')
-                    ->where('artist', 'LIKE', '%' . $q . '%')
-                    ->orWhere('country', 'LIKE', '%' . $q . '%')
-                    ->paginate(10)
-                    ->appends(['q' => $q])
-                    ->setPath('');
-            }
+            $artists = $this->retrieve_artists($q);
         } else {
-            // TODO get previous search query.
-            $artists = \MySounds\Artist::orderBy('artist')->paginate(10);
+            $artists = $this->retrieve_artists(session()->get('artists_query'));
         }
-        if (count ( $artists ) > 0) {
+        if (count($artists) > 0) {
             return view('artists', ['artists' => $artists]);
         } else {
             return view('artists', ['artists' => $artists])->withMessage('No Details found. Try to search again !');
+        }
+    }
+
+    /**
+     * Retrieve artists
+     *
+     * @param  string $query
+     * @return array
+     */
+    protected function retrieve_artists($query) {
+        if ($query != "") {
+            session()->put('artists_query', $query);
+            if ( stripos( $query, 'SELECT') === 0 ) {
+                return $this->admin_search($query);
+            } else {
+                return \DB::table('artists')
+                    ->where('artist', 'LIKE', '%' . $query . '%')
+                    ->orWhere('country', 'LIKE', '%' . $query . '%')
+                    ->paginate(10)
+                    ->appends(['q' => $query])
+                    ->setPath('');
+            }
+        } else {
+            return \MySounds\Artist::orderBy('artist')->paginate(10);
         }
     }
 
