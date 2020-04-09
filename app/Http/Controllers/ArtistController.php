@@ -15,7 +15,7 @@ class ArtistController extends Controller
      */
     public function index()
     {
-        $artists = \MySounds\Artist::paginate(10);
+        $artists = \MySounds\Artist::orderBy('artist')->paginate(10);
         return view('artists', ['artists' => $artists]);
     }
 
