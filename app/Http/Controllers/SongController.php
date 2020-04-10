@@ -178,28 +178,48 @@ class SongController extends Controller
     /**
      * Search for song.
      *
-     * @param  string  $q
+     * @param Request
      * @return Response
      */
     public function search(Request $request)
     {
         $q = $request->q;
-        $songs = [];
+        $artists = [];
         if ($q != "") {
-                $songs = \DB::table('songs')
-                ->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
-                ->select('songs.*', 'artist')
-                ->where ( 'title', 'LIKE', '%' . $q . '%' )
-                ->orWhere ( 'artist', 'LIKE', '%' . $q . '%' )
-                ->orWhere ( 'album', 'LIKE', '%' . $q . '%' )
-                ->paginate(10)
-                ->appends(['q' => $q])
-                ->setPath('');
+            $songs = $this->retrieve_songs($q);
+        } else {
+            $songs = $this->retrieve_songs(session()->get('songs_query'));
         }
-        if (count ( $songs ) > 0) {
+        if (count($songs) > 0) {
             return view('songs', ['songs' => $songs]);
         } else {
             return view('songs', ['songs' => $songs])->withMessage('No Details found. Try to search again !');
+        }
+    }
+
+    /**
+     * Retrieve songs
+     *
+     * @param  string $query
+     * @return array
+     */
+    protected function retrieve_songs($query) {
+        if ($query != "") {
+            session()->put('songs_query', $query);
+            return \DB::table('songs')
+                ->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
+                ->select('songs.*', 'artist')
+                ->where ( 'title', 'LIKE', '%' . $query . '%' )
+                ->orWhere ( 'artist', 'LIKE', '%' . $query . '%' )
+                ->orWhere ( 'album', 'LIKE', '%' . $query . '%' )
+                ->paginate(10)
+                ->appends(['q' => $query])
+                ->setPath('');
+        } else {
+            return \DB::table('songs')
+                ->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
+                ->select('songs.*', 'artist')
+                ->paginate(10);
         }
     }
 

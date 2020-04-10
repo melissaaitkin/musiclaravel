@@ -135,10 +135,14 @@ class ArtistController extends Controller
         } else {
             $artists = $this->retrieve_artists(session()->get('artists_query'));
         }
-        if (count($artists) > 0) {
-            return view('artists', ['artists' => $artists]);
+        if (is_array($artists)) {
+            if (count($artists) > 0) {
+                return view('artists', ['artists' => $artists]);
+            } else {
+                return view('artists', ['artists' => $artists])->withMessage('No Details found. Try to search again !');
+            }
         } else {
-            return view('artists', ['artists' => $artists])->withMessage('No Details found. Try to search again !');
+            return $artists;
         }
     }
 
@@ -183,18 +187,17 @@ class ArtistController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             $artists = [];
         }
-
-        $paginate = new LengthAwarePaginator($artists, 10, 1, 1, [
+        $paginate = new LengthAwarePaginator($artists, count($artists), 10, 1, [
             'path' =>  request()->url(),
             'query' => request()->query()
         ]);
 
-        if (count ( $artists ) > 0) {
+        if (count($artists) > 0) {
             return view('artists', ['artists' => $paginate]);
         } else {
             return view('artists', ['artists' => $paginate])->withMessage('No Details found. Try to search again !');
         }
-    }    
+    }
 
     /**
      * Remove the artist and all their songs from the database
