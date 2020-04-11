@@ -6,7 +6,7 @@
 
     <div class="panel-body mysound-submit-form-div">
 
-        <h2 class="col-sm-3">{{$title}}</h2>
+        <h2 class="col-sm-3">{{$song->title}}</h2>
 
         @include('common.errors')
 
@@ -15,9 +15,18 @@
         <form action="/song" method="POST" class="form-horizontal">
             {{ csrf_field() }}
 
+            <div class="form-group">
+
+                <div class="col-sm-6">
+                    <audio controls>
+                        <source src="{{ route('song.play', array('slug' => $song->id)) }}" type="audio/mpeg">
+                    </audio>
+                </div>
+            </div>
+
             <!-- song Name -->
             <div class="form-group">
-                <label for="song" class="col-sm-3 control-label">Song</label>
+                <label for="title" class="col-sm-3 control-label">Title</label>
 
                 <div class="col-sm-6">
                     <input type="text" name="title" id="song-title" class="form-control" @if( ! empty($song->title)) value="{{$song->title}}" @endif>
@@ -111,7 +120,6 @@
                 </div>
             </div>
 
-            <!-- Add song Button -->
             <div class="form-group">
                 @if( ! empty($song->id))
                     <div class="col-sm-offset-3 col-sm-6">

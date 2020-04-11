@@ -36,6 +36,8 @@ Route::middleware(['auth'])->group(function () {
 
 	Route::delete('/song/{id}', 'SongController@destroy');
 
+	Route::get('/song/play/{id}', 'SongController@play')->name('song.play');
+
 	Route::get('/artists', 'ArtistController@index');
 
 	Route::any('/artists/search', 'ArtistController@search');

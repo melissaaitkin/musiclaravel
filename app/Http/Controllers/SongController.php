@@ -3,9 +3,12 @@
 namespace MySounds\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Storage;
+use File;
 
 //use \DateTime;
 use getID3;
@@ -304,6 +307,14 @@ class SongController extends Controller
                 //no luck    
         }
         return $song_info;
+    }
+
+    public function play($id)
+    {
+        $song = \MySounds\Song::find($id);
+        $location = str_replace(array('C:\\', '\\'), array('', '/'), $song->location);
+        $contents = Storage::disk('partitionC')->get($location);
+        return response($contents, 200)->header("Content-Type", 'audio/mpeg');
     }
 
 }
