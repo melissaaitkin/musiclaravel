@@ -140,7 +140,13 @@ class SongController extends Controller
     {
         $artists = \MySounds\Artist::all( [ 'id', 'artist']);
         $song = \MySounds\Song::find($id);
-        return view('song', [ 'title' => 'Edit Song', 'song' => $song, 'artists' => $artists, 'file_types' => $this->file_types ]);
+        $location = str_replace(array('C:\\', '\\'), array('', '/'), $song->location);
+        return view('song', [
+            'song' => $song,
+            'artists' => $artists,
+            'file_types' => $this->file_types,
+            'song_exists' => Storage::disk('partitionC')->has($location),
+        ]);
     }
 
     /**
@@ -313,8 +319,10 @@ class SongController extends Controller
     {
         $song = \MySounds\Song::find($id);
         $location = str_replace(array('C:\\', '\\'), array('', '/'), $song->location);
-        $contents = Storage::disk('partitionC')->get($location);
-        return response($contents, 200)->header("Content-Type", 'audio/mpeg');
+        if (Storage::disk('partitionC')->has($location)) {
+            $contents = Storage::disk('partitionC')->get($location);
+            return response($contents, 200)->header("Content-Type", 'audio/mpeg');
+        }
     }
 
 }

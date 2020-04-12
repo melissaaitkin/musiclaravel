@@ -6,7 +6,7 @@
 
     <div class="panel-body mysound-submit-form-div">
 
-        <h2 class="col-sm-3">{{$song->title}}</h2>
+        <h2 class="col-sm-12">{{$song->title}}</h2>
 
         @include('common.errors')
 
@@ -15,14 +15,15 @@
         <form action="/song" method="POST" class="form-horizontal">
             {{ csrf_field() }}
 
+            @if($song_exists)
             <div class="form-group">
-
                 <div class="col-sm-6">
                     <audio controls>
                         <source src="{{ route('song.play', array('slug' => $song->id)) }}" type="audio/mpeg">
                     </audio>
                 </div>
             </div>
+            @endif
 
             <!-- song Name -->
             <div class="form-group">
