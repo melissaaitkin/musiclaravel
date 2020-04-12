@@ -26,13 +26,7 @@ class ArtistController extends Controller
      */
     public function create()
     {
-        // TODO add to cache
-        $countries = json_decode( file_get_contents( "https://restcountries.eu/rest/v2/all") );
-        $country_names = [ 'Please Select' ];
-        foreach( $countries as $country ) {
-            $country_names[] = $country->name;
-        }
-        return view('artist', ['title' => 'Add Artist', 'countries' => $country_names]);
+        return view('artist', ['title' => 'Add Artist', 'countries' => get_country_names()]);
     }
 
     /**
@@ -109,15 +103,8 @@ class ArtistController extends Controller
      */ 
     public function edit($id)
     {
-        // TODO add to cache
-        $countries = json_decode( file_get_contents( "https://restcountries.eu/rest/v2/all") );
-        $country_names = [ 'Please Select' ];
-        foreach( $countries as $country ) {
-            $country_names[] = $country->name;
-        }
-
         $artist = \MySounds\Artist::find($id);
-        return view('artist', ['title' => 'Edit Artist', 'artist' => $artist, 'countries' => $country_names]);
+        return view('artist', ['title' => 'Edit Artist', 'artist' => $artist, 'countries' => get_country_names()]);
     }
 
     /**
@@ -132,6 +119,7 @@ class ArtistController extends Controller
         $artists = [];
         if ($q != "") {
             $artists = $this->retrieve_artists($q);
+            // var_dump($artists);exit;
         } else {
             $artists = $this->retrieve_artists(session()->get('artists_query'));
         }
@@ -142,7 +130,7 @@ class ArtistController extends Controller
                 return view('artists', ['artists' => $artists])->withMessage('No Details found. Try to search again !');
             }
         } else {
-            return $artists;
+            return view('artists', ['artists' => $artists]);
         }
     }
 

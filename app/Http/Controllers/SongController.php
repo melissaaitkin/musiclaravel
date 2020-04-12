@@ -319,6 +319,7 @@ class SongController extends Controller
     {
         $song = \MySounds\Song::find($id);
         $location = str_replace(array('C:\\', '\\'), array('', '/'), $song->location);
+        // TODO what to do with wma files
         if (Storage::disk('partitionC')->has($location)) {
             $contents = Storage::disk('partitionC')->get($location);
             return response($contents, 200)->header("Content-Type", 'audio/mpeg');
