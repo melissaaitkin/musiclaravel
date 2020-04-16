@@ -23,6 +23,8 @@
             body {
                 background: url({{ asset('img/nightswimming.jpg') }});
                 background-size: cover;
+                border: 10px solid white;
+                border-radius: 25px;
             }
 
             .full-height {
@@ -52,6 +54,8 @@
             .title {
                 font-size: 84px;
                 color: white;
+                font-weight: bold;
+                font-style: italic;
             }
 
             .links > a {

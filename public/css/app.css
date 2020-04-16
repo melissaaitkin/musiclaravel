@@ -10911,5 +10911,7 @@ body {
   background-color: black;
   color: white;
   padding: 20px;
+  margin-right: 15px;
+  border-radius: 25px;
 }
 
