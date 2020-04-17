@@ -51,7 +51,12 @@ class SongController extends Controller
     public function create()
     {
 		$artists = \MySounds\Artist::all( [ 'id', 'artist']);
-		return view('song', ['title' => 'Add New Song', 'artists' => $artists, 'file_types' => $this->file_types]);
+		return view('song', [
+            'title' => 'Add New Song',
+            'artists' => $artists,
+            'file_types' => $this->file_types,
+            'song_exists' => false,
+        ]);
     }
 
     /**
@@ -143,6 +148,7 @@ class SongController extends Controller
         $location = str_replace(array('C:\\', '\\'), array('', '/'), $song->location);
         return view('song', [
             'song' => $song,
+            'title' => $song->title,
             'artists' => $artists,
             'file_types' => $this->file_types,
             'song_exists' => Storage::disk('partitionC')->has($location),
