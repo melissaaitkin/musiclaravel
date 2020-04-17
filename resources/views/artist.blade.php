@@ -58,7 +58,7 @@
         </form>
     </div>
 
-    @if(!empty($songs))
+    @if(count($songs) > 0)
     <div class="mysound-information-div">
         <h5 class="col-sm-3">Songs</h5>
         <ol>
