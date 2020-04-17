@@ -2,16 +2,12 @@
 
 @section('content')
 
-    <!-- Bootstrap Boilerplate... -->
-
     <div class="panel-body mysound-submit-form-div">
 
         <h2 class="col-sm-3">{{$title}}</h2>
 
         @include('common.errors')
 
-
-        <!-- New song Form -->
         <form action="/artist" method="POST" class="form-horizontal">
             {{ csrf_field() }}
 
@@ -48,7 +44,7 @@
 
             <!-- Add song Button -->
             <div class="form-group">
-                @if( ! empty($artist->id))
+                @if(!empty($artist->id))
                     <div class="col-sm-offset-3 col-sm-6">
                         <input type="hidden" name="id" id="artist-id" value="{{$artist->id}}">
                         <button type="submit" class="btn btn-primary">Update</button>
@@ -61,4 +57,16 @@
             </div>
         </form>
     </div>
+
+    @if(!empty($songs))
+    <div class="mysound-information-div">
+        <h5 class="col-sm-3">Songs</h5>
+        <ol>
+            @foreach($songs as $song)
+                <li>{{$song->title}}</li>
+            @endforeach
+        </ol>
+    </div>
+    @endif
+
 @endsection

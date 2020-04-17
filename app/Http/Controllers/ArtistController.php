@@ -104,7 +104,13 @@ class ArtistController extends Controller
     public function edit($id)
     {
         $artist = \MySounds\Artist::find($id);
-        return view('artist', ['title' => 'Edit Artist', 'artist' => $artist, 'countries' => get_country_names()]);
+        $songs = \MySounds\Song::select('title')->where(["artist_id" => $id])->orderBy('title')->get();
+        return view('artist', [
+            'title' => $artist->artist,
+            'artist' => $artist,
+            'songs' => $songs,
+            'countries' => get_country_names(),
+        ]);
     }
 
     /**
@@ -119,16 +125,12 @@ class ArtistController extends Controller
         $artists = [];
         if ($q != "") {
             $artists = $this->retrieve_artists($q);
-            // var_dump($artists);exit;
         } else {
             $artists = $this->retrieve_artists(session()->get('artists_query'));
         }
-        if (is_array($artists)) {
-            if (count($artists) > 0) {
-                return view('artists', ['artists' => $artists]);
-            } else {
-                return view('artists', ['artists' => $artists])->withMessage('No Details found. Try to search again !');
-            }
+        // Artists can be returned as an array or a paginated object.
+        if (is_array($artists) && count($artists) == 0) {
+            return view('artists', ['artists' => $artists])->withMessage('No Details found. Try to search again !');
         } else {
             return view('artists', ['artists' => $artists]);
         }
