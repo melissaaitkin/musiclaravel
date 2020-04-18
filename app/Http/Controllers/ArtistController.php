@@ -15,6 +15,9 @@ class ArtistController extends Controller
      */
     public function index()
     {
+        // TODO add notes field to artist to describe mixed nationalities
+        // Add group member field
+        // Work with Compilation/Compilations
         $artists = \MySounds\Artist::orderBy('artist')->paginate(10);
         return view('artists', ['artists' => $artists]);
     }
@@ -103,6 +106,7 @@ class ArtistController extends Controller
      */ 
     public function edit($id)
     {
+        // TODO add return to list button
         $artist = \MySounds\Artist::find($id);
         $songs = \MySounds\Song::select('title')->where(["artist_id" => $id])->orderBy('title')->get();
         return view('artist', [
@@ -197,6 +201,7 @@ class ArtistController extends Controller
      */
     public function destroy($id)
     {
+        // TODO redirect to correctly paginated page
         \MySounds\Artist::findOrFail($id)->delete();
         return redirect('/artists');
     }

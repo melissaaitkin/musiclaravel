@@ -36,6 +36,7 @@ class SongController extends Controller
      */
     public function index()
     {
+        // TODO add notes field to songs to describe conductor/orchestra of classical pieces.
         $songs = \DB::table('songs')
             ->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
             ->select('songs.*', 'artist')
