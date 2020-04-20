@@ -6,6 +6,7 @@ use MySounds\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use LaravelMP3;
+use Exception;
 
 class UtilitiesController extends Controller
 {
@@ -29,21 +30,21 @@ class UtilitiesController extends Controller
 	public function load_songs(Request $request)
 	{
 		// FIXME duplicates are still being created such as Clarence Carter - Patches (original name versus name retrieved from ID3 extractor)
-		// FIXME cannot handle square brackets
-		if (is_dir( $request->directory)) {
-			if (isset($request->entire_library)) {
-				$this->process_media_directory($request->directory);
-			} else {
-				$dirs = explode('\\', $request->directory);
-				$artist_id = $this->process_artist($dirs[count($dirs)-1]);
-				$this->process_artist_directory($request->directory, $artist_id);
+		try {
+			if (is_dir( $request->directory)) {
+				if (isset($request->entire_library)) {
+					$this->process_media_directory($request->directory);
+				} else {
+					$dirs = explode('\\', $request->directory);
+					$artist_id = $this->process_artist($dirs[count($dirs)-1]);
+					$this->process_artist_directory($request->directory, $artist_id);
 
+				}
+			} else {
+				return view('utilities')->withErrors(['This is not a valid directory']);
 			}
-		} else {
-			$error = \Illuminate\Validation\ValidationException::withMessages([
-				'directory' => ['This is not a valid directory'],
-			]);
-			throw $error;
+		} catch (Exception $e) {
+			return view('utilities')->withErrors([$e->getMessage()]);
 		}
 		return view('utilities', ['msg' => 'Songs have been loaded']);
 	}
@@ -100,6 +101,9 @@ class UtilitiesController extends Controller
 
 	private function process_album(string $album, int $artist_id) {
 		$album_name = basename($album);
+		if (preg_match('/[\[\]]/', $album_name)) {
+			throw new Exception("Album directory contains square brackets");
+		}
 		$album_exists = app('MySounds\Http\Controllers\SongController')->does_album_exist($artist_id, $album_name);
 		if (!$album_exists) {
 			$scan_songs = glob($album . '/*');
