@@ -53,10 +53,13 @@ class ArtistController extends Controller
         $artist->artist = $request->artist;
         $artist->is_group = isset($request->is_group);
         $artist->country = $request->country;
+        $artist->group_members = $request->group_members;
+        $artist->notes = $request->notes;
         $artist->save();
 
         $url = $request->only('redirects_to');
-        return redirect()->to($url['redirects_to']);
+        $path = $url['redirects_to'] ?? '/artists';
+        return redirect()->to($path);
     }
 
     /**
@@ -199,11 +202,10 @@ class ArtistController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        // TODO redirect to correctly paginated page
         \MySounds\Artist::findOrFail($id)->delete();
-        return redirect('/artists');
+        return back();
     }
 
 }

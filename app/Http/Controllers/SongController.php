@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Storage;
 use File;
+use Exception;
 
-//use \DateTime;
 use getID3;
 
 class SongController extends Controller
@@ -104,25 +104,25 @@ class SongController extends Controller
      */
     public function dynamic_store($path, $filename, $album_name, $artist_id)
     {
-        $song_info = $this->retrieve_song_info($path, $filename);
-        $_song = new \MySounds\Song;
-        $_song->title = $song_info['title'] ?? '';
-        $_song->album = $album_name;
-        $_song->year = $song_info['year'] ?? 9999;
-        $_song->file_type = $song_info['file_type'] ?? '';
-        $_song->track_no = $song_info['track_no'] ?? '';
-        $_song->genre = $song_info['genre'] ?? '';
-        $_song->filesize = $song_info['filesize'] ?? 0;
-        $_song->composer = $song_info['composer'] ?? '';
-        $_song->playtime = $song_info['playtime'] ?? 0;
-        $_song->location = $path;
-        $_song->artist_id = $artist_id;
         try {
+            $song_info = $this->retrieve_song_info($path, $filename);
+            $_song = new \MySounds\Song;
+            $_song->title = $song_info['title'] ?? '';
+            $_song->album = $album_name;
+            $_song->year = $song_info['year'] ?? 9999;
+            $_song->file_type = $song_info['file_type'] ?? '';
+            $_song->track_no = $song_info['track_no'] ?? '';
+            $_song->genre = $song_info['genre'] ?? '';
+            $_song->filesize = $song_info['filesize'] ?? 0;
+            $_song->composer = $song_info['composer'] ?? '';
+            $_song->playtime = $song_info['playtime'] ?? 0;
+            $_song->location = $path;
+            $_song->artist_id = $artist_id;
+
             $_song->save();
-        } catch (\Illuminate\Database\QueryException $ex) {
-            Log::error( 'An exception occured adding song: ' . $path . ' : ' . $ex->getMessage() );
-        } catch (\Exception $e ) {
-            Log::error( 'An exception occured adding song: ' . $path . ' : ' . $e->getMessage() );
+        } catch (Exception $e) {
+            Log::error('An exception occured adding song: ' . $path . ' : ' . $e->getMessage());
+            abort(404, "An error occurred processing the song");
         }
     }
 
@@ -261,16 +261,16 @@ class SongController extends Controller
     private function retrieve_song_info($path, $filename) {
         $this->file_info = $this->ID3_extractor->analyze($path);
 
-         try {
-            $song_info = $this->extract_tag_info();
-            if ( empty( $song_info['title'] ) ) {
-                $idx = strrpos($filename, '.');
-                if ( $idx !== false ) {
-                    $song_info['title'] = substr($filename, 0, $idx );
-                }
+        if (isset($this->file_info['error'])) {
+            throw new Exception($this->file_info['error'][0]);
+        }
+
+        $song_info = $this->extract_tag_info();
+        if ( empty( $song_info['title'] ) ) {
+            $idx = strrpos($filename, '.');
+            if ( $idx !== false ) {
+                $song_info['title'] = substr($filename, 0, $idx );
             }
-        } catch ( Exception $e ) {
-            error_log( "Exception occurred processing - " .  $path . " : " . $e->getMessage() );
         }
 
         return $song_info;

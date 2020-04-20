@@ -18,6 +18,10 @@ Route::get('/', function () {
 	return view('welcome');
 });
 
+Route::get('/404', function () {
+    return abort(404);
+});
+
 Route::middleware(['auth'])->group(function () {
 
 	Route::get("/utilities", ["uses" => "UtilitiesController@index", "middleware" => "admin"]);
@@ -48,7 +52,7 @@ Route::middleware(['auth'])->group(function () {
 
 	Route::get('/artist/{id}', 'ArtistController@edit');
 
-	Route::delete('/artist/{id}', 'ArtistController@destroy');
+	Route::delete('/artist/{id}', 'ArtistController@destroy')->name('artist.destroy');
 
 	Route::get('/home', 'SongController@index');
 
