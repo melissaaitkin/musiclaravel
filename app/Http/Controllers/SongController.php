@@ -80,18 +80,19 @@ class SongController extends Controller
             $song = new \MySounds\Song;
         }
 
-	    $song->title       = $request->title;
-	    $song->album       = $request->album;
-	    $song->year        = $request->year;
-        $song->file_type   = $request->file_type;
-        $song->track_no    = $request->track_no;
-        $song->genre       = $request->genre;
-        $song->location    = $request->location;        
-	    $song->artist_id   = $request->artist_id;
-        $song->filesize    = $request->filesize ?? 0;
-        $song->composer    = $request->composer;
-        $song->playtime    = $request->playtime;        
-	    $song->save();
+		$song->title 		= $request->title;
+		$song->album 		= $request->album;
+		$song->year 		= $request->year;
+		$song->file_type   	= $request->file_type;
+		$song->track_no    	= $request->track_no;
+		$song->genre 		= $request->genre;
+		$song->location    	= $request->location;
+		$song->artist_id   	= $request->artist_id;
+		$song->filesize    	= $request->filesize ?? 0;
+		$song->composer    	= $request->composer;
+		$song->playtime 	= $request->playtime;
+		$song->notes 		= $request->notes;
+		$song->save();
 
 	    return redirect('/songs');
     }

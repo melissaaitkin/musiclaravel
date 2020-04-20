@@ -122,10 +122,19 @@
             </div>
 
             <div class="form-group">
+                <label for="notes" class="col-sm-3 control-label">Notes</label>
+
+                <div class="col-sm-6">
+                    <textarea name="notes" id="song-notes" class="form-control">@if(!empty($song->notes)){{$song->notes}}@endif</textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
                 @if( ! empty($song->id))
                     <div class="col-sm-offset-3 col-sm-6">
                         <input type="hidden" name="id" id="song-id" value="{{$song->id}}">
                         <button type="submit" class="btn btn-primary">Update</button>
+                        <a href="{{ url()->previous() }}" class="btn btn-primary">Back</a>
                     </div>
                 @else
                     <div class="col-sm-offset-3 col-sm-6">
