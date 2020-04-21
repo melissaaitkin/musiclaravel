@@ -4,7 +4,7 @@
 
     <div class="panel-body mysound-submit-form-div">
 
-        <h2 class="col-sm-3">{{$title}}</h2>
+        <h2 class="col-sm-6">{{$title}}</h2>
 
         @include('common.errors')
 
