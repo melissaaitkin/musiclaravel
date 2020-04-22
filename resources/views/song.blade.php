@@ -116,7 +116,7 @@
             <div class="form-group">
                 <label for="location" class="col-sm-3 control-label">Location</label>
 
-                <div class="col-sm-6">
+                <div class="col-sm-9">
                     <input type="text" name="location" id="song-location" class="form-control" @if( ! empty($song->location)) value="{{$song->location}}" @endif>
                 </div>
             </div>
