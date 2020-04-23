@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/artist.js') }}"></script>
+
 @section('content')
 
     <div class="panel-body mysound-submit-form-div">
@@ -30,10 +33,24 @@
                 </div>
             </div>
 
+            @if(isset($albums))
+            <div class="form-group">
+                <label for="album" class="col-sm-3 control-label">Albums</label>
+                <div class="col-sm-3">
+                    <select class="form-control" name="album" id="album">
+                        @foreach($albums as $album)
+                            <option value="{{$album['album']}}">{{$album['album']}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            @endif
+
             <div class="form-group">
                 <label for="country" class="col-sm-3 control-label">Country</label>
                 <div class="col-sm-3">
                     <select class="form-control" name="country">
+
                         @foreach($countries as $country)
                             <option value="{{$country}}" @if( ! empty($artist->country) && ($artist->country == $country)) selected @endif>{{$country}}</option>
                         @endforeach
@@ -76,7 +93,7 @@
     @if(isset($songs) && count($songs) > 0)
     <div class="mysound-information-div">
         <h5 class="col-sm-3">Songs</h5>
-        <ol>
+        <ol id="artist-songs">
             @foreach($songs as $song)
                 <li>{{$song->title}}</li>
             @endforeach

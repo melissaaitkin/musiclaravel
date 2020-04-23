@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use MySounds\Song as Song;
 use Storage;
 use File;
 use Exception;
@@ -331,6 +332,15 @@ class SongController extends Controller
         if (Storage::disk('partitionC')->has($location)) {
             $contents = Storage::disk('partitionC')->get($location);
             return response($contents, 200)->header("Content-Type", 'audio/mpeg');
+        }
+    }
+
+    public function all(Request $request)
+    {
+        if (isset($request->album)){
+            return Song::where('album', '=', $request->album)->get(['title']);
+        } else {
+            return Song::all(['title']);
         }
     }
 

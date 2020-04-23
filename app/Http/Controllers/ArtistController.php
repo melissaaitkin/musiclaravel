@@ -4,6 +4,8 @@ namespace MySounds\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use MySounds\Artist as Artist;
+use MySounds\Song as Song;
 
 class ArtistController extends Controller
 {
@@ -15,8 +17,6 @@ class ArtistController extends Controller
      */
     public function index()
     {
-        // TODO add notes field to artist to describe mixed nationalities
-        // Add group member field
         // Work with Compilation/Compilations
         $artists = \MySounds\Artist::orderBy('artist')->paginate(10);
         return view('artists', ['artists' => $artists]);
@@ -109,13 +109,18 @@ class ArtistController extends Controller
      */ 
     public function edit($id)
     {
-        // TODO add return to list button
-        $artist = \MySounds\Artist::find($id);
-        $songs = \MySounds\Song::select('title')->where(["artist_id" => $id])->orderBy('title')->get();
+        $artist = Artist::find($id);
+        $albums = null;
+        if ($artist->artist === 'Compilations') {
+            $albums = Song::distinct('album')->where(["artist_id" => $id])->get(['album'])->toArray();
+            array_unshift($albums, array('album' => 'Please Select'));
+        }
+        $songs = Song::select('title')->where(["artist_id" => $id])->orderBy('title')->get();
         return view('artist', [
-            'title' => $artist->artist,
-            'artist' => $artist,
-            'songs' => $songs,
+            'title'     => $artist->artist,
+            'artist'    => $artist,
+            'albums'    => $albums,
+            'songs'     => $songs,
             'countries' => get_country_names(),
         ]);
     }
