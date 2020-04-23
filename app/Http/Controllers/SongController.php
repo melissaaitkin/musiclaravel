@@ -145,7 +145,7 @@ class SongController extends Controller
      */
     public function edit($id)
     {
-        $artists = \MySounds\Artist::all( [ 'id', 'artist']);
+        $artists = \MySounds\Artist::orderBy('artist')->get(['id', 'artist']);
         $song = \MySounds\Song::find($id);
         $location = str_replace(array('C:\\', '\\'), array('', '/'), $song->location);
         return view('song', [
