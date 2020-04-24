@@ -230,6 +230,7 @@ class SongController extends Controller
                 ->where ( 'title', 'LIKE', '%' . $query . '%' )
                 ->orWhere ( 'artist', 'LIKE', '%' . $query . '%' )
                 ->orWhere ( 'album', 'LIKE', '%' . $query . '%' )
+                ->orWhere ( 'songs.notes', 'LIKE', '%' . $query . '%' )
                 ->paginate(10)
                 ->appends(['q' => $query])
                 ->setPath('');
