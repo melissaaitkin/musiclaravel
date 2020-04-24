@@ -2,30 +2,26 @@
 
 @section('content')
 
-    <!-- Bootstrap Boilerplate... -->
-
     <div class="panel-body mysound-submit-form-div">
 
         <h2 class="col-sm-12">{{$title}}</h2>
 
         @include('common.errors')
 
-
-        <!-- New song Form -->
         <form action="/song" method="POST" class="form-horizontal">
             {{ csrf_field() }}
 
             @if($song_exists)
             <div class="form-group">
-                <div class="col-sm-6">
-                    <audio controls>
-                        <source src="{{ route('song.play', array('slug' => $song->id)) }}" type="audio/mpeg">
-                    </audio>
+                <div class="col-sm-3">
+                    <a href="{{ route('song.play', array('slug' => $song->id)) }}" target="_blank">play</a>
+                    <i class="fa fa-music" style="color:aqua;"></i>
+                    <i class="fa fa-music" style="color:aqua;"></i>
+                    <i class="fa fa-music" style="color:aqua;"></i>
                 </div>
             </div>
             @endif
 
-            <!-- song Name -->
             <div class="form-group">
                 <label for="title" class="col-sm-3 control-label">Title</label>
 

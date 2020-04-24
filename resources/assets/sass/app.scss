@@ -5,6 +5,13 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
+@import "~font-awesome/scss/font-awesome.scss";
+
+//@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+//@import '~@fortawesome/fontawesome-free/scss/brand';
+//@import '~@fortawesome/fontawesome-free/scss/regular';
+//@import '~@fortawesome/fontawesome-free/scss/solid';
+
 :root {
   --font-family-sans-serif: Helvetica, Arial, sans-serif;
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
