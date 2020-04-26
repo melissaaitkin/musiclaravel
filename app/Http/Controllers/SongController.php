@@ -102,12 +102,15 @@ class SongController extends Controller
      * Store an dynamically created song in the database
      *
      * @param array song
-     * @return integer Song id
+     * @param string filename
+     * @param string album_name
+     * @param integer artist_it
+     * @param boolean is_compilation
      */
-    public function dynamic_store($path, $filename, $album_name, $artist_id)
+    public function dynamic_store($path, $filename, $album_name, $artist_id, $is_compilation)
     {
         try {
-            $song_info = $this->retrieve_song_info($path, $filename);
+            $song_info = $this->retrieve_song_info($path, $filename, $is_compilation);
             $_song = new \MySounds\Song;
             $_song->title = $song_info['title'] ?? '';
             $_song->album = $album_name;
@@ -120,6 +123,7 @@ class SongController extends Controller
             $_song->playtime = $song_info['playtime'] ?? 0;
             $_song->location = $path;
             $_song->artist_id = $artist_id;
+            $_song->notes = $song_info['notes'] ?? '';
 
             $_song->save();
         } catch (Exception $e) {
@@ -259,16 +263,17 @@ class SongController extends Controller
      *
      * @param string $path Full file path
      * @param string $filename Filename
+     * @param boolean $is_compilation Is song part of a compilation ablum
      * @return array
      */
-    private function retrieve_song_info($path, $filename) {
+    private function retrieve_song_info($path, $filename, $is_compilation) {
         $this->file_info = $this->ID3_extractor->analyze($path);
 
         if (isset($this->file_info['error'])) {
             throw new Exception($this->file_info['error'][0]);
         }
 
-        $song_info = $this->extract_tag_info();
+        $song_info = $this->extract_tag_info($is_compilation);
         if ( empty( $song_info['title'] ) ) {
             $idx = strrpos($filename, '.');
             if ( $idx !== false ) {
@@ -289,7 +294,7 @@ class SongController extends Controller
     }
 
     // TODO CREATE mp3/mp4 songs objects
-    private function extract_tag_info() {
+    private function extract_tag_info($is_compilation) {
         $song_info = [];
         $song_info['file_type'] = $this->file_info['fileformat'];
         switch ( $this->file_info['fileformat'] ) {
@@ -298,6 +303,9 @@ class SongController extends Controller
                 $song_info['genre'] = $this->file_info["tags"]["id3v2"]["genre"][0] ?? '';
                 $song_info['track_no'] = $this->file_info["tags"]["id3v2"]["track_number"][0] ?? '';
                 $song_info['year'] = $this->file_info["tags"]["id3v2"]["year"][0] ?? 9999;
+                if ($is_compilation) {
+                   $song_info['notes'] = $this->file_info["tags"]["id3v2"]["artist"][0] ?? '';
+                }
                 $song_info['filesize'] = $this->file_info["filesize"] ?? 0;
                 $song_info['composer'] = '';
                 $song_info['playtime'] = $this->file_info["playtime_string"] ?? '';     
