@@ -4,23 +4,20 @@ namespace MySounds\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use MySounds\Artist as Artist;
-use MySounds\Song as Song;
+use MySounds\Music\Artist\Artist as Artist;
+use MySounds\Music\Song\Song as Song;
 
 class ArtistController extends Controller
 {
 
-  /**
+    /**
      * Display artists
      *
      * @return Response
      */
     public function index()
     {
-        // Work with Compilation/Compilations
-        // TODO move calls to Artist to Artist object and clean up Artist references
-        $artists = \MySounds\Artist::orderBy('artist')->paginate(10);
-        return view('artists', ['artists' => $artists]);
+        return view('artists', ['artists' => Artist::get_artists()]);
     }
 
     /**
@@ -41,65 +38,11 @@ class ArtistController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = $request->validate([
-            'artist' => 'required|max:255',
-        ]);
-
-        if (isset($request->id)){
-            $artist = \MySounds\Artist::findOrFail($request->id);
-        } else {
-            $artist = new \MySounds\Artist;
-        }
-
-        $artist->artist = $request->artist;
-        $artist->is_group = isset($request->is_group);
-        $artist->country = $request->country;
-        $artist->group_members = $request->group_members;
-        $artist->notes = $request->notes;
-        $artist->save();
+        Artist::store($request);
 
         $url = $request->only('redirects_to');
         $path = $url['redirects_to'] ?? '/artists';
         return redirect()->to($path);
-    }
-
-    /**
-     * Store an dynamically created artist in the database
-     *
-     * @param array $artist
-     * @return integer Artist id
-     */
-    public function dynamic_store(array $artist)
-    {
-        $_artist = new \MySounds\Artist;
-        $_artist->artist = $artist[0];
-        $_artist->is_group = $artist[1];
-        $_artist->country = $artist[2];
-        $_artist->save();
-        return $_artist->id;
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Does the artist exist
-     *
-     * @param  string $artist_name Artist name
-     * @return boolean
-     */
-    public function get_id($artist_name)
-    {
-        $artist = \MySounds\Artist::where("artist", $artist_name)->first();
-        return $artist->id ?? false;
     }
 
     /**
@@ -113,15 +56,14 @@ class ArtistController extends Controller
         $artist = Artist::find($id);
         $albums = null;
         if ($artist->artist === 'Compilations') {
-            $albums = Song::distinct('album')->where(["artist_id" => $id])->get(['album'])->toArray();
+            $albums = Song::get_artist_albums($id);
             array_unshift($albums, array('album' => 'Please Select'));
         }
-        $songs = Song::select('title')->where(["artist_id" => $id])->orderBy('title')->get();
         return view('artist', [
             'title'     => $artist->artist,
             'artist'    => $artist,
             'albums'    => $albums,
-            'songs'     => $songs,
+            'songs'     => Song::get_artist_songs($id),
             'countries' => get_country_names(),
         ]);
     }
@@ -164,12 +106,12 @@ class ArtistController extends Controller
                 return \DB::table('artists')
                     ->where('artist', 'LIKE', '%' . $query . '%')
                     ->orWhere('country', 'LIKE', '%' . $query . '%')
-                    ->paginate(10)
+                    ->paginate()
                     ->appends(['q' => $query])
                     ->setPath('');
             }
         } else {
-            return \MySounds\Artist::orderBy('artist')->paginate(10);
+            return Artist::orderBy('artist')->paginate();
         }
     }
 
@@ -210,7 +152,7 @@ class ArtistController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        \MySounds\Artist::findOrFail($id)->delete();
+        Artist::destroy($id);
         return back();
     }
 
