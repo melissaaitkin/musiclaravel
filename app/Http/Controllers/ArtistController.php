@@ -18,6 +18,7 @@ class ArtistController extends Controller
     public function index()
     {
         // Work with Compilation/Compilations
+        // TODO move calls to Artist to Artist object and clean up Artist references
         $artists = \MySounds\Artist::orderBy('artist')->paginate(10);
         return view('artists', ['artists' => $artists]);
     }

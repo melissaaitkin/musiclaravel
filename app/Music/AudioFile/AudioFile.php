@@ -1,0 +1,143 @@
+<?php 
+
+namespace MySounds\Music\AudioFile;
+
+class AudioFile implements AudioFileInterface {
+
+    /**
+     * @var string
+     */
+    private $file_type;
+
+    /**
+     * @var string
+     */
+    private $location;
+
+    /**
+     * @var string
+     */
+    private $filename;
+
+    /**
+     * @var bool
+     */
+    private $is_compilation;
+
+    /**
+     * @var array
+     */
+    private $file_info;
+
+	/**
+     * @param string $file_type
+     * @param string $location
+     * @param string $filename
+     * @param bool $is_compilation
+     * @param array $file_info
+     */
+    function __construct(String $file_type, String $location, String $filename, bool $is_compilation, array $file_info)
+    {
+        $this->file_type = $file_type;
+        $this->location = $location;
+        $this->filename = $filename;
+        $this->is_compilation = $is_compilation;
+        $this->file_info = $file_info;
+    }
+
+    /**
+     * Return song title.
+     *
+     * @return string
+     */
+    public function title() {
+        $title = '';
+        $idx = strrpos($this->filename, '.');
+        if ( $idx !== false ) {
+            $title = substr($this->filename, 0, $idx );
+        }
+        return $title;
+    }
+
+    /**
+     * Return year.
+     *
+     * @return integer
+     */
+    public function year() {
+        return 9999;
+    }
+
+    /**
+     * Return file_type.
+     *
+     * @return string
+     */
+    public function file_type() {
+        return $this->file_type;
+    }
+
+    /**
+     * Return track_no.
+     *
+     * @return string
+     */
+    public function track_no() {
+        return '';
+    }
+
+    /**
+     * Return genre.
+     *
+     * @return string
+     */
+    public function genre() {
+        return '';
+    }
+
+    /**
+     * Return file_size.
+     *
+     * @return integer
+     */
+    public function file_size() {
+        return $this->file_info['filesize'] ?? 0;
+    }
+
+    /**
+     * Require the composer method is implemented.
+     *
+     * @return string
+     */
+    public function composer() {
+        return '';
+    }
+        
+    /**
+     * Return playtime.
+     *
+     * @return string
+     */
+    public function playtime() {
+        return $this->file_info['playtime_string'] ?? '';  
+    }
+
+    /**
+     * Return file location.
+     *
+     * @return string
+     */
+    public function location() {
+        return $this->location;
+    }
+
+    /**
+     * Return notes.
+     *
+     * @return string
+     */
+    public function notes() {
+        return '';
+    }
+
+}

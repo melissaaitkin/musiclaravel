@@ -8,6 +8,9 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use MySounds\Song as Song;
+use MySounds\Music\AudioFile\AudioFile as AudioFile;
+use MySounds\Music\AudioFile\MP3 as MP3;
+use MySounds\Music\AudioFile\MP4 as MP4;
 use Storage;
 use File;
 use Exception;
@@ -16,7 +19,7 @@ use getID3;
 
 class SongController extends Controller
 {
-    private $file_types = [ 'mp3', 'm4a', 'wav', 'wma' ];
+    private $file_types = [ 'mp3', 'mp4', 'm4a', 'wav', 'wma' ];
 
     private $ID3_extractor;
 
@@ -38,6 +41,7 @@ class SongController extends Controller
     public function index()
     {
         // TODO add notes field to songs to describe conductor/orchestra of classical pieces.
+        // TODO move calls to Songs to Song object and clean up Song references.
         $songs = \DB::table('songs')
             ->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
             ->select('songs.*', 'artist')
@@ -110,20 +114,20 @@ class SongController extends Controller
     public function dynamic_store($path, $filename, $album_name, $artist_id, $is_compilation)
     {
         try {
-            $song_info = $this->retrieve_song_info($path, $filename, $is_compilation);
-            $_song = new \MySounds\Song;
-            $_song->title = $song_info['title'] ?? '';
+            $song = $this->retrieve_song_info($path, $filename, $is_compilation);
+            $_song = new Song;
+            $_song->title = $song->title();
             $_song->album = $album_name;
-            $_song->year = $song_info['year'] ?? 9999;
-            $_song->file_type = $song_info['file_type'] ?? '';
-            $_song->track_no = $song_info['track_no'] ?? '';
-            $_song->genre = $song_info['genre'] ?? '';
-            $_song->filesize = $song_info['filesize'] ?? 0;
-            $_song->composer = $song_info['composer'] ?? '';
-            $_song->playtime = $song_info['playtime'] ?? 0;
+            $_song->year = $song->year();
+            $_song->file_type = $song->file_type();
+            $_song->track_no = $song->track_no();
+            $_song->genre = $song->genre();
+            $_song->filesize = $song->file_size();
+            $_song->composer = $song->composer();
+            $_song->playtime = $song->playtime();
             $_song->location = $path;
             $_song->artist_id = $artist_id;
-            $_song->notes = $song_info['notes'] ?? '';
+            $_song->notes = $song->notes();
 
             $_song->save();
         } catch (Exception $e) {
@@ -267,21 +271,23 @@ class SongController extends Controller
      * @return array
      */
     private function retrieve_song_info($path, $filename, $is_compilation) {
-        $this->file_info = $this->ID3_extractor->analyze($path);
+        $file_info = $this->ID3_extractor->analyze($path);
 
-        if (isset($this->file_info['error'])) {
+        if (isset($file_info['error'])) {
             throw new Exception($this->file_info['error'][0]);
         }
-
-        $song_info = $this->extract_tag_info($is_compilation);
-        if ( empty( $song_info['title'] ) ) {
-            $idx = strrpos($filename, '.');
-            if ( $idx !== false ) {
-                $song_info['title'] = substr($filename, 0, $idx );
-            }
+        switch ($file_info['fileformat']) {
+            case "mp3":
+                $song = new MP3($path, $filename, $is_compilation, $file_info);
+                break;
+            case "mp4":
+                $song = new MP4($path, $filename, $is_compilation, $file_info);
+                break;
+            default:
+                $song = new AudioFile($file_info['fileformat'], $path, $filename, $is_compilation, $file_info);
+                break;
         }
-
-        return $song_info;
+        return $song;
     }
 
     public function is_song($file) {
@@ -291,46 +297,6 @@ class SongController extends Controller
           $result = true;
         }
         return $result;
-    }
-
-    // TODO CREATE mp3/mp4 songs objects
-    private function extract_tag_info($is_compilation) {
-        $song_info = [];
-        $song_info['file_type'] = $this->file_info['fileformat'];
-        switch ( $this->file_info['fileformat'] ) {
-            case "mp3":
-                $song_info['title'] = $this->file_info["tags"]["id3v2"]["title"][0] ?? '';
-                $song_info['genre'] = $this->file_info["tags"]["id3v2"]["genre"][0] ?? '';
-                $song_info['track_no'] = $this->file_info["tags"]["id3v2"]["track_number"][0] ?? '';
-                $song_info['year'] = $this->file_info["tags"]["id3v2"]["year"][0] ?? 9999;
-                if ($is_compilation) {
-                   $song_info['notes'] = $this->file_info["tags"]["id3v2"]["artist"][0] ?? '';
-                }
-                $song_info['filesize'] = $this->file_info["filesize"] ?? 0;
-                $song_info['composer'] = '';
-                $song_info['playtime'] = $this->file_info["playtime_string"] ?? '';     
-                break;
-            case "mp4":
-                $song_info['title'] = $this->file_info["quicktime"]["comments"]["title"][0] ?? '';
-                $song_info['genre'] = $this->file_info["quicktime"]["comments"]["genre"][0] ?? '';
-                $song_info['track_no'] = $this->file_info["quicktime"]["comments"]["track_number"][0] ?? '';
-                //1984-01-23T08:00:00Z
-                $date_str = $this->file_info["quicktime"]["comments"]["creation_date"][0] ?? '';
-                if (empty($date_str)) {
-                    $year = 9999;
-                } else {
-                    $date_time = new \DateTime($date_str);
-                    $year = $date_time->format('Y');
-                }
-                $song_info['year'] = $year;
-                $song_info['filesize'] = $this->file_info["filesize"] ?? 0;
-                $song_info['composer'] = $this->file_info["quicktime"]["comments"]["composer"][0] ?? '';  
-                $song_info['playtime'] = $this->file_info["playtime_string"] ?? '';                
-                break;   
-            default:
-                //no luck    
-        }
-        return $song_info;
     }
 
     public function play($id)
