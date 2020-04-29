@@ -140,7 +140,7 @@ class Song extends Model
      *
 	 * @param Request $request
      */
-    public static function store(Request $request)
+    public static function store($request)
     {
         $validator = $request->validate([
 			'title'	=> 'required|max:255',
@@ -259,8 +259,20 @@ class Song extends Model
 		return Song::distinct('album')->where(["artist_id" => $id])->get(['album'])->toArray();
 	}
 
-	public static function get_artist_songs($id) {
-		return Song::select('title')->where(["artist_id" => $id])->orderBy('title')->get();
+	/**
+	* Retrieve artist's songs.
+	*
+	* Retrieves the songs from the artist's albums and compilation albums.
+	*
+	* @param int  $id
+	* @param string $artist
+	*/
+	public static function get_artist_songs($id, $artist) {
+		return Song::select('title')
+			->where(["artist_id" => $id])
+			->orWhere(["notes" => $artist])
+			->orderBy('title')
+			->get();
 	}
 
 }

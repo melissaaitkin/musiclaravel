@@ -63,7 +63,7 @@ class ArtistController extends Controller
             'title'     => $artist->artist,
             'artist'    => $artist,
             'albums'    => $albums,
-            'songs'     => Song::get_artist_songs($id),
+            'songs'     => Song::get_artist_songs($id, $artist->artist),
             'countries' => get_country_names(),
         ]);
     }
