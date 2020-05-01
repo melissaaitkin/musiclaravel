@@ -155,8 +155,8 @@ class Artist extends Model
      */
     public static function get_id($artist_name)
     {
-        $artist = Artist::where("artist", $artist_name)->first();
-        return $artist->id ?? false;
+        $artist = Artist::where("artist", $artist_name)->first()->toArray();
+        return $artist['id'] ?? false;
     }
 
 
