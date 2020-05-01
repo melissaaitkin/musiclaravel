@@ -35,8 +35,8 @@
 
             @if(isset($albums))
             <div class="form-group">
-                <label for="album" class="col-sm-3 control-label">Albums</label>
-                <div class="col-sm-3">
+                <label for="album" class="col-sm-6 control-label">Albums</label>
+                <div class="col-sm-6">
                     <select class="form-control" name="album" id="album">
                         @foreach($albums as $album)
                             <option value="{{$album['album']}}">{{$album['album']}}</option>
@@ -47,8 +47,8 @@
             @endif
 
             <div class="form-group">
-                <label for="country" class="col-sm-3 control-label">Country</label>
-                <div class="col-sm-3">
+                <label for="country" class="col-sm-6 control-label">Country</label>
+                <div class="col-sm-6">
                     <select class="form-control" name="country">
 
                         @foreach($countries as $country)

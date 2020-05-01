@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/song.js') }}"></script>
+
 @section('content')
 
     <div class="panel-body mysound-submit-form-div">
@@ -14,7 +17,7 @@
             @if($song_exists)
             <div class="form-group">
                 <div class="col-sm-3">
-                    <a href="{{ route('song.play', array('slug' => $song->id)) }}" target="_blank">play</a>
+                    <a href="{{ route('song.play', array('slug' => $song->id)) }}" target="_blank" style="color:aqua;">play</a>
                     <i class="fa fa-music" style="color:aqua;"></i>
                     <i class="fa fa-music" style="color:aqua;"></i>
                     <i class="fa fa-music" style="color:aqua;"></i>

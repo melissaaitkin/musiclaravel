@@ -22,3 +22,4 @@ const app = new Vue({
 });
 
 window.Jquery = require('jquery');
+import 'jquery-ui/ui/widgets/dialog.js';

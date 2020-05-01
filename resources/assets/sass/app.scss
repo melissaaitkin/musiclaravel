@@ -6,11 +6,7 @@
 @import '~bootstrap/scss/bootstrap';
 
 @import "~font-awesome/scss/font-awesome.scss";
-
-//@import '~@fortawesome/fontawesome-free/scss/fontawesome';
-//@import '~@fortawesome/fontawesome-free/scss/brand';
-//@import '~@fortawesome/fontawesome-free/scss/regular';
-//@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~jquery-ui/themes/base/all.css';
 
 :root {
   --font-family-sans-serif: Helvetica, Arial, sans-serif;
@@ -56,4 +52,12 @@ body {
 
 .mysound-information-div ol li {
   list-style-type: none;
+}
+
+.form-control {
+  font-size: 12px;
+}
+
+.tr-playlist {
+  font-size: 12px;
 }

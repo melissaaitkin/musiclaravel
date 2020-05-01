@@ -81,6 +81,7 @@
                         <a href="{{ url('/home') }}">Home</a>
                         <a href="{{ url('/songs') }}">Songs</a>
                         <a href="{{ url('/artists') }}">Artists</a>
+                        <a href="{{ url('/playlists') }}">Playlists</a>
                         @if ( Auth::user()->id == 1)
                             <a href="{{ url('/utilities') }}">Utilities</a>
                         @endif

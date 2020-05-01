@@ -56,6 +56,8 @@ Route::middleware(['auth'])->group(function () {
 
 	Route::get('/home', 'SongController@index');
 
+	Route::get('/playlists', 'PlaylistController@index');
+
 });
 
 Auth::routes();
