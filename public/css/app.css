@@ -15495,7 +15495,13 @@ body {
   font-size: 12px;
 }
 
-.tr-playlist {
+.mysounds-tr {
   font-size: 12px;
+}
+
+.btn-mysounds {
+  font-size: 12px;
+  padding: 0px;
+  line-height: inherit;
 }
 

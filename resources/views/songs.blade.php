@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/song.js') }}"></script>
+
 @section('content')
 
     <div class="panel-body">
@@ -46,11 +49,12 @@
                         <th>Playtime</th>
                         <th>Composer</th>
                         <th>&nbsp;</th>
+                        <th>&nbsp;</th>
                     </thead>
 
                     <tbody>
                         @foreach ($songs as $song)
-                            <tr>
+                            <tr class="mysounds-tr">
                                 <td class="table-text">
                                     <div>{{ $song->title }}</div>
                                 </td>
@@ -78,6 +82,9 @@
                                 <td>
                                     {{ csrf_field() }}
                                     <a href="/song/{{ $song->id }}">edit</a>
+                                </td>
+                                <td>
+                                   <input type="button" class="btn btn-link btn-mysounds" id="playlist" value="playlist">
                                 </td>
                                 <td>
                                     <form action="/song/{{ $song->id }}" method="POST">

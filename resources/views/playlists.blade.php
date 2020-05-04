@@ -32,7 +32,7 @@
 
                     <tbody>
                         @foreach ($playlists as $title => $playlist)
-                            <tr class="tr-playlist">
+                            <tr class="mysounds-tr">
                                 <td class="table-text">
                                     <div id="playlist-title">{{ $title }}</div>
                                     <input type="hidden" name="playlist" id="playlist" value="{{ $playlist }}">

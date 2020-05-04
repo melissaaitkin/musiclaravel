@@ -1,9 +1,8 @@
 $(document).ready(function() {
 
-
 	$("#play").click(function() {
 
-		let base_url = 'http://mymusic/song/play/';
+		let base_url = APP_URL + '/song/play/';
 		let songs_obj = JSON.parse($('#playlist').val());
 		let songs = Object.keys(songs_obj).map((key) => [key, songs_obj[key]]);
 
