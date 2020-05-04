@@ -3,6 +3,8 @@
 namespace MySounds\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis as Redis;
+
 use MySounds\Music\Song\Song as Song;
 
 class PlaylistController extends Controller
@@ -15,15 +17,18 @@ class PlaylistController extends Controller
      */
     public function index()
     {
-        // TODO retrieve from Redis when add playlist functionality is added
-        $records = Song::get(['id','title'])->take(4)->toArray();
-        $songs = [];
-        foreach($records as $record) {
-            $songs[$record['id']] = $record['title'];
+
+        $playlists = [];
+        $records = json_decode(Redis::get('playlists'));
+        foreach ($records as $k => $v) {
+           $playlists[$k] = [];
+           $songs = [];
+           foreach ($v as $id => $title) {
+            $songs[$id] = $title;
+           }
+           $playlists[$k] = json_encode($songs);
         }
-        $playlists = [
-            'dance'  => json_encode($songs),
-        ];
+
         return view('playlists', ['playlists' => $playlists]);
     }
 

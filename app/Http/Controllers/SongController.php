@@ -5,8 +5,8 @@ namespace MySounds\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB as DB;
+
 use MySounds\Music\Song\Song as Song;
 use MySounds\Music\Artist\Artist as Artist;
 use Storage;
@@ -23,7 +23,7 @@ class SongController extends Controller
 	 */
 	public function index()
 	{
-		$songs = \DB::table('songs')
+		$songs = DB::table('songs')
 			->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
 			->select('songs.*', 'artist')
 			->paginate(10);
@@ -109,7 +109,7 @@ class SongController extends Controller
 	protected function retrieve_songs($query) {
 		if ($query != "") {
 			session()->put('songs_query', $query);
-			return \DB::table('songs')
+			return DB::table('songs')
 				->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
 				->select('songs.*', 'artist')
 				->where ( 'title', 'LIKE', '%' . $query . '%' )
@@ -120,7 +120,7 @@ class SongController extends Controller
 				->appends(['q' => $query])
 				->setPath('');
 		} else {
-			return \DB::table('songs')
+			return DB::table('songs')
 				->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
 				->select('songs.*', 'artist')
 				->paginate(10);

@@ -34,12 +34,12 @@
                         @foreach ($playlists as $title => $playlist)
                             <tr class="mysounds-tr">
                                 <td class="table-text">
-                                    <div id="playlist-title">{{ $title }}</div>
-                                    <input type="hidden" name="playlist" id="playlist" value="{{ $playlist }}">
+                                    <div name="playlist-title">{{ $title }}</div>
                                 </td>                                                             
                                 <td>
                                     {{ csrf_field() }}
-                                    <a href="#" id="play">play</a>
+                                    <a href="#" name="play">play</a>
+                                    <input type="hidden" name="playlist" value="{{ $playlist }}">
                                 </td>
                                 <td>
                                     <form action="/playlist/{{ $title }}" method="POST">

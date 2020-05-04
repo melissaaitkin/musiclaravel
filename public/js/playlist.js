@@ -1,9 +1,10 @@
 $(document).ready(function() {
 
-	$("#play").click(function() {
+	$("a[name='play']").click(function() {
 
+		let title = $(this).parent().prev('td').find('div').text();
 		let base_url = APP_URL + '/song/play/';
-		let songs_obj = JSON.parse($('#playlist').val());
+		let songs_obj = JSON.parse($(this).next('input').val());
 		let songs = Object.keys(songs_obj).map((key) => [key, songs_obj[key]]);
 
 		let playlist = '<div class="audio">';
@@ -20,7 +21,7 @@ $(document).ready(function() {
 		playlist += '</div>';
 
 		$(playlist).dialog({
-		  title: $('#playlist-title').text(),
+		  title: title,
 		  close: function() { 
 		  	$(this).remove()
 		  },
