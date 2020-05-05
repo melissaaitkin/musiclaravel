@@ -41,7 +41,7 @@
                                     <a href="#" name="play">play</a>
                                 </td>
                                 <td>
-                                    <form action="/playlist/{{ $playlist }}" method="POST">
+                                    <form action="/playlists/{{ $playlist }}" method="POST">
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
                                          <a href="javascript:;" onclick="parentNode.submit();">delete</a>
@@ -54,21 +54,4 @@
             </div>
         </div>
 
-        <div>
-            @if (Route::has('login'))
-                <div class="col-sm-3">
-                    @auth
-                        <a href="{{ url('/playlist') }}">Add</a>
-                    @endauth
-                </div>
-            @endif
-        </div>
-
-
 @endsection
-
-@push('scripts')
-<script>
-// your code
-</script>
-@endpush

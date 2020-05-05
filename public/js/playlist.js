@@ -6,7 +6,7 @@ $(document).ready(function() {
 
 		let playlist = $(this).parent().prev('td').find('div').text();
 
-		let url = '/api/playlist/songs?playlist=' + encodeURIComponent(playlist);
+		let url = '/api/playlists/songs?playlist=' + encodeURIComponent(playlist);
 
 		fetch(url, {
 				headers: {
@@ -20,8 +20,7 @@ $(document).ready(function() {
 						return;
 					}
 					response.json().then(function(data) {
-						songs = Object.keys(data.data).map((key) => [key, data.data[key]]);
-						// display_playlist(title, base_url, songs);
+						songs = Object.keys(data.songs).map((key) => [key, data.songs[key]]);
 						display_playlist(playlist, songs);
 					});
 				}

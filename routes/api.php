@@ -18,6 +18,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 // TODO add authentication
-Route::get('/song', 'SongController@all')->name('song');
+Route::get('/songs', 'SongController@all')->name('songs');
+Route::get('/songs/{id}', 'SongController@song')->name('songs.song');
 
-Route::get('/playlist/songs', 'PlaylistController@songs')->name('playlist.songs');
+Route::get('/playlists', 'PlaylistController@playlists')->name('playlists');
+Route::get('/playlists/songs', 'PlaylistController@songs')->name('playlists.songs');
+Route::post('/playlists', 'PlaylistController@save')->name('playlists.save');

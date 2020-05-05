@@ -58,6 +58,8 @@ Route::middleware(['auth'])->group(function () {
 
 	Route::get('/playlists', 'PlaylistController@index');
 
+	Route::delete('/playlists/{playlist}', 'PlaylistController@destroy')->name('playlists.destroy');
+
 });
 
 Auth::routes();

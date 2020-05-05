@@ -2,7 +2,7 @@ $(document).ready(function() {
 
 	$("#album").change(function() {
 
-		var url = '/api/song?album=' + encodeURIComponent($('#album').val());
+		var url = '/api/songs?album=' + encodeURIComponent($('#album').val());
 
 		fetch(url, {
 				headers: {
@@ -16,12 +16,12 @@ $(document).ready(function() {
 						return;
 					}
 					response.json().then(function(data) {
-						var songs = '<ol id="artist-songs">';
-						$.each(data, function(k, v) {
-							songs += '<li>' + v.title + '</li>';
+						var ol = '<ol id="artist-songs">';
+						$.each(data.songs, function(k, v) {
+							ol += '<li>' + v.title + '</li>';
 						});
-						songs += '</ol>';
-						$("#artist-songs").replaceWith(songs);
+						ol += '</ol>';
+						$("#artist-songs").replaceWith(ol);
 					});
 				}
 			)

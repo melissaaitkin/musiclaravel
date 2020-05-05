@@ -84,7 +84,7 @@
                                     <a href="/song/{{ $song->id }}">edit</a>
                                 </td>
                                 <td>
-                                   <input type="button" class="btn btn-link btn-mysounds" id="playlist" value="playlist">
+                                   <input type="button" class="btn btn-link btn-mysounds" name="playlist" id="playlist-{{ $song->id }}" value="playlist">
                                 </td>
                                 <td>
                                     <form action="/song/{{ $song->id }}" method="POST">
