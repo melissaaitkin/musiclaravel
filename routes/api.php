@@ -19,3 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 // TODO add authentication
 Route::get('/song', 'SongController@all')->name('song');
+
+Route::get('/playlist/songs', 'PlaylistController@songs')->name('playlist.songs');
