@@ -268,7 +268,7 @@ class Song extends Model
 	* @param string $artist
 	*/
 	public static function get_artist_songs($id, $artist) {
-		return Song::select('title')
+		return Song::select('id', 'title')
 			->where(["artist_id" => $id])
 			->orWhere(["notes" => $artist])
 			->orderBy('title')

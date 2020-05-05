@@ -95,7 +95,7 @@
         <h5 class="col-sm-3">Songs</h5>
         <ol id="artist-songs">
             @foreach($songs as $song)
-                <li>{{$song->title}}</li>
+                <li><a href="{{ url('/song') }}/{{ $song->id }}">{{ $song->title }}</a></li>
             @endforeach
         </ol>
     </div>

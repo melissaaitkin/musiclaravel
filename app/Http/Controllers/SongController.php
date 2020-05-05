@@ -154,9 +154,9 @@ class SongController extends Controller
 	{
 		// TODO use get_song_titles()
 		if (isset($request->album)) {
-			$songs = Song::where('album', '=', $request->album)->get(['title']);
+			$songs = Song::where('album', '=', $request->album)->get(['id', 'title']);
 		} else {
-			$songs = Song::all(['title']);
+			$songs = Song::all(['id', 'title']);
 		}
 		return ['songs' => $songs, 'status_code' => 200];
 	}

@@ -17,8 +17,8 @@ $(document).ready(function() {
 					}
 					response.json().then(function(data) {
 						var ol = '<ol id="artist-songs">';
-						$.each(data.songs, function(k, v) {
-							ol += '<li>' + v.title + '</li>';
+						$.each(data.songs, function(k, song) {
+							ol += '<li><a href="/song/' + song.id + '">' + song.title + '</a></li>';
 						});
 						ol += '</ol>';
 						$("#artist-songs").replaceWith(ol);
