@@ -1,12 +1,14 @@
 $(document).ready(function() {
 
-	var url = '/api/playlists';
+	var playlist_url = '/api/playlists';
+	var song_url = APP_URL + '/song/play/';
+
 	$("input[name='playlist']").click(function() {
 
 		let song_id = $(this).attr('id');
 		song_id = song_id.replace("playlist-", "");
 
-		fetch(url, {
+		fetch(playlist_url, {
 				headers: {
 			        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			    },
@@ -63,7 +65,7 @@ $(document).ready(function() {
 						$('#error_message').removeClass('d-none');
 					} else {
 						const data = {playlist: playlist, id: $('#song_id').val()};
-						fetch(url, {
+						fetch(playlist_url, {
 							method: 'POST',
 							headers: {
 								'Content-Type': 'application/json',
@@ -84,6 +86,83 @@ $(document).ready(function() {
 					$( this ).dialog( "close" );
 				}
 			}
+		})
+	}
+
+	$("input[name='play_album']").click(function() {
+		let song_id = $(this).attr('id');
+		song_id = song_id.replace("play-album-", "");
+
+		var url = '/api/songs?id=' + song_id + '&album=true';
+
+		fetch(url, {
+				headers: {
+			        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			    },
+		    })
+			.then(
+				function(response) {
+					if (response.status !== 200) {
+						console.log('Looks like there was a problem. Status Code: ' + response.status);
+						return;
+					}
+					response.json().then(function(data) {
+						display_album(data.songs[0].album, data.songs);
+					});
+				}
+			)
+			.catch(function(err) {
+				console.log('Fetch Error: ', err);
+		});
+
+	});
+
+	function display_album(album, songs) {
+		let playlist_form = '<div class="audio">';
+		playlist_form += '<figure>';
+		playlist_form += '<audio controls src="' + song_url + songs[0].id + '">Your browser does not support the<code>audio</code> element.</audio>';
+		playlist_form += '</figure>';
+
+		playlist_form += '<div>';
+		for (i = 0; i < songs.length; i++) {
+			playlist_form += '<span id="song-' + songs[i].id + '">' + songs[i].title + '</span><br>';
+		}
+		playlist_form += '</div>';
+		playlist_form += '</div>';
+
+		$(playlist_form).dialog({
+		  title: album,
+		  close: function() {
+			$(this).remove()
+		  },
+		  modal: false,
+		  width: 500,
+		  open : function() {
+			// Remove song that is already set
+			song = songs.shift();
+			// Add css styling
+			let previous_id = song.id;
+			$("#song-" + previous_id).addClass('font-weight-bold');
+			// Play
+			let audio = $(this).find('audio').get(0);
+			audio.play();
+
+			audio.addEventListener('ended',function() {
+				// Get next song
+				song = songs.shift();
+				if (song !== undefined) {
+					audio.src = song_url + song.id;
+					$("#current-song").text(song.title);
+					$("#song-" + previous_id).removeClass('font-weight-bold');
+					previous_id = song.id;
+					$("#song-" + previous_id).addClass('font-weight-bold');
+					audio.pause();
+					audio.load();
+					audio.play();
+				}
+			});
+
+		  }
 		})
 	}
 

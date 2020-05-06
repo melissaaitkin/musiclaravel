@@ -275,4 +275,27 @@ class Song extends Model
 			->get();
 	}
 
+    /**
+    * Retrieve album songs by song id.
+    *
+    * @param int $id
+    */
+    public static function get_album_songs_by_song_id($id) {
+        return Song::select('id', 'title', 'album')
+            ->where('artist_id', function($q1) use ($id)
+                {
+                    $q1->from('songs')
+                      ->select('artist_id')
+                      ->where('id', '=', $id);
+
+                })
+            ->where('album', function($q2)  use ($id)
+                {
+                    $q2->from('songs')
+                      ->select('album')
+                      ->where('id', '=', $id);
+                })
+            ->get();
+    }
+
 }

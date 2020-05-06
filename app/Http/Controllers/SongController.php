@@ -152,10 +152,16 @@ class SongController extends Controller
 
 	public function all(Request $request)
 	{
-		// TODO use get_song_titles()
 		if (isset($request->album)) {
-			$songs = Song::where('album', '=', $request->album)->get(['id', 'title']);
+			if (isset($request->id)) {
+				// Get songs in an album by song id
+				$songs = Song::get_album_songs_by_song_id($request->id);
+			} else {
+				// Get songs by album name
+				$songs = Song::where('album', '=', $request->album)->get(['id', 'title']);
+			}
 		} else {
+			// Get all songs
 			$songs = Song::all(['id', 'title']);
 		}
 		return ['songs' => $songs, 'status_code' => 200];

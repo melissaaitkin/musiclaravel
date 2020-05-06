@@ -45,9 +45,8 @@
                         <th>Album</th>
                         <th>Year</th>
                         <th>Genre</th>
-                        <th>Track No</th>
                         <th>Playtime</th>
-                        <th>Composer</th>
+                        <th>&nbsp;</th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
                     </thead>
@@ -71,20 +70,17 @@
                                     <div>{{ $song->genre }}</div>
                                 </td>
                                 <td class="table-text">
-                                    <div>{{ $song->track_no }}</div>
-                                </td>
-                                <td class="table-text">
                                     <div>{{ $song->playtime }}</div>
                                 </td>
-                                <td class="table-text">
-                                    <div>{{ $song->composer }}</div>
-                                </td>                                                                
                                 <td>
                                     {{ csrf_field() }}
                                     <a href="/song/{{ $song->id }}">edit</a>
                                 </td>
                                 <td>
-                                   <input type="button" class="btn btn-link btn-mysounds" name="playlist" id="playlist-{{ $song->id }}" value="playlist">
+                                   <input type="button" class="btn btn-link btn-mysounds" name="play_album" id="play-album-{{ $song->id }}" value="play album">
+                                </td>
+                                <td>
+                                   <input type="button" class="btn btn-link btn-mysounds" name="playlist" id="playlist-{{ $song->id }}" value="add to playlist">
                                 </td>
                                 <td>
                                     <form action="/song/{{ $song->id }}" method="POST">
