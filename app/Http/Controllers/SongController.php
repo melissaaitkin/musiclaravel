@@ -12,6 +12,7 @@ use MySounds\Music\Artist\Artist as Artist;
 use Storage;
 use File;
 use Exception;
+use Config;
 
 class SongController extends Controller
 {
@@ -162,6 +163,7 @@ class SongController extends Controller
 			}
 		} else {
 			// Get all songs
+			// FIXME handle malformed UTF8 characters
 			$songs = Song::all(['id', 'title']);
 		}
 		return ['songs' => $songs, 'status_code' => 200];
