@@ -135,6 +135,17 @@ class Song extends Model
      */
     const FILE_TYPES = ['mp3', 'mp4', 'm4a', 'wav', 'wma'];
 
+    /**
+     * Encode the song's title.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getTitleAttribute($value)
+    {
+        return utf8_encode($value);
+    }
+
 	/**
      * Create or update a song.
      *
