@@ -138,10 +138,21 @@ class Song extends Model
     /**
      * Encode the song's title.
      *
-     * @param  string  $value
+     * @param string $value
      * @return string
      */
     public function getTitleAttribute($value)
+    {
+        return utf8_encode($value);
+    }
+
+    /**
+     * Encode the song's location.
+     *
+     * @param string $value
+     * @return string
+     */
+    public function getLocationAttribute($value)
     {
         return utf8_encode($value);
     }
