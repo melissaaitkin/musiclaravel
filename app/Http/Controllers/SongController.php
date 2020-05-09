@@ -24,10 +24,10 @@ class SongController extends Controller
 	 */
 	public function index()
 	{
-		$songs = DB::table('songs')
-			->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
-			->select('songs.*', 'artist')
-			->paginate(10);
+		$songs = Song::leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
+		    ->select('songs.*','artist')
+		    ->paginate(10);
+
 		return view('songs', ['songs' => $songs]);
 	}
 
