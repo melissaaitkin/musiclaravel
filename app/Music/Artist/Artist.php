@@ -81,6 +81,17 @@ class Artist extends Model
      */
     protected $perPage = 10;
 
+    /**
+     * Encode the artist's name.
+     *
+     * @param string $value
+     * @return string
+     */
+    public function getArtistAttribute($value)
+    {
+        return utf8_encode($value);
+    }
+
 	/**
      * Returns artists
      *

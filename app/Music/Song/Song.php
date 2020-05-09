@@ -157,6 +157,17 @@ class Song extends Model
         return utf8_encode($value);
     }
 
+    /**
+     * Encode the song's artist.
+     *
+     * @param string $value
+     * @return string
+     */
+    public function getArtistAttribute($value)
+    {
+        return utf8_encode($value);
+    }
+
 	/**
      * Create or update a song.
      *
