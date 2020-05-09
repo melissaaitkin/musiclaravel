@@ -5,6 +5,7 @@ namespace MySounds\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB as DB;
 
 use MySounds\Music\Song\Song as Song;
@@ -150,8 +151,25 @@ class SongController extends Controller
 		}
 	}
 
+	/**
+	 * Retrieve all songs by various criteria
+	 *
+	 * @param Request
+	 * @return Response
+	 */
 	public function all(Request $request)
 	{
+		$validator = Validator::make($request->all(), [
+            'id'        => 'numeric',
+            'offset'   	=> 'numeric',
+            'limit'		=> 'numeric',
+        ]);
+
+        // Validate parameters
+        if ($validator->fails()):
+            return ['errors' => $validator->errors(), 'status_code' => 422];
+        endif;
+
 		if (isset($request->album)) {
 			if (isset($request->id)) {
 				// Get songs in an album by song id
@@ -161,9 +179,15 @@ class SongController extends Controller
 				$songs = Song::where('album', '=', $request->album)->get(['id', 'title']);
 			}
 		} else {
-			// Get all songs
-			$songs = Song::all(['id', 'title']);
+			if (isset($request->offset) && isset($request->limit)) {
+				// Get a segment of songs
+				$songs = Song::skip($request->offset)->take($request->limit)->get();
+			} else {
+				// Get all songs
+				$songs = Song::all(['id', 'title']);
+			}
 		}
+
 		return ['songs' => $songs, 'status_code' => 200];
 	}
 
