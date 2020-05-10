@@ -147,6 +147,16 @@ class Song extends Model
     }
 
     /**
+     * Encode the song's album.
+     *
+     * @param string $value
+     * @return string
+     */
+    public function getAlbumAttribute($value)
+    {
+        return utf8_encode($value);
+    }
+    /**
      * Encode the song's location.
      *
      * @param string $value
@@ -331,4 +341,29 @@ class Song extends Model
             ->get();
     }
 
+    /**
+    * Search for songs
+    *
+    * @param string $query
+    */
+    public static function search($query) {
+        return Song::select('songs.*', 'artist')
+            ->leftJoin('artists', 'artists.id', '=', 'songs.artist_id')
+            ->where('title', 'LIKE', '%' . $query . '%')
+            ->orWhere('artist', 'LIKE', '%' . $query . '%')
+            ->orWhere('album', 'LIKE', '%' . $query . '%')
+            ->orWhere('songs.notes', 'LIKE', '%' . $query . '%')
+            ->paginate()
+            ->appends(['q' => $query])
+            ->setPath('');
+    }
+
+    /**
+    * Retrieve subset of songs
+    */
+    public static function subset() {
+        return Song::select('songs.*', 'artist')
+            ->leftJoin('artists', 'artists.id', '=', 'songs.artist_id')
+            ->paginate();
+    }
 }

@@ -110,21 +110,9 @@ class SongController extends Controller
 	protected function retrieve_songs($query) {
 		if ($query != "") {
 			session()->put('songs_query', $query);
-			return DB::table('songs')
-				->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
-				->select('songs.*', 'artist')
-				->where ( 'title', 'LIKE', '%' . $query . '%' )
-				->orWhere ( 'artist', 'LIKE', '%' . $query . '%' )
-				->orWhere ( 'album', 'LIKE', '%' . $query . '%' )
-				->orWhere ( 'songs.notes', 'LIKE', '%' . $query . '%' )
-				->paginate(10)
-				->appends(['q' => $query])
-				->setPath('');
+			return Song::search($query);
 		} else {
-			return DB::table('songs')
-				->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
-				->select('songs.*', 'artist')
-				->paginate(10);
+			return Song::subset;
 		}
 	}
 
