@@ -51,6 +51,7 @@ services:
     volumes:
       - dbdata:/var/lib/mysql/
       - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - ./storage/backups/mymusic.sql:/etc/mysql/dump.sql
     networks:
       - app-network
 
