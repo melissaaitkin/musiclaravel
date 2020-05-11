@@ -21,6 +21,9 @@ class PlaylistController extends Controller
     public function index()
     {
         $playlists = unserialize(Redis::get('playlists'));
+        if (!$playlists) {
+            $playlists = [];
+        }
         return view('playlists', ['playlists' => array_keys($playlists)]);
     }
 
