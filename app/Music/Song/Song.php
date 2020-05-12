@@ -3,6 +3,7 @@
 namespace MySounds\Music\Song;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class Song extends Model
 {
@@ -365,5 +366,35 @@ class Song extends Model
         return Song::select('songs.*', 'artist')
             ->leftJoin('artists', 'artists.id', '=', 'songs.artist_id')
             ->paginate();
+    }
+
+    public static function songs(Request $request)
+    {
+        $model = new Song();
+
+        $query = $model->leftJoin('artists', 'artists.id', '=', 'songs.artist_id');
+        if (isset($request->album)) {
+            $query->where('album', '=', $request->album);
+        }
+
+        if (isset($request->artist_id)) {
+            $query->where('artist_id', '=', $request->artist_id);
+        }
+
+        if (isset($request->artist)) {
+            $query->orWhere("songs.notes", '=', $request->artist);
+        }
+
+        if (isset($request->offset) && isset($request->limit)) {
+            $query->skip($request->offset)->take($request->limit);
+        }
+
+        if (isset($request->all)) {
+            $songs = $query->get(['songs.*', 'artist']);
+        } else {
+           $songs = $query->get(['songs.id', 'songs.title', 'artists.artist']);
+        }
+
+        return $songs;
     }
 }

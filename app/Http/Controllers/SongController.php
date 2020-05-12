@@ -147,10 +147,9 @@ class SongController extends Controller
 	 */
 	public function all(Request $request)
 	{
-		// TODO Refactor
 		$validator = Validator::make($request->all(), [
             'id'        => 'numeric',
-            'artist'	=> 'numeric',
+            'artist_id'	=> 'numeric',
             'offset'   	=> 'numeric',
             'limit'		=> 'numeric',
         ]);
@@ -160,25 +159,11 @@ class SongController extends Controller
             return ['errors' => $validator->errors(), 'status_code' => 422];
         endif;
 
-		if (isset($request->album)) {
-			if (isset($request->id)) {
-				// Get songs in an album by song id
-				$songs = Song::get_album_songs_by_song_id($request->id);
-			} else {
-				// Get songs by album name
-				$songs = Song::where('album', '=', $request->album)->get(['id', 'title']);
-			}
-		} else if (isset($request->artist_id)) {
-			$artist = Artist::find($request->artist_id);
-			$songs = Song::get_artist_songs($request->artist_id, $artist->artist);
+		if (isset($request->album) && isset($request->id)) {
+			// Get songs in an album by song id
+			$songs = Song::get_album_songs_by_song_id($request->id);
 		} else {
-			if (isset($request->offset) && isset($request->limit)) {
-				// Get a segment of songs
-				$songs = Song::skip($request->offset)->take($request->limit)->get();
-			} else {
-				// Get all songs
-				$songs = Song::all(['id', 'title']);
-			}
+			$songs = Song::songs($request);
 		}
 
 		return ['songs' => $songs, 'status_code' => 200];

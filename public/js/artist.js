@@ -36,8 +36,7 @@ $(document).ready(function() {
 		artist_id = artist_id.replace("play-songs-", "");
 		let artist = $(this).closest('tr').find('div[name="artist_name"]').text();
 
-		let url = '/api/songs?artist_id=' + artist_id;
-
+		let url = '/api/songs?artist_id=' + artist_id + '&artist=' + encodeURIComponent(artist);
 
 		fetch(url, {
 				headers: {
