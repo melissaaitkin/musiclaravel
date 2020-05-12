@@ -71,12 +71,15 @@ class PlaylistController extends Controller
         endif;
 
         $records = unserialize(Redis::get('playlists'));
+        $data = [];
         foreach ($records as $playlist => $songs) {
-           if ($playlist === $request->playlist) {
-                $data = $songs;
-           }
+            if ($playlist === $request->playlist) {
+                foreach ($songs as $id => $title) {
+                    $data[] = ['id' => $id, 'title' => $title];
+                }
+                break;
+            }
         }
-
         return ['songs' => $data ?? null, 'status_code' => 200];
     }
 
