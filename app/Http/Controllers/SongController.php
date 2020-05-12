@@ -112,7 +112,7 @@ class SongController extends Controller
 			session()->put('songs_query', $query);
 			return Song::search($query);
 		} else {
-			return Song::subset;
+			return Song::subset();
 		}
 	}
 
@@ -147,8 +147,10 @@ class SongController extends Controller
 	 */
 	public function all(Request $request)
 	{
+		// TODO Refactor
 		$validator = Validator::make($request->all(), [
             'id'        => 'numeric',
+            'artist'	=> 'numeric',
             'offset'   	=> 'numeric',
             'limit'		=> 'numeric',
         ]);
@@ -166,6 +168,9 @@ class SongController extends Controller
 				// Get songs by album name
 				$songs = Song::where('album', '=', $request->album)->get(['id', 'title']);
 			}
+		} else if (isset($request->artist_id)) {
+			$artist = Artist::find($request->artist_id);
+			$songs = Song::get_artist_songs($request->artist_id, $artist->artist);
 		} else {
 			if (isset($request->offset) && isset($request->limit)) {
 				// Get a segment of songs

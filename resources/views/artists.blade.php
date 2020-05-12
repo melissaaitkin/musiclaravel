@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/artist.js') }}"></script>
+
 @section('content')
 
     <div class="panel-body">
@@ -43,14 +46,15 @@
                         <th>Country</th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
+                        <th>&nbsp;</th>
                     </thead>
 
                     <!-- Table Body -->
                     <tbody>
                         @foreach ($artists as $artist)
-                            <tr>
+                            <tr class="mysounds-tr">
                                 <td class="table-text">
-                                    <div>{{ $artist->artist }}</div>
+                                    <div name="artist_name">{{ $artist->artist }}</div>
                                 </td>
                                 <td class="table-text">
                                     <div>{{ $artist->country }}</div>
@@ -58,6 +62,9 @@
                                 <td>
                                     {{ csrf_field() }}
                                     <a href="/artist/{{ $artist->id }}">edit</a>
+                                </td>
+                                <td>
+                                   <input type="button" class="btn btn-link btn-mysounds" name="play_songs" id="play-songs-{{ $artist->id }}" value="play songs">
                                 </td>
                                 <td>
                                     <form action="/artist/{{ $artist->id }}" method="POST">
