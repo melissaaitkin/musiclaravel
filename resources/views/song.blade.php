@@ -17,7 +17,7 @@
             @if($song_exists)
             <div class="form-group">
                 <div class="col-sm-3">
-                    <a href="{{ route('song.play', array('slug' => $song->id)) }}" target="_blank" style="color:aqua;">play</a>
+                    <a href="/song/play/{{ $song->id }}" target="_blank" style="color:aqua;">play</a>
                     <i class="fa fa-music" style="color:aqua;"></i>
                     <i class="fa fa-music" style="color:aqua;"></i>
                     <i class="fa fa-music" style="color:aqua;"></i>
