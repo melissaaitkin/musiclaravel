@@ -3,6 +3,7 @@
 namespace MySounds\Music\Song;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class Song extends Model
 {
@@ -135,6 +136,49 @@ class Song extends Model
      */
     const FILE_TYPES = ['mp3', 'mp4', 'm4a', 'wav', 'wma'];
 
+    /**
+     * Encode the song's title.
+     *
+     * @param string $value
+     * @return string
+     */
+    public function getTitleAttribute($value)
+    {
+        return utf8_encode($value);
+    }
+
+    /**
+     * Encode the song's album.
+     *
+     * @param string $value
+     * @return string
+     */
+    public function getAlbumAttribute($value)
+    {
+        return utf8_encode($value);
+    }
+    /**
+     * Encode the song's location.
+     *
+     * @param string $value
+     * @return string
+     */
+    public function getLocationAttribute($value)
+    {
+        return utf8_encode($value);
+    }
+
+    /**
+     * Encode the song's artist.
+     *
+     * @param string $value
+     * @return string
+     */
+    public function getArtistAttribute($value)
+    {
+        return utf8_encode($value);
+    }
+
 	/**
      * Create or update a song.
      *
@@ -150,12 +194,12 @@ class Song extends Model
 
         $song = [];
         $song['title'] = $request->title;
-        $song['album'] = $request->album;
+        $song['album'] = utf8_decode($request->album);
         $song['year'] = $request->year;
         $song['file_type'] = $request->file_type;
         $song['track_no'] = $request->track_no;
         $song['genre'] = $request->genre;
-        $song['location'] = $request->location;
+        $song['location'] = utf8_decode($request->location);
         $song['artist_id'] = $request->artist_id;
         $song['filesize'] = $request->filesize ?? 0;
         $song['composer'] = $request->composer;
@@ -184,12 +228,12 @@ class Song extends Model
     {
         $_song = [];
         $_song['title'] = $song->title();
-        $_song['album'] = $album_name;
+        $_song['album'] = utf8_decode($album_name);
         $_song['year'] = $song->year();
         $_song['file_type'] = $song->file_type();
         $_song['track_no'] = $song->track_no();
         $_song['genre'] = $song->genre();
-        $_song['location'] = $path;
+        $_song['location'] = utf8_decode($path);
         $_song['artist_id'] = $artist_id;
         $_song['filesize'] = $song->file_size();
         $_song['composer'] = $song->composer();
@@ -298,4 +342,59 @@ class Song extends Model
             ->get();
     }
 
+    /**
+    * Search for songs
+    *
+    * @param string $query
+    */
+    public static function search($query) {
+        return Song::select('songs.*', 'artist')
+            ->leftJoin('artists', 'artists.id', '=', 'songs.artist_id')
+            ->where('title', 'LIKE', '%' . $query . '%')
+            ->orWhere('artist', 'LIKE', '%' . $query . '%')
+            ->orWhere('album', 'LIKE', '%' . $query . '%')
+            ->orWhere('songs.notes', 'LIKE', '%' . $query . '%')
+            ->paginate()
+            ->appends(['q' => $query])
+            ->setPath('');
+    }
+
+    /**
+    * Retrieve subset of songs
+    */
+    public static function subset() {
+        return Song::select('songs.*', 'artist')
+            ->leftJoin('artists', 'artists.id', '=', 'songs.artist_id')
+            ->paginate();
+    }
+
+    public static function songs(Request $request)
+    {
+        $model = new Song();
+
+        $query = $model->leftJoin('artists', 'artists.id', '=', 'songs.artist_id');
+        if (isset($request->album)) {
+            $query->where('album', '=', $request->album);
+        }
+
+        if (isset($request->artist_id)) {
+            $query->where('artist_id', '=', $request->artist_id);
+        }
+
+        if (isset($request->artist)) {
+            $query->orWhere("songs.notes", '=', $request->artist);
+        }
+
+        if (isset($request->offset) && isset($request->limit)) {
+            $query->skip($request->offset)->take($request->limit);
+        }
+
+        if (isset($request->all)) {
+            $songs = $query->get(['songs.*', 'artist']);
+        } else {
+           $songs = $query->get(['songs.id', 'songs.title', 'artists.artist']);
+        }
+
+        return $songs;
+    }
 }

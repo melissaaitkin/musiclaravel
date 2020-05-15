@@ -21,6 +21,9 @@ class PlaylistController extends Controller
     public function index()
     {
         $playlists = unserialize(Redis::get('playlists'));
+        if (!$playlists) {
+            $playlists = [];
+        }
         return view('playlists', ['playlists' => array_keys($playlists)]);
     }
 
@@ -68,12 +71,15 @@ class PlaylistController extends Controller
         endif;
 
         $records = unserialize(Redis::get('playlists'));
+        $data = [];
         foreach ($records as $playlist => $songs) {
-           if ($playlist === $request->playlist) {
-                $data = $songs;
-           }
+            if ($playlist === $request->playlist) {
+                foreach ($songs as $id => $title) {
+                    $data[] = ['id' => $id, 'title' => $title];
+                }
+                break;
+            }
         }
-
         return ['songs' => $data ?? null, 'status_code' => 200];
     }
 

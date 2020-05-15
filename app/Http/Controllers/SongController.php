@@ -5,6 +5,7 @@ namespace MySounds\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB as DB;
 
 use MySounds\Music\Song\Song as Song;
@@ -24,10 +25,10 @@ class SongController extends Controller
 	 */
 	public function index()
 	{
-		$songs = DB::table('songs')
-			->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
-			->select('songs.*', 'artist')
-			->paginate(10);
+		$songs = Song::leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
+		    ->select('songs.*','artist')
+		    ->paginate(10);
+
 		return view('songs', ['songs' => $songs]);
 	}
 
@@ -110,21 +111,9 @@ class SongController extends Controller
 	protected function retrieve_songs($query) {
 		if ($query != "") {
 			session()->put('songs_query', $query);
-			return DB::table('songs')
-				->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
-				->select('songs.*', 'artist')
-				->where ( 'title', 'LIKE', '%' . $query . '%' )
-				->orWhere ( 'artist', 'LIKE', '%' . $query . '%' )
-				->orWhere ( 'album', 'LIKE', '%' . $query . '%' )
-				->orWhere ( 'songs.notes', 'LIKE', '%' . $query . '%' )
-				->paginate(10)
-				->appends(['q' => $query])
-				->setPath('');
+			return Song::search($query);
 		} else {
-			return DB::table('songs')
-				->leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
-				->select('songs.*', 'artist')
-				->paginate(10);
+			return Song::subset();
 		}
 	}
 
@@ -151,21 +140,33 @@ class SongController extends Controller
 		}
 	}
 
+	/**
+	 * Retrieve all songs by various criteria
+	 *
+	 * @param Request
+	 * @return Response
+	 */
 	public function all(Request $request)
 	{
-		if (isset($request->album)) {
-			if (isset($request->id)) {
-				// Get songs in an album by song id
-				$songs = Song::get_album_songs_by_song_id($request->id);
-			} else {
-				// Get songs by album name
-				$songs = Song::where('album', '=', $request->album)->get(['id', 'title']);
-			}
+		$validator = Validator::make($request->all(), [
+            'id'        => 'numeric',
+            'artist_id'	=> 'numeric',
+            'offset'   	=> 'numeric',
+            'limit'		=> 'numeric',
+        ]);
+
+        // Validate parameters
+        if ($validator->fails()):
+            return ['errors' => $validator->errors(), 'status_code' => 422];
+        endif;
+
+		if (isset($request->album) && isset($request->id)) {
+			// Get songs in an album by song id
+			$songs = Song::get_album_songs_by_song_id($request->id);
 		} else {
-			// Get all songs
-			// FIXME handle malformed UTF8 characters
-			$songs = Song::all(['id', 'title']);
+			$songs = Song::songs($request);
 		}
+
 		return ['songs' => $songs, 'status_code' => 200];
 	}
 

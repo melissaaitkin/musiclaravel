@@ -13,4 +13,4 @@ It demonstrates my ability to:
 - work with node to pull jquery-ui and fontawesome packages into the application
 - cache data
 - create REST api functionality
-- serve up an application via valet and wamp
+- serve up an application via Valet, WampServer and Docker

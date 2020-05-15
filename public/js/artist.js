@@ -31,4 +31,33 @@ $(document).ready(function() {
 
   	});
 
+	$("input[name='play_songs']").click(function() {
+		let artist_id = $(this).attr('id');
+		artist_id = artist_id.replace("play-songs-", "");
+		let artist = $(this).closest('tr').find('div[name="artist_name"]').text();
+
+		let url = '/api/songs?artist_id=' + artist_id + '&artist=' + encodeURIComponent(artist);
+
+		fetch(url, {
+				headers: {
+			        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			    },
+		    })
+			.then(
+				function(response) {
+					if (response.status !== 200) {
+						console.log('Looks like there was a problem. Status Code: ' + response.status);
+						return;
+					}
+					response.json().then(function(data) {
+						display_jukebox(artist, data.songs);
+					});
+				}
+			)
+			.catch(function(err) {
+				console.log('Fetch Error: ', err);
+		});
+
+	});
+
 });
