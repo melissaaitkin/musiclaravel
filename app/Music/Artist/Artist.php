@@ -129,7 +129,7 @@ class Artist extends Model
         ]);
 
         $artist = [];
-        $artist['artist'] = $request->artist;
+        $artist['artist'] = utf8_decode($request->artist);
         $artist['is_group'] = isset($request->is_group);
         $artist['country'] = $request->country;
         $artist['group_members'] = $request->group_members;
@@ -152,7 +152,7 @@ class Artist extends Model
 	public static function dynamic_store(array $artist)
 	{
 		return Artist::insertGetId([
-			'artist' 	=> $artist[0],
+			'artist' 	=> utf8_decode($artist[0]),
 			'is_group' 	=> $artist[1],
 			'country' 	=> $artist[2],
 		]);
@@ -196,4 +196,17 @@ class Artist extends Model
         Artist::findOrFail($id)->delete();
     }
 
+    /**
+    * Search for artists
+    *
+    * @param string $query
+    */
+    public static function search($query) {
+        return Artist::select('artists.*')
+            ->where('artist', 'LIKE', '%' . $query . '%')
+            ->orWhere('country', 'LIKE', '%' . $query . '%')
+            ->paginate()
+            ->appends(['q' => $query])
+            ->setPath('');
+    }
 }

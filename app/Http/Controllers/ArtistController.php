@@ -103,12 +103,7 @@ class ArtistController extends Controller
             if ( stripos( $query, 'SELECT') === 0 ) {
                 return $this->admin_search($query);
             } else {
-                return \DB::table('artists')
-                    ->where('artist', 'LIKE', '%' . $query . '%')
-                    ->orWhere('country', 'LIKE', '%' . $query . '%')
-                    ->paginate()
-                    ->appends(['q' => $query])
-                    ->setPath('');
+                return Artist::search($query);
             }
         } else {
             return Artist::orderBy('artist')->paginate();
