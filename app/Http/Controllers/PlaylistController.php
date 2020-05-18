@@ -1,6 +1,6 @@
 <?php
 
-namespace MySounds\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Redis as Redis;
 
 use Log;
 
-use MySounds\Music\Song\Song as Song;
+use App\Music\Song\Song as Song;
 
 class PlaylistController extends Controller
 {

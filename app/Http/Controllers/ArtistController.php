@@ -1,11 +1,11 @@
 <?php
 
-namespace MySounds\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use MySounds\Music\Artist\Artist as Artist;
-use MySounds\Music\Song\Song as Song;
+use App\Music\Artist\Artist as Artist;
+use App\Music\Song\Song as Song;
 
 class ArtistController extends Controller
 {

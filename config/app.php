@@ -150,12 +150,12 @@ return [
         /*
          * Application Service Providers...
          */
-        MySounds\Providers\HelperServiceProvider::class,
-        MySounds\Providers\AppServiceProvider::class,
-        MySounds\Providers\AuthServiceProvider::class,
-        // MySounds\Providers\BroadcastServiceProvider::class,
-        MySounds\Providers\EventServiceProvider::class,
-        MySounds\Providers\RouteServiceProvider::class,
+        App\Providers\HelperServiceProvider::class,
+        App\Providers\AppServiceProvider::class,
+        App\Providers\AuthServiceProvider::class,
+        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\EventServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
 
     ],
 

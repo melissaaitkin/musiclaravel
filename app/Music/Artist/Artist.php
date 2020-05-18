@@ -1,6 +1,6 @@
 <?php
 
-namespace MySounds\Music\Artist;
+namespace App\Music\Artist;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;

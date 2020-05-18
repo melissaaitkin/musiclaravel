@@ -1,9 +1,9 @@
 <?php
 
-namespace MySounds\Http\Middleware;
+namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
-use MySounds\Music\ClientToken\ClientToken as ClientToken;
+use App\Music\ClientToken\ClientToken as ClientToken;
 use Closure;
 
 class ApiAuth

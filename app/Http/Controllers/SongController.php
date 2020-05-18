@@ -1,6 +1,6 @@
 <?php
 
-namespace MySounds\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -8,8 +8,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB as DB;
 
-use MySounds\Music\Song\Song as Song;
-use MySounds\Music\Artist\Artist as Artist;
+use App\Music\Song\Song as Song;
+use App\Music\Artist\Artist as Artist;
 use Storage;
 use File;
 use Exception;

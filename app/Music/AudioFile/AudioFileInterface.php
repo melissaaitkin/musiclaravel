@@ -1,6 +1,6 @@
 <?php 
 
-namespace MySounds\Music\AudioFile;
+namespace App\Music\AudioFile;
 
 interface AudioFileInterface {
 

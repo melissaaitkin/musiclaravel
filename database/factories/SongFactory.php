@@ -2,7 +2,7 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(MySounds\Song::class, function (Faker $faker) {
+$factory->define(App\Song::class, function (Faker $faker) {
     return [
         //
     ];

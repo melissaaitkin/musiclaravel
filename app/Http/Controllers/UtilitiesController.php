@@ -1,17 +1,17 @@
 <?php
 
-namespace MySounds\Http\Controllers;
+namespace App\Http\Controllers;
 
-use MySounds\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use Exception;
-use MySounds\Music\Artist\Artist as Artist;
-use MySounds\Music\Song\Song as Song;
-use MySounds\Music\AudioFile\AudioFile as AudioFile;
-use MySounds\Music\AudioFile\MP3 as MP3;
-use MySounds\Music\AudioFile\MP4 as MP4;
+use App\Music\Artist\Artist as Artist;
+use App\Music\Song\Song as Song;
+use App\Music\AudioFile\AudioFile as AudioFile;
+use App\Music\AudioFile\MP3 as MP3;
+use App\Music\AudioFile\MP4 as MP4;
 
 use getID3;
 

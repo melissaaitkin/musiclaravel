@@ -1,6 +1,6 @@
 <?php 
 
-namespace MySounds\Music\AudioFile;
+namespace App\Music\AudioFile;
 
 class AudioFile implements AudioFileInterface {
 

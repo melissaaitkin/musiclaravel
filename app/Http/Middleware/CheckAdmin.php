@@ -1,6 +1,6 @@
 <?php
 
-namespace MySounds\Http\Middleware;
+namespace App\Http\Middleware;
 
 use Illuminate\Support\Facades\Auth;
 use Closure;

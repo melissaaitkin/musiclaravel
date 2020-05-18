@@ -1,6 +1,6 @@
 <?php
 
-namespace MySounds\Music\ClientToken;
+namespace App\Music\ClientToken;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;

@@ -1,6 +1,6 @@
 <?php
 
-namespace MySounds\Providers;
+namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
