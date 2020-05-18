@@ -8,11 +8,7 @@ $(document).ready(function() {
 
 		let url = '/api/playlists/songs?playlist=' + encodeURIComponent(playlist);
 
-		fetch(url, {
-				headers: {
-			        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			    },
-		    })
+		fetch(url)
 			.then(
 				function(response) {
 					if (response.status !== 200) {

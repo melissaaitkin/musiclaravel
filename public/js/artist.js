@@ -2,13 +2,9 @@ $(document).ready(function() {
 
 	$("#album").change(function() {
 
-		var url = '/api/songs?album=' + encodeURIComponent($('#album').val());
+		var url = '/internalapi/songs?album=' + encodeURIComponent($('#album').val());
 
-		fetch(url, {
-				headers: {
-			        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			    },
-		    })
+		fetch(url)
 			.then(
 				function(response) {
 					if (response.status !== 200) {
@@ -36,13 +32,9 @@ $(document).ready(function() {
 		artist_id = artist_id.replace("play-songs-", "");
 		let artist = $(this).closest('tr').find('div[name="artist_name"]').text();
 
-		let url = '/api/songs?artist_id=' + artist_id + '&artist=' + encodeURIComponent(artist);
+		let url = '/internalapi/songs?artist_id=' + artist_id + '&artist=' + encodeURIComponent(artist);
 
-		fetch(url, {
-				headers: {
-			        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			    },
-		    })
+		fetch(url)
 			.then(
 				function(response) {
 					if (response.status !== 200) {

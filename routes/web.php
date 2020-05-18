@@ -60,6 +60,22 @@ Route::middleware(['auth'])->group(function () {
 
 	Route::delete('/playlists/{playlist}', 'PlaylistController@destroy')->name('playlists.destroy');
 
+
+
 });
+
+Route::middleware(['auth'])->prefix('internalapi')->group(function () {
+
+	Route::get('/songs', 'SongController@all');
+
+	Route::get('/songs/{id}', 'SongController@song');
+
+	Route::get('/playlists', 'PlaylistController@playlists');
+
+	Route::get('/playlists/songs', 'PlaylistController@songs');
+
+	Route::post('/playlists', 'PlaylistController@save');
+
+ });
 
 Auth::routes();

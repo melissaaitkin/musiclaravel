@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-	var playlist_url = '/api/playlists';
+	var playlist_url = '/internalapi/playlists';
 	var song_url = APP_URL + '/song/play/';
 
 	$("input[name='playlist']").click(function() {
@@ -8,11 +8,7 @@ $(document).ready(function() {
 		let song_id = $(this).attr('id');
 		song_id = song_id.replace("playlist-", "");
 
-		fetch(playlist_url, {
-				headers: {
-			        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			    },
-		    })
+		fetch(playlist_url)
 			.then(
 				function(response) {
 					if (response.status !== 200) {
@@ -69,6 +65,8 @@ $(document).ready(function() {
 							method: 'POST',
 							headers: {
 								'Content-Type': 'application/json',
+								'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+
 							},
 								body: JSON.stringify(data),
 							})
