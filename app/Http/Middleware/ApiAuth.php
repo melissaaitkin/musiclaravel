@@ -2,11 +2,9 @@
 
 namespace MySounds\Http\Middleware;
 
-use Closure;
-use Log;
-use Config;
-
 use Illuminate\Http\Request;
+use MySounds\Music\ClientToken\ClientToken as ClientToken;
+use Closure;
 
 class ApiAuth
 {
@@ -47,20 +45,27 @@ class ApiAuth
     }
 
     /**
-    * Compare token passed against valid keys.
+    * Does auth token exist for the client?
     * @return bool
     */
     private function validAuthentication()
     {
-        // Get the token from the request.
-        $tokenId = $this->request->get('authentication_token');
+        $token = $this->request->get('auth_token');
+        $client_id = $this->request->get('client_id');
+        if (!$token || !$client_id || !is_numeric($client_id)) {
+            return false;
+        }
 
-        // If there's no auth token matching that string just back out.
-        if(empty($tokenId)):
+        $client_token = ClientToken::where(["client_id" => $client_id])->get(['token'])->first();
+        if (!$client_token) {
+            return false;
+        }
+
+        if ($client_token->token == crypt($token, config('app.api_salt'))) {
             return true;
-        endif;
+        }
 
-        return true;
+        return false;
     }
 
 }

@@ -22,11 +22,16 @@ Route::group([
         'auth.mymusic.api',
     ],
 ], function () {
+
 	Route::get('/songs', 'SongController@all')->name('songs');
+
+	Route::get('/songs/{id}', 'SongController@song')->name('songs.song');
+
+	Route::get('/playlists', 'PlaylistController@playlists')->name('playlists');
+
+	Route::post('/playlists', 'PlaylistController@save')->name('playlists.save');
+
+	Route::get('/playlists/songs', 'PlaylistController@songs')->name('playlists.songs');
+
 });
 
-Route::get('/songs/{id}', 'SongController@song')->name('songs.song');
-
-Route::get('/playlists', 'PlaylistController@playlists')->name('playlists');
-Route::get('/playlists/songs', 'PlaylistController@songs')->name('playlists.songs');
-Route::post('/playlists', 'PlaylistController@save')->name('playlists.save');

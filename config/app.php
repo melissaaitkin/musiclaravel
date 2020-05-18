@@ -215,6 +215,6 @@ return [
     |
     */
 
-    'token' => env('TOKEN'),
+    'api_salt' => env('API_SALT'),
 
 ];
