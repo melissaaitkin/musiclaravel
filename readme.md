@@ -14,3 +14,4 @@ It demonstrates my ability to:
 - cache data
 - create REST api functionality
 - serve up an application via Valet, WampServer and Docker
+- add application test coverage via Codeception
