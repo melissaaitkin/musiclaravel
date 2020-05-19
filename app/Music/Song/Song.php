@@ -136,49 +136,6 @@ class Song extends Model
      */
     const FILE_TYPES = ['mp3', 'mp4', 'm4a', 'wav', 'wma'];
 
-    /**
-     * Encode the song's title.
-     *
-     * @param string $value
-     * @return string
-     */
-    public function getTitleAttribute($value)
-    {
-        return utf8_encode($value);
-    }
-
-    /**
-     * Encode the song's album.
-     *
-     * @param string $value
-     * @return string
-     */
-    public function getAlbumAttribute($value)
-    {
-        return utf8_encode($value);
-    }
-    /**
-     * Encode the song's location.
-     *
-     * @param string $value
-     * @return string
-     */
-    public function getLocationAttribute($value)
-    {
-        return utf8_encode($value);
-    }
-
-    /**
-     * Encode the song's artist.
-     *
-     * @param string $value
-     * @return string
-     */
-    public function getArtistAttribute($value)
-    {
-        return utf8_encode($value);
-    }
-
 	/**
      * Create or update a song.
      *
@@ -194,12 +151,12 @@ class Song extends Model
 
         $song = [];
         $song['title'] = $request->title;
-        $song['album'] = utf8_decode($request->album);
+        $song['album'] = $request->album;
         $song['year'] = $request->year;
         $song['file_type'] = $request->file_type;
         $song['track_no'] = $request->track_no;
         $song['genre'] = $request->genre;
-        $song['location'] = utf8_decode($request->location);
+        $song['location'] = $request->location;
         $song['artist_id'] = $request->artist_id;
         $song['filesize'] = $request->filesize ?? 0;
         $song['composer'] = $request->composer;
@@ -228,12 +185,12 @@ class Song extends Model
     {
         $_song = [];
         $_song['title'] = $song->title();
-        $_song['album'] = utf8_decode($album_name);
+        $_song['album'] = $album_name;
         $_song['year'] = $song->year();
         $_song['file_type'] = $song->file_type();
         $_song['track_no'] = $song->track_no();
         $_song['genre'] = $song->genre();
-        $_song['location'] = utf8_decode($path);
+        $_song['location'] = $path;
         $_song['artist_id'] = $artist_id;
         $_song['filesize'] = $song->file_size();
         $_song['composer'] = $song->composer();
