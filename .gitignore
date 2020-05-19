@@ -17,7 +17,11 @@ config/database.php
 codecept.phar
 tests/_data/
 tests/_output/
-tests/_support/
+tests/_support/_generated
+tests/_support/Helper/
+tests/_support/UnitTester.php
+tests/_support/FunctionalTester.php
+tests/_support/UnitTester.php
 tests/functional*
 tests/unit*
 
