@@ -11,5 +11,13 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 .env
+.env.testing
 config/database.php
 .gitignore
+codecept.phar
+tests/_data/
+tests/_output/
+tests/_support/
+tests/functional*
+tests/unit*
+
