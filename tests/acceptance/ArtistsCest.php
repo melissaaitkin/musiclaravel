@@ -8,8 +8,27 @@ class ArtistsCest
 
     public function tryArtistsPage(AcceptanceTester $I)
     {
-    	$I->login($I, $_ENV['TEST_EMAIL'], $_ENV['TEST_PW']);
-		$I->amOnPage('/artists');
-		$I->see('Current Artists');
-	}
+        $I->login($I);
+        $I->amOnPage('/artists');
+        $I->see('Current Artists');
+    }
+
+    public function tryViewEditArtistPage(AcceptanceTester $I)
+    {
+        $I->login($I);
+        $I->amOnPage('/artists');
+        $I->see('Current Artists');
+        $I->click('edit');
+        $I->see('Country');
+    }
+
+    public function tryPlayArtistsSongs(AcceptanceTester $I)
+    {
+        $I->login($I);
+        $I->amOnPage('/artists');
+        $I->click('play songs');
+        $I->wait(1);
+        $I->seeElement('audio');
+    }
+
 }
