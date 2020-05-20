@@ -6,7 +6,7 @@ $(document).ready(function() {
 
 		let playlist = $(this).parent().prev('td').find('div').text();
 
-		let url = '/api/playlists/songs?playlist=' + encodeURIComponent(playlist);
+		let url = '/internalapi/playlists/songs?playlist=' + encodeURIComponent(playlist);
 
 		fetch(url)
 			.then(

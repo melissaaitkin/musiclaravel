@@ -24,8 +24,9 @@ class AcceptanceTester extends \Codeception\Actor
     {
         $I->amOnPage('/');
         $I->click('Login');
+        $I->wait(1);
         $I->fillField('E-Mail Address', $email ?? $_ENV['TEST_EMAIL']);
         $I->fillField('Password', $password ?? $_ENV['TEST_PW']);
-        $I->click('Login', '.btn-primary');
+        $I->click('.btn-primary');
     }
 }
