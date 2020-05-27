@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-<script src="{{ asset('js/app.js') }}"></script>
-<script src="{{ asset('js/utilities.js') }}"></script>
-<script src="{{ asset('js/artist.js') }}"></script>
-
 @section('content')
 
     <div class="panel-body">
@@ -93,4 +89,8 @@
         </div>
 
 
+@endsection
+
+@section('scripts')
+    <script src="{{ asset('js/artist.js') }}"></script>
 @endsection

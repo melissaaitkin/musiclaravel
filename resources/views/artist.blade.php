@@ -1,8 +1,5 @@
 @extends('layouts.app')
 
-<script src="{{ asset('js/app.js') }}"></script>
-<script src="{{ asset('js/artist.js') }}"></script>
-
 @section('content')
 
     <div class="panel-body mysound-submit-form-div">
@@ -101,4 +98,8 @@
     </div>
     @endif
 
+@endsection
+
+@section('scripts')
+    <script src="{{ asset('js/artist.js') }}"></script>
 @endsection
