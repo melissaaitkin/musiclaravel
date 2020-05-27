@@ -130,6 +130,14 @@ class UtilitiesController extends Controller
 				if (Song::is_song($song)) {
 					$song_info = $this->retrieve_song_info($song, basename($song), $is_compilation);
 					Song::dynamic_store($song, $album_name, $artist_id, $song_info);
+					// If the song is in a compilation but the artist does not exist, add the artist.
+					if ($song_info->is_compilation()) {
+						if (!empty($song_info->notes())) {
+							if (!Artist::get_id($song_info->notes())) {
+								Artist::dynamic_store([$song_info->notes(), 1, 'To Set']);
+							}
+						}
+					}
 				}
 			}
 		}

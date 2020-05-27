@@ -138,4 +138,13 @@ class MP4 implements AudioFileInterface {
         return '';
     }
 
+    /**
+     * Return whether song is part of a compilation.
+     *
+     * @return bool
+     */
+    public function is_compilation() {
+        return $this->is_compilation;
+    }
+
 }
