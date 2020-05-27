@@ -15505,3 +15505,18 @@ body {
   line-height: inherit;
 }
 
+.mysounds-home-page {
+  background-image: url("/img/nightswimming.jpg");
+  background-size: cover;
+  border: 10px solid white;
+  border-radius: 25px;
+}
+
+.mysounds-home-page a {
+  font-size: 16px;
+}
+
+.mysounds-home-page-div {
+  padding: 30%;
+}
+

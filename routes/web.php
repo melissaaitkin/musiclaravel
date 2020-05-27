@@ -54,7 +54,7 @@ Route::middleware(['auth'])->group(function () {
 
 	Route::delete('/artist/{id}', 'ArtistController@destroy')->name('artist.destroy');
 
-	Route::get('/home', 'SongController@index');
+	Route::get('/home', 'HomeController@index');
 
 	Route::get('/playlists', 'PlaylistController@index');
 
