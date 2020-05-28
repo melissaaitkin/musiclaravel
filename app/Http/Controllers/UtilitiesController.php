@@ -47,7 +47,6 @@ class UtilitiesController extends Controller
 	 */
 	public function load_songs(Request $request)
 	{
-		// FIXME duplicates are still being created such as Clarence Carter - Patches (original name versus name retrieved from ID3 extractor)
 		try {
 			if (is_dir( $request->directory)) {
 				if (isset($request->entire_library)) {

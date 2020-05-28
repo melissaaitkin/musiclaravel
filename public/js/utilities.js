@@ -22,6 +22,9 @@ function display_jukebox(title, songs) {
 	  modal: false,
 	  width: 500,
 	  open : function() {
+
+		$('div.ui-dialog').addClass('ui-dialog-jukebox');
+
 		// Remove song that is already set
 		song = songs.shift();
 		// Add css styling
