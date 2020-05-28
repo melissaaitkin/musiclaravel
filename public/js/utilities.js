@@ -5,6 +5,7 @@ function display_jukebox(title, songs) {
 	jukebox_form += '<figure>';
 	jukebox_form += '<audio controls src="' + song_url + songs[0].id + '">Your browser does not support the<code>audio</code> element.</audio>';
 	jukebox_form += '</figure>';
+	jukebox_form += '<button class="next">Next</button>';
 
 	jukebox_form += '<div>';
 	for (i = 0; i < songs.length; i++) {
@@ -30,7 +31,17 @@ function display_jukebox(title, songs) {
 		let audio = $(this).find('audio').get(0);
 		audio.play();
 
+		let next = $(this).find('button.next').get(0);
+
 		audio.addEventListener('ended',function() {
+			previous_id = next_song(audio, next, previous_id);
+		});
+
+		next.addEventListener('click', function() {
+			previous_id = next_song(audio, next, previous_id);
+		});
+
+		function next_song(audio, next, previous_id) {
 			// Get next song
 			song = songs.shift();
 			if (song !== undefined) {
@@ -42,8 +53,11 @@ function display_jukebox(title, songs) {
 				audio.pause();
 				audio.load();
 				audio.play();
+				return previous_id;
+			} else {
+				 next.disabled = true;
 			}
-		});
+		}
 
 	  }
 	})

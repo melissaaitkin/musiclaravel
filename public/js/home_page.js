@@ -32,6 +32,7 @@ function play_songs(title, songs) {
 	jukebox_form += '<figcaption id="song_title">' +  songs[0].title + '</figcaption>';
 	jukebox_form += '<audio controls src="' + song_url + songs[0].id + '">Your browser does not support the<code>audio</code> element.</audio>';
 	jukebox_form += '</figure>';
+	jukebox_form += '<button class="next">Next</button>';
 	jukebox_form += '</div>';
 
 	$(jukebox_form).dialog({
@@ -49,6 +50,15 @@ function play_songs(title, songs) {
 		audio.play();
 
 		audio.addEventListener('ended',function() {
+			next_song(audio);
+		});
+
+		let next = $(this).find('button.next').get(0);
+		next.addEventListener('click', function() {
+			next_song(audio);
+		});
+
+		function next_song(audio) {
 			// Get next song
 			song = songs.shift();
 			if (song !== undefined) {
@@ -58,7 +68,7 @@ function play_songs(title, songs) {
 				audio.load();
 				audio.play();
 			}
-		});
+		}
 
 	  }
 	})
