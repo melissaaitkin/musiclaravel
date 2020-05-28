@@ -30,6 +30,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Local Partition to Use
+    |--------------------------------------------------------------------------
+    |
+    | Extra partition to retrieve files from local computer.
+    |
+    */
+
+    'partition' => env('LOCAL_PARTITION', 'partitionWin'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Filesystem Disks
     |--------------------------------------------------------------------------
     |
@@ -64,9 +75,14 @@ return [
             'url' => env('AWS_URL'),
         ],
 
-        'partitionC' => [
+        'partitionWin' => [
             'driver' => 'local',
             'root'   => 'C:/',
+        ],
+
+        'partitionMac' => [
+            'driver' => 'local',
+            'root'   => '/var/www/',
         ],
     ],
 

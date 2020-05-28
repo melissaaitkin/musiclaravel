@@ -74,7 +74,7 @@ class SongController extends Controller
 			'title'         => $song->title,
 			'artists'       => Artist::orderBy('artist')->get(['id', 'artist']),
 			'file_types'    => Song::FILE_TYPES,
-			'song_exists'   => Storage::disk('partitionC')->has($location),
+			'song_exists'   => Storage::disk(config('filesystems.partition'))->has($location),
 		]);
 	}
 
@@ -134,8 +134,8 @@ class SongController extends Controller
 		$song = Song::find($id);
 		$location = str_replace(array('C:\\', '\\'), array('', '/'), $song->location);
 		// TODO what to do with wma files
-		if (Storage::disk('partitionC')->has($location)) {
-			$contents = Storage::disk('partitionC')->get($location);
+		if (Storage::disk(config('filesystems.partition'))->has($location)) {
+			$contents = Storage::disk(config('filesystems.partition'))->get($location);
 			return response($contents, 200)->header("Content-Type", 'audio/mpeg');
 		}
 	}
