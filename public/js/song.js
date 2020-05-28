@@ -91,13 +91,9 @@ $(document).ready(function() {
 		let song_id = $(this).attr('id');
 		song_id = song_id.replace("play-album-", "");
 
-		var url = '/internalapi/songs?id=' + song_id + '&album=true&authentication_token=fdsafsf';
+		var url = '/internalapi/songs?id=' + song_id + '&album=true';
 
-		fetch(url, {
-				headers: {
-			        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			    },
-		    })
+		fetch(url)
 			.then(
 				function(response) {
 					if (response.status !== 200) {

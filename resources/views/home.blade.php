@@ -13,7 +13,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/utilities.js') }}"></script>
+    <script src="{{ asset('js/home_page.js') }}"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -30,7 +30,7 @@
             <div><a href="{{ url('/songs') }}">Songs</a></div>
             <div><a href="{{ url('/artists') }}">Artists</a></div>
             <div><a href="{{ url('/playlists') }}">Playlists</a></div>
-            <div><a href="#">Shuffle Songs</a></div>
+            <div><a href="#" name="shuffle_songs">Shuffle Songs</a></div>
             @if ( Auth::user()->id == 1)
                 <div><a href="{{ url('/utilities') }}">Utilities</a></div>
             @endif
@@ -48,3 +48,7 @@
 </body>
 
 </html>
+
+<script type="text/javascript">
+    var APP_URL = {!! json_encode(url('/')) !!}
+</script>
