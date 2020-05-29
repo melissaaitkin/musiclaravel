@@ -5,22 +5,23 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Log;
 
-class BackupDatabase extends Command
+class LoadDatabase extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'db:backup';
+    protected $signature = 'db:load';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Backup the database';
+    protected $description = 'Load database from backup';
 
     /**
      * Create a new command instance.
@@ -32,7 +33,7 @@ class BackupDatabase extends Command
         parent::__construct();
 
         $this->process = new Process(sprintf(
-            'mysqldump -u%s -p%s --port=%s %s --column-statistics=0 > %s',
+            'mysql -u%s -p%s --port=%s %s < %s',
             config('database.connections.mysql.username'),
             config('database.connections.mysql.password'),
             config('database.connections.mysql.port'),
@@ -51,9 +52,10 @@ class BackupDatabase extends Command
         try {
             $this->process->mustRun();
 
-            $this->info('The backup has been processed successfully.');
+            $this->info('The database load has been processed successfully.');
         } catch (ProcessFailedException $exception) {
-            $this->error('The backup process has been failed.');
+            Log::info($exception);
+            $this->error('The database load process has been failed.');
         }
     }
 }
