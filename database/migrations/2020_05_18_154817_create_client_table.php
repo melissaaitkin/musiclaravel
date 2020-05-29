@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateClientTokenTable extends Migration
+class CreateClientTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateClientTokenTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_token', function (Blueprint $table) {
+        Schema::create('clients', function (Blueprint $table) {
             $table->bigIncrements('client_id');
-            $table->string('token');
-            $table->dateTime('expires');
+            $table->string('client', 128)->unique();
+            $table->string('token', 128)->unique();
+            $table->dateTime('expires')->nullable();
         });
     }
 
@@ -27,6 +28,6 @@ class CreateClientTokenTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('client_token');
+        Schema::dropIfExists('clients');
     }
 }

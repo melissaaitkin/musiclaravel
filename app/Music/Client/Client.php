@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Music\ClientToken;
+namespace App\Music\Client;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
-class ClientToken extends Model
+class Client extends Model
 {
 
-    protected $table = 'client_token';
+    protected $table = 'clients';
 
 	/**
      * The primary key for the model.
@@ -16,6 +16,13 @@ class ClientToken extends Model
      * @var string
      */
     protected $client_id;
+
+    /**
+     * The client.
+     *
+     * @var string
+     */
+    protected $client;
 
     /**
      * The token.
