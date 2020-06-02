@@ -31,14 +31,14 @@
                         @foreach ($playlists as $playlist)
                             <tr class="mysounds-tr">
                                 <td class="table-text">
-                                    <div name="playlist-title">{{ $playlist }}</div>
+                                    <div name="playlist-title">{{ $playlist->name }}</div>
                                 </td>                                                             
                                 <td>
                                     {{ csrf_field() }}
                                     <a href="#" name="play">play</a>
                                 </td>
                                 <td>
-                                    <form action="/playlists/{{ $playlist }}" method="POST">
+                                    <form action="/playlists/{{ $playlist->name }}" method="POST">
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
                                          <a href="javascript:;" onclick="parentNode.submit();">delete</a>

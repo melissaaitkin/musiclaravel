@@ -38,7 +38,7 @@ $(document).ready(function() {
 		playlist_form += '<select id="existing_playlist">';
 		playlist_form += '<option value="">Please Select</option>';
 		$.each(playlists, function(index, playlist) {
-			playlist_form += '<option value="' + playlist + '">' + playlist + '</option>';
+			playlist_form += '<option value="' + playlist.name + '">' + playlist.name + '</option>';
 		});
 		playlist_form += '</select>';
 		playlist_form += '<div>Add to New Playlist</div>';

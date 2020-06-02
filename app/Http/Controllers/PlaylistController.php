@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Redis as Redis;
-
-use Log;
 
 use App\Music\Song\Song as Song;
+use App\Music\Playlist\Playlist;
 
+use Log;
 class PlaylistController extends Controller
 {
 
@@ -20,11 +19,8 @@ class PlaylistController extends Controller
      */
     public function index()
     {
-        $playlists = unserialize(Redis::get('playlists'));
-        if (!$playlists) {
-            $playlists = [];
-        }
-        return view('playlists', ['playlists' => array_keys($playlists)]);
+        $playlists = Playlist::get(['name']);
+        return view('playlists', ['playlists' => $playlists ?? []]);
     }
 
     /**
@@ -35,9 +31,7 @@ class PlaylistController extends Controller
      */
     public function destroy($playlist)
     {
-        $records = unserialize(Redis::get('playlists'));
-        unset($records[$playlist]);
-        Redis::set('playlists', serialize($records));
+        Playlist::where(['name' => $playlist])->delete();
         return redirect('/playlists');
     }
 
@@ -49,8 +43,8 @@ class PlaylistController extends Controller
      */
     public function playlists(Request $request)
     {
-        $playlists = unserialize(Redis::get('playlists'));
-        return ['playlists' => array_keys($playlists), 'status_code' => 200];
+        $playlists = Playlist::get(['name']);
+        return ['playlists' => $playlists, 'status_code' => 200];
     }
 
     /**
@@ -70,17 +64,8 @@ class PlaylistController extends Controller
             return ['errors' => $validator->errors(), 'status_code' => 422];
         endif;
 
-        $records = unserialize(Redis::get('playlists'));
-        $data = [];
-        foreach ($records as $playlist => $songs) {
-            if ($playlist === $request->playlist) {
-                foreach ($songs as $id => $title) {
-                    $data[] = ['id' => $id, 'title' => $title];
-                }
-                break;
-            }
-        }
-        return ['songs' => $data ?? null, 'status_code' => 200];
+        $playlist = Playlist::where(['name' => $request->playlist])->get(['playlist'])->toArray();
+        return ['songs' => json_decode($playlist[0]['playlist']), 'status_code' => 200];
     }
 
 
@@ -102,14 +87,18 @@ class PlaylistController extends Controller
             return ['errors' => $validator->errors(), 'status_code' => 422];
         endif;
 
-        $records = unserialize(Redis::get('playlists'));
-        if (!isset($records[$request->playlist])) {
-            $records[$request->playlist] = [];
-        }
-        $song = Song::find($request->id);
-        $records[$request->playlist][$request->id] = $song['title'];
+        $playlist = Playlist::firstOrNew(array('name' => $request->playlist));
+        $playlist->name = $request->playlist;
 
-        Redis::set('playlists', serialize($records));
+        $song = Song::find($request->id);
+        if(isset($playlist->playlist)) {
+            $existing_playlist = (array) json_decode($playlist->playlist);
+        } else {
+            $playlist->playlist = [];
+        }
+        $existing_playlist[] = ['id' => $request->id, 'title' => $song['title']];
+        $playlist->playlist = json_encode($existing_playlist);
+        $playlist->save();
 
         return ['status_code' => 200];
     }
