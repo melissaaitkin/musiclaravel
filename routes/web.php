@@ -60,7 +60,7 @@ Route::middleware(['auth'])->group(function () {
 
 	Route::delete('/playlists/{playlist}', 'PlaylistController@destroy')->name('playlists.destroy');
 
-
+	Route::get('/genres', 'GenreController@index');
 
 });
 
@@ -75,6 +75,8 @@ Route::middleware(['auth'])->prefix('internalapi')->group(function () {
 	Route::get('/playlists/songs', 'PlaylistController@songs');
 
 	Route::post('/playlists', 'PlaylistController@save');
+
+	Route::get('/genres/songs', 'GenreController@songs');
 
  });
 

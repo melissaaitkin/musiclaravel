@@ -31,9 +31,7 @@
             <div><a href="{{ url('/artists') }}">Artists</a></div>
             <div><a href="{{ url('/playlists') }}">Playlists</a></div>
             <div><a href="#" name="shuffle_songs">Shuffle Songs</a></div>
-            @if ( Auth::user()->id == 1)
-                <div><a href="{{ url('/utilities') }}">Utilities</a></div>
-            @endif
+            <div><a href="{{ url('/genres') }}">Genres</a></div>
             <div>
                 <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                     Logout
