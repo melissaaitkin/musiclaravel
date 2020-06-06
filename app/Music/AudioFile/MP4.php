@@ -50,6 +50,18 @@ class MP4 implements AudioFileInterface {
     }
 
     /**
+     * Return song artist.
+     *
+     * @return string
+     */
+    public function artist() {
+        $artist = $this->file_info["quicktime"]["comments"]["artist"][0] ?? '';
+        // Artist will be folder on computer, strip special characters
+        $artist = str_replace(["'", ":", "/", ";"], ["", " -", "-", " "], $artist);
+        return $artist;
+    }
+
+    /**
      * Return year.
      *
      * @return integer
@@ -76,7 +88,19 @@ class MP4 implements AudioFileInterface {
     }
 
     /**
-     * Require the track_no method is implemented.
+     * Return song album.
+     *
+     * @return string
+     */
+    public function album() {
+        $album = $this->file_info["quicktime"]["comments"]["album"][0] ?? 'Unknown Album';
+        // Album will be folder on computer, strip special characters
+        $album = str_replace(["'", ":"], ["", " -"], $album);
+        return $album;
+    }
+
+    /**
+     * Return track_no.
      *
      * @return string
      */

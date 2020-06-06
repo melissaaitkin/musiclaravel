@@ -48,17 +48,31 @@ class UtilitiesController extends Controller
 	public function load_songs(Request $request)
 	{
 		try {
-			if (is_dir( $request->directory)) {
-				if (isset($request->entire_library)) {
-					$this->process_media_directory($request->directory);
-				} else {
-					$dirs = explode('\\', $request->directory);
-					$artist_id = $this->process_artist($dirs[count($dirs)-1]);
-					$this->process_artist_directory($request->directory, $artist_id);
+			// Processing artists and albums inside the media directory
+			if (!empty($request->media_directory)) {
+				if (is_dir( $request->media_directory)) {
+					if (isset($request->entire_library)) {
+						$this->process_media_directory($request->media_directory);
+					} else {
+						$dirs = explode('\\', $request->media_directory);
+						$artist_id = $this->process_artist($dirs[count($dirs)-1]);
+						$this->process_artist_directory($request->media_directory, $artist_id);
 
+					}
+				} else {
+					return view('utilities')->withErrors(['This is not a valid directory']);
 				}
-			} else {
-				return view('utilities')->withErrors(['This is not a valid directory']);
+			}
+			// Processing songs inside a random directory
+			if (!empty($request->random_directory)) {
+				if (is_dir( $request->random_directory)) {
+					$scan_songs = glob($request->random_directory . '/*');
+					foreach($scan_songs as $song) {
+						$this->process_song_and_artist($song);
+					}
+				} else {
+					return view('utilities')->withErrors(['This is not a valid directory']);
+				}
 			}
 		} catch (Exception $e) {
 			return view('utilities')->withErrors([$e->getMessage()]);
@@ -149,6 +163,38 @@ class UtilitiesController extends Controller
             $song_info = $this->retrieve_song_info($song, basename($song), $is_compilation);
 			Song::dynamic_store($song, 'To Set', $artist_id, $song_info);
 		}
+	}
+
+	private function process_song_and_artist(string $song) {
+		// TODO Add base directory in blade
+		// TODO use php dir separator
+		$song_info = $this->retrieve_song_info($song, basename($song), false);
+		$base = "C:\Users\melis\Music\iTunes\iTunes Media\Music\\";
+		$artist_id = Artist::get_id($song_info->artist());
+		if (!$artist_id) {
+			// Create artist in database.
+			$artist_id = Artist::dynamic_store([$song_info->artist(), 1, 'To Set']);
+		}
+		// Artist might exist in a compilation, so also check for a physical folder.
+		if (!file_exists($base. $song_info->artist())) {
+			// Create artist folder in media library.
+			mkdir($base . $song_info->artist());
+		}
+		if (!file_exists($base. $song_info->artist() . "\\" . $song_info->album())) {
+			// Create album folder under artist in media library.
+			mkdir($base . $song_info->artist() . "\\" . $song_info->album());
+		}
+		if (!Song::does_song_exist($artist_id, $song_info->title())) {
+			$new_song_location = $base . $song_info->artist() . "\\" . $song_info->album() . "\\" . $song_info->title() . "." . $song_info->file_type(); 
+			// Create song in database.
+			Song::dynamic_store($new_song_location, $song_info->album(), $artist_id, $song_info);
+			// Move the song to the media library if it does not already exist.
+			rename($song, $new_song_location);
+		} else {
+			// Song already exists, delete this one
+			unlink($song);
+		}
+		exit;
 	}
 
     /**

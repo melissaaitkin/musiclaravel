@@ -104,7 +104,7 @@
             <div class="form-group">
                 <label for="composer" class="col-sm-3 control-label">Composer</label>
 
-                <div class="col-sm-3">
+                <div class="col-sm-6">
                     <input type="text" name="composer" id="song-composer" class="form-control" @if( ! empty($song->composer)) value="{{$song->composer}}" @endif>
                 </div>
             </div>
