@@ -28,6 +28,10 @@ Route::middleware(['auth'])->group(function () {
 
 	Route::post('/load', 'UtilitiesController@load_songs');
 
+	Route::get("/settings", "SettingsController@index");
+
+	Route::post('/settings', 'SettingsController@settings');
+
 	Route::get('/songs', 'SongController@index');
 
 	Route::any('/songs/search', 'SongController@search');

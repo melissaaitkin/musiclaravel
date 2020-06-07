@@ -83,6 +83,9 @@
                                             <a class="dropdown-item" href="{{ url('/utilities') }}">
                                                  {{ __('Utilities') }}
                                             </a>
+                                            <a class="dropdown-item" href="{{ url('/settings') }}">
+                                                 {{ __('Settings') }}
+                                            </a>
                                         @endif
                                     @endauth
                                 </div>

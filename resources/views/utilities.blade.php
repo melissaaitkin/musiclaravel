@@ -15,16 +15,15 @@
         <form action="/load" method="POST" class="form-horizontal">
             {{ csrf_field() }}
 
-
             <div class="border border-dark pt-3 ml-3 mb-4">
 
                 <h6 class="col-sm-6">Load Songs from Media Library</h6>
 
                 <div class="form-group">
-                    <label for="directory" class="col-sm-3 control-label">Directory</label>
+                    <label for="directory" class="col-sm-3 control-label">Artist Directory</label>
 
                     <div class="col-sm-6">
-                        <input type="text" name="media_directory" id="media_directory" class="form-control">
+                        <input type="text" name="artist_directory" id="artist_directory" class="form-control">
                     </div>
                 </div>
 

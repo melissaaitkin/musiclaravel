@@ -49,14 +49,14 @@ class UtilitiesController extends Controller
 	{
 		try {
 			// Processing artists and albums inside the media directory
-			if (!empty($request->media_directory)) {
-				if (is_dir( $request->media_directory)) {
+			if (!empty($request->artist_directory)) {
+				if (is_dir( $request->artist_directory)) {
 					if (isset($request->entire_library)) {
-						$this->process_media_directory($request->media_directory);
+						$this->process_media_directory();
 					} else {
-						$dirs = explode('\\', $request->media_directory);
+						$dirs = explode('\\', $request->artist_directory);
 						$artist_id = $this->process_artist($dirs[count($dirs)-1]);
-						$this->process_artist_directory($request->media_directory, $artist_id);
+						$this->process_artist_directory($request->artist_directory, $artist_id);
 
 					}
 				} else {
@@ -83,12 +83,11 @@ class UtilitiesController extends Controller
 	/**
 	 * Loop over sub directories and insert artists and songs
 	 *
-	 * @param  string $path
 	 * @return Result
 	 */
-	private function process_media_directory($path) {
+	private function process_media_directory() {
 		$result = [];
-		$scan_items = glob($path . '/*');
+		$scan_items = glob(Redis::get('media_directory') . '/*');
 		foreach($scan_items as $item){
 			if (is_dir($item)) {
 				$artist_id = $this->process_artist($item);
