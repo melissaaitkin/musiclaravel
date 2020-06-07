@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB as DB;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 
-use App\Music\Song\Song as Song;
-use App\Music\Artist\Artist as Artist;
+use App\Music\Song\Song;
+use App\Music\Artist\Artist;
+
 use Storage;
 use File;
 use Exception;
@@ -17,6 +19,21 @@ use Config;
 
 class SongController extends Controller
 {
+
+	/**
+     * The media directory
+     *
+     * @var string
+     */
+    private $media_directory;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->media_directory = Redis::get('media_directory');
+    }
 
 	/**
 	 * Display songs
@@ -68,13 +85,12 @@ class SongController extends Controller
 	public function edit($id)
 	{
 		$song = Song::find($id);
-		$location = str_replace(array('C:\\', '\\'), array('', '/'), $song->location);
 		return view('song', [
 			'song'          => $song,
 			'title'         => $song->title,
 			'artists'       => Artist::orderBy('artist')->get(['id', 'artist']),
 			'file_types'    => Song::FILE_TYPES,
-			'song_exists'   => Storage::disk(config('filesystems.partition'))->has($location),
+			'song_exists'   => Storage::disk(config('filesystems.partition'))->has($this->media_directory . $song->location),
 		]);
 	}
 
@@ -132,7 +148,7 @@ class SongController extends Controller
 	public function play($id)
 	{
 		$song = Song::find($id);
-		$location = str_replace(array('C:\\', '\\'), array('', '/'), $song->location);
+		$location = $this->media_directory . $song->location;
 		// TODO what to do with wma files
 		if (Storage::disk(config('filesystems.partition'))->has($location)) {
 			$contents = Storage::disk(config('filesystems.partition'))->get($location);

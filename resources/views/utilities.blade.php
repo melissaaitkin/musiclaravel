@@ -19,6 +19,10 @@
 
                 <h6 class="col-sm-6">Load Songs from Media Library</h6>
 
+                <div class="form-group pt-1">
+                    <label for="directory" class="col-sm-6 control-label">Media Library: @if (!empty($media_directory)) {{$media_directory}} @endif</label>
+                </div>
+
                 <div class="form-group">
                     <label for="directory" class="col-sm-3 control-label">Artist Directory</label>
 

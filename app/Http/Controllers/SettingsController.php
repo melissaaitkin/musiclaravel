@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 
+use Storage;
+
 class SettingsController extends Controller
 {
 
@@ -30,10 +32,11 @@ class SettingsController extends Controller
 		try {
 
 			if (!empty($request->media_directory)) {
-				if (is_dir( $request->media_directory)) {
+				if (Storage::disk(config('filesystems.partition'))->has($request->media_directory)) {
 					Redis::set('media_directory', $request->media_directory);
 				} else {
-					return view('settings')->withErrors(['This is not a valid directory']);
+					return view('settings', ['media_directory' => $request->media_directory])
+						->withErrors(['This is not a valid directory']);
 				}
 			}
 

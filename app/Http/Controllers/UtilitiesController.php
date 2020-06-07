@@ -5,21 +5,29 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
-use Exception;
-use App\Music\Artist\Artist as Artist;
-use App\Music\Song\Song as Song;
-use App\Music\AudioFile\AudioFile as AudioFile;
-use App\Music\AudioFile\MP3 as MP3;
-use App\Music\AudioFile\MP4 as MP4;
+use Illuminate\Support\Facades\Redis;
 
 use getID3;
+use Exception;
+use Log;
 
+use App\Music\Artist\Artist;
+use App\Music\Song\Song;
+use App\Music\AudioFile\AudioFile;
+use App\Music\AudioFile\MP3;
+use App\Music\AudioFile\MP4;
 
 class UtilitiesController extends Controller
 {
 
     private $ID3_extractor;
+
+	/**
+     * The media directory
+     *
+     * @var string
+     */
+    private $media_directory;
 
      /**
      * Constructor
@@ -27,6 +35,7 @@ class UtilitiesController extends Controller
     public function __construct()
     {
         $this->ID3_extractor = new \getID3;
+        $this->media_directory = Redis::get('media_directory');
     }
 
     /**
@@ -36,7 +45,7 @@ class UtilitiesController extends Controller
 	 */
 	public function index()
 	{
-		return view('utilities');
+		return view('utilities', ['media_directory' => $this->media_directory]);
 	}
 
 	/**
@@ -48,6 +57,10 @@ class UtilitiesController extends Controller
 	public function load_songs(Request $request)
 	{
 		try {
+			// Check media library has been set
+			if (empty($this->media_directory)) {
+				return view('utilities')->withErrors(["The media library needs to be set at <a href='/settings'>Settings</a>"]);
+			}
 			// Processing artists and albums inside the media directory
 			if (!empty($request->artist_directory)) {
 				if (is_dir( $request->artist_directory)) {
@@ -65,7 +78,7 @@ class UtilitiesController extends Controller
 			}
 			// Processing songs inside a random directory
 			if (!empty($request->random_directory)) {
-				if (is_dir( $request->random_directory)) {
+				if (is_dir($request->random_directory)) {
 					$scan_songs = glob($request->random_directory . '/*');
 					foreach($scan_songs as $song) {
 						$this->process_song_and_artist($song);
@@ -164,31 +177,35 @@ class UtilitiesController extends Controller
 		}
 	}
 
+	/**
+	 * Add artists and songs to the database from a temporary directory and
+	 * move the songs into the media library
+	 *
+	 * @param String $song Song name including path
+	 */
 	private function process_song_and_artist(string $song) {
-		// TODO Add base directory in blade
 		// TODO use php dir separator
 		$song_info = $this->retrieve_song_info($song, basename($song), false);
-		$base = "C:\Users\melis\Music\iTunes\iTunes Media\Music\\";
 		$artist_id = Artist::get_id($song_info->artist());
 		if (!$artist_id) {
 			// Create artist in database.
 			$artist_id = Artist::dynamic_store([$song_info->artist(), 1, 'To Set']);
 		}
 		// Artist might exist in a compilation, so also check for a physical folder.
-		if (!file_exists($base. $song_info->artist())) {
+		if (!file_exists($this->media_directory . $song_info->artist())) {
 			// Create artist folder in media library.
-			mkdir($base . $song_info->artist());
+			mkdir($this->media_directory . $song_info->artist());
 		}
-		if (!file_exists($base. $song_info->artist() . "\\" . $song_info->album())) {
+		if (!file_exists($this->media_directory. $song_info->artist() . "\\" . $song_info->album())) {
 			// Create album folder under artist in media library.
-			mkdir($base . $song_info->artist() . "\\" . $song_info->album());
+			mkdir($this->media_directory . $song_info->artist() . "\\" . $song_info->album());
 		}
 		if (!Song::does_song_exist($artist_id, $song_info->title())) {
-			$new_song_location = $base . $song_info->artist() . "\\" . $song_info->album() . "\\" . $song_info->title() . "." . $song_info->file_type(); 
-			// Create song in database.
+			$new_song_location = $song_info->artist() . "\\" . $song_info->album() . "\\" . $song_info->title() . "." . $song_info->file_type(); 
+			// Create song in datathis->media_directory.
 			Song::dynamic_store($new_song_location, $song_info->album(), $artist_id, $song_info);
 			// Move the song to the media library if it does not already exist.
-			rename($song, $new_song_location);
+			rename($song, $this->media_directory . $new_song_location);
 		} else {
 			// Song already exists, delete this one
 			unlink($song);
@@ -208,7 +225,8 @@ class UtilitiesController extends Controller
         $file_info = $this->ID3_extractor->analyze($path);
 
         if (isset($file_info['error'])) {
-            throw new Exception($this->file_info['error'][0]);
+			Log::error($file_info['error'][0]);
+            throw new Exception($file_info['error'][0]);
         }
         switch ($file_info['fileformat']) {
             case "mp3":
