@@ -77,7 +77,7 @@ return [
 
         'partitionWin' => [
             'driver' => 'local',
-            'root'   => 'C:/',
+            'root'   => 'C:\\',
         ],
 
         'partitionMac' => [
