@@ -197,6 +197,11 @@ class UtilitiesController extends Controller
             $song_info = $this->retrieve_song_info($song, basename($song), false);
 
             Log::info("Artist " . $song_info->artist());
+
+            if (empty($song_info->artist())) {
+                throw new Exception("Error processing " . $song . ": unknown artist");
+            }
+
             $artist_id = Artist::get_id($song_info->artist());
 
             // Process artist

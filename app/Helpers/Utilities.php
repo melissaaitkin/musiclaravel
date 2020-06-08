@@ -20,3 +20,10 @@ function get_country_names()
     }
     return Cache::store('redis')->get('country_names');
 }
+
+/**
+ * Replaces characters file systems cannot process
+ */
+function replace_special_file_system_chars(String $string) {
+    return str_replace(["'", ":", "/", ";", "?"], ["", " -", "-", " ", ""], $string);
+}

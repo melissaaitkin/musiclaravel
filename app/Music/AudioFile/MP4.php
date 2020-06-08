@@ -46,7 +46,8 @@ class MP4 implements AudioFileInterface {
      * @return string
      */
     public function title() {
-        return $this->file_info["quicktime"]["comments"]["title"][0] ?? '';
+        $title = $this->file_info["quicktime"]["comments"]["title"][0] ?? '';
+        return replace_special_file_system_chars($title);
     }
 
     /**
@@ -56,9 +57,7 @@ class MP4 implements AudioFileInterface {
      */
     public function artist() {
         $artist = $this->file_info["quicktime"]["comments"]["artist"][0] ?? '';
-        // Artist will be folder on computer, strip special characters
-        $artist = str_replace(["'", ":", "/", ";"], ["", " -", "-", " "], $artist);
-        return $artist;
+        return replace_special_file_system_chars($artist);
     }
 
     /**
@@ -94,9 +93,7 @@ class MP4 implements AudioFileInterface {
      */
     public function album() {
         $album = $this->file_info["quicktime"]["comments"]["album"][0] ?? 'Unknown Album';
-        // Album will be folder on computer, strip special characters
-        $album = str_replace(["'", ":"], ["", " -"], $album);
-        return $album;
+        return replace_special_file_system_chars($album);
     }
 
     /**
