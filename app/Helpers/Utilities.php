@@ -26,8 +26,8 @@ function get_country_names()
  */
 function replace_special_file_system_chars(String $s) {
     $s = str_replace(
-        [":", "/", ";", "?", "[", "]"],
-        [" - ", "-", " ", "", "(", ")"],
+        [":", "/", ";", "?", "[", "]", '"'],
+        [" - ", "-", " ", "", "(", ")", "'"],
         $s
     );
     // Trim whitespace
