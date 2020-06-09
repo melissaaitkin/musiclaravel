@@ -49,6 +49,17 @@ class MP3 implements AudioFileInterface {
         return $this->file_info["tags"]["id3v2"]["title"][0] ?? '';
     }
 
+
+    /**
+     * Return song artist.
+     *
+     * @return string
+     */
+    public function artist() {
+        $artist = $this->file_info["tags"]["id3v2"]["artist"][0] ?? '';
+        return replace_special_file_system_chars($artist);
+    }
+
     /**
      * Return year.
      *
@@ -65,6 +76,22 @@ class MP3 implements AudioFileInterface {
      */
     public function file_type() {
         return self::FILE_TYPE;
+    }
+
+
+    /**
+     * Return song album.
+     *
+     * @return string
+     */
+    public function album() {
+        $album = $this->file_info["tags"]["id3v2"]["album"][0] ?? 'Unknown Album';
+        if (!empty($album)) {
+            $album = replace_special_file_system_chars($album);
+        } else {
+            $album = 'Unknown Album';
+        }
+        return $album;
     }
 
     /**
