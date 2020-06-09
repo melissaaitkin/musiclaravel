@@ -24,9 +24,9 @@ Route::get('/404', function () {
 
 Route::middleware(['auth'])->group(function () {
 
-	Route::get("/utilities", ["uses" => "UtilitiesController@index", "middleware" => "admin"]);
+	Route::get("/utilities", ["uses" => "UtilitiesController@index", "middleware" => "admin"])->name('utilities.utilities');
 
-	Route::post('/load', 'UtilitiesController@load_songs');
+	Route::post("/load", ["uses" => "UtilitiesController@load_songs", "middleware" => "admin"])->name('utilities.load');
 
 	Route::get("/settings", "SettingsController@index");
 

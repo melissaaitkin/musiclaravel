@@ -11,6 +11,7 @@ use getID3;
 use Exception;
 use Storage;
 use Log;
+use Redirect;
 
 use App\Music\Artist\Artist;
 use App\Music\Song\Song;
@@ -81,8 +82,9 @@ class UtilitiesController extends Controller
 
                     }
                 } else {
-                    return view('utilities', ['artist_directory' => $request->artist_directory])
-                        ->withErrors(['The artist directory is not a valid directory']);
+                    return Redirect::route('utilities.utilities')
+                        ->with(['artist_directory' => $request->artist_directory])
+                        ->withErrors(['The artist directory not a valid directory']);
                 }
             }
             // Processing songs inside a random directory
@@ -93,7 +95,8 @@ class UtilitiesController extends Controller
                         $this->process_song_and_artist($song);
                     }
                 } else {
-                    return view('utilities', ['random_directory' => $request->random_directory])
+                    return Redirect::route('utilities.utilities')
+                        ->with(['random_directory' => $request->random_directory])
                         ->withErrors(['The random directory not a valid directory']);
                 }
             }
@@ -101,11 +104,12 @@ class UtilitiesController extends Controller
         } catch (Exception $e) {
             return view('utilities')->withErrors([$e->getMessage()]);
         }
-        return view('utilities', [
+        return Redirect::route('utilities.utilities')
+            ->with([
+                'msg' => 'Songs have been loaded',
                 'random_directory' => $request->random_directory,
                 'artist_directory' => $request->artist_directory
-                ])
-            ->with('msg', 'Songs have been loaded');
+            ]);
     }
 
     /**
