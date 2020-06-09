@@ -81,7 +81,8 @@ class UtilitiesController extends Controller
 
                     }
                 } else {
-                    return view('utilities')->withErrors(['The artist directory is not a valid directory']);
+                    return view('utilities', ['artist_directory' => $request->artist_directory])
+                        ->withErrors(['The artist directory is not a valid directory']);
                 }
             }
             // Processing songs inside a random directory
@@ -92,13 +93,19 @@ class UtilitiesController extends Controller
                         $this->process_song_and_artist($song);
                     }
                 } else {
-                    return view('utilities')->withErrors(['The random directory not a valid directory']);
+                    return view('utilities', ['random_directory' => $request->random_directory])
+                        ->withErrors(['The random directory not a valid directory']);
                 }
             }
+
         } catch (Exception $e) {
             return view('utilities')->withErrors([$e->getMessage()]);
         }
-        return view('utilities', ['msg' => 'Songs have been loaded']);
+        return view('utilities', [
+                'random_directory' => $request->random_directory,
+                'artist_directory' => $request->artist_directory
+                ])
+            ->with('msg', 'Songs have been loaded');
     }
 
     /**
@@ -220,7 +227,7 @@ class UtilitiesController extends Controller
 
             // Make album folder
             if (!Storage::disk(config('filesystems.partition'))->exists($this->media_directory. $song_info->artist() . DIRECTORY_SEPARATOR . $song_info->album())) {
-                Log::info("Making album directory");
+                Log::info("Making album directory " . $song_info->album());
                 // Create album folder under artist in media library.
                 Storage::disk(config('filesystems.partition'))->makeDirectory($this->media_directory . $song_info->artist() . DIRECTORY_SEPARATOR . $song_info->album());
             }

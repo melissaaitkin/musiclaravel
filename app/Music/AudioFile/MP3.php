@@ -46,7 +46,8 @@ class MP3 implements AudioFileInterface {
      * @return string
      */
     public function title() {
-        return $this->file_info["tags"]["id3v2"]["title"][0] ?? '';
+        $title = $this->file_info["tags"]["id3v2"]["title"][0] ?? '';
+        return replace_special_file_system_chars($title);
     }
 
 

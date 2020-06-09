@@ -24,10 +24,14 @@ function get_country_names()
 /**
  * Replaces characters file systems cannot process
  */
-function replace_special_file_system_chars(String $string) {
-    return str_replace(
-        ["'", ":", "/", ";", "?", "."],
-        ["", " -", "-", " ", "", ""],
-        $string
+function replace_special_file_system_chars(String $s) {
+    $s = str_replace(
+        [":", "/", ";", "?", "[", "]"],
+        [" - ", "-", " ", "", "(", ")"],
+        $s
     );
+    // Trim whitespace
+    $s = trim($s);
+    // Strip periods if they are at the end of the string
+    return rtrim($s, '.');
 }

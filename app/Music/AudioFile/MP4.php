@@ -93,7 +93,12 @@ class MP4 implements AudioFileInterface {
      */
     public function album() {
         $album = $this->file_info["quicktime"]["comments"]["album"][0] ?? 'Unknown Album';
-        return replace_special_file_system_chars($album);
+        if (!empty($album)) {
+            $album = replace_special_file_system_chars($album);
+        } else {
+            $album = 'Unknown Album';
+        }
+        return $album;
     }
 
     /**

@@ -9,7 +9,13 @@
         @include('common.errors')
 
         @if(isset($msg))
-            <div>{{ $msg }}</div>
+            <div class="alert alert-success">{{ $msg }}</div>
+        @endif
+
+        @if(session()->has('msg'))
+            <div class="alert alert-success">
+                {{ session()->get('msg') }}
+            </div>
         @endif
 
         <form action="/load" method="POST" class="form-horizontal">
@@ -27,7 +33,7 @@
                     <label for="directory" class="col-sm-3 control-label">Artist Directory</label>
 
                     <div class="col-sm-6">
-                        <input type="text" name="artist_directory" id="artist_directory" class="form-control">
+                        <input type="text" name="artist_directory" id="artist_directory" class="form-control"  @if(!empty($artist_directory)) value="{{$artist_directory}}" @endif>
                     </div>
                 </div>
 
@@ -56,7 +62,7 @@
                     <label for="directory" class="col-sm-3 control-label">Directory</label>
 
                     <div class="col-sm-6">
-                        <input type="text" name="random_directory" id="random_directory" class="form-control">
+                        <input type="text" name="random_directory" id="random_directory" class="form-control" @if(!empty($random_directory)) value="{{$random_directory}}" @endif>
                     </div>
                 </div>
 
