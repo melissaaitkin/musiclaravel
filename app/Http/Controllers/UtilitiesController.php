@@ -143,7 +143,7 @@ class UtilitiesController extends Controller
         $scan_albums = glob($this->partition_root . $this->media_directory . $artist_dir . '/*');
         foreach($scan_albums as $album) {
             if (is_dir($album)) {
-                $this->process_album($album, $artist_id);
+                $this->process_album($artist_dir, $album, $artist_id);
             } else {
                 if (Song::is_song($album)) {
                     $this->process_song($artist_id, $album);
@@ -161,7 +161,7 @@ class UtilitiesController extends Controller
         return $artist_id;
     }
 
-    private function process_album(string $album, int $artist_id) {
+    private function process_album(string $artist, string $album, int $artist_id) {
         $album_name = basename($album);
         if (preg_match('/[\[\]]/', $album_name)) {
             throw new Exception("Album directory contains square brackets");
@@ -171,9 +171,10 @@ class UtilitiesController extends Controller
             $is_compilation = Artist::is_compilation($artist_id);
             $scan_songs = glob($album . '/*');
             foreach($scan_songs as $song){
-                if (Song::is_song($song)) {
+                if (Song::is_song($song)) { echo basename($song);
                     $song_info = $this->retrieve_song_info($song, basename($song), $is_compilation);
-                    Song::dynamic_store($song, $album_name, $artist_id, $song_info);
+                    $location = $artist . DIRECTORY_SEPARATOR . $album_name . DIRECTORY_SEPARATOR . basename($song);
+                    Song::dynamic_store($location, $album_name, $artist_id, $song_info);
                     // If the song is in a compilation but the artist does not exist, add the artist.
                     if ($song_info->is_compilation()) {
                         if (!empty($song_info->notes())) {
