@@ -29,7 +29,7 @@ function play_songs(title, songs) {
 
 	let jukebox_form = '<div class="audio">';
 	jukebox_form += '<figure>';
-	jukebox_form += '<figcaption id="song_title">' +  songs[0].title + '</figcaption>';
+	jukebox_form += '<figcaption id="song_title">' +  songs[0].title + ' - ' + songs[0].artist + '</figcaption>';
 	jukebox_form += '<audio controls src="' + song_url + songs[0].id + '">Your browser does not support the<code>audio</code> element.</audio>';
 	jukebox_form += '</figure>';
 	jukebox_form += '<button class="next">Next</button>';
@@ -66,7 +66,7 @@ function play_songs(title, songs) {
 			song = songs.shift();
 			if (song !== undefined) {
 				audio.src = song_url + song.id;
-				$("#song_title").text(song.title);
+				$("#song_title").text(song.title + ' - ' + song.artist);
 				audio.pause();
 				audio.load();
 				audio.play();
