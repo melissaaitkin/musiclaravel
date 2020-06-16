@@ -112,9 +112,9 @@ class SongController extends Controller
 			$songs = $this->retrieve_songs(session()->get('songs_query'));
 		}
 		if (count($songs) > 0) {
-			return view('songs', ['songs' => $songs]);
+			return view('songs', ['q' => $q, 'songs' => $songs]);
 		} else {
-			return view('songs', ['songs' => $songs])->withMessage('No Details found. Try to search again !');
+			return view('songs', ['q' => $q, 'songs' => $songs])->withMessage('No Details found. Try to search again !');
 		}
 	}
 

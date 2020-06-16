@@ -85,9 +85,9 @@ class ArtistController extends Controller
         }
         // Artists can be returned as an array or a paginated object.
         if (is_array($artists) && count($artists) == 0) {
-            return view('artists', ['artists' => $artists])->withMessage('No Details found. Try to search again !');
+            return view('artists', ['q' => $q, 'artists' => $artists])->withMessage('No Details found. Try to search again !');
         } else {
-            return view('artists', ['artists' => $artists]);
+            return view('artists', ['q' => $q, 'artists' => $artists]);
         }
     }
 

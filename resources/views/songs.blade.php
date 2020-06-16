@@ -23,13 +23,13 @@
                 <form action="/songs/search" method="POST" role="search">
                     {{ csrf_field() }}
                     <div class="input-group col-sm-6">
-                        <input type="text" class="form-control" name="q"
-                            placeholder="Search songs"> <span class="input-group-btn">
+                        <input type="text" class="form-control" name="q" placeholder="Search songs"  @if(!empty($q)) value="{{$q}}" @endif>
+                        <span class="input-group-btn">
                             <button type="submit" class="btn btn-default">
                                 <span class="glyphicon glyphicon-search"></span>
                             </button>
                         </span>
-                    </div>
+                </div>
                 </form>
             </div>
 
