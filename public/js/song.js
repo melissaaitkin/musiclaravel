@@ -111,4 +111,30 @@ $(document).ready(function() {
 
 	});
 
+	$("input[name='play']").click(function() {
+		let song_id = $(this).attr('id');
+		song_id = song_id.replace("play-", "");
+
+		var url = '/internalapi/songs?id=' + song_id;
+
+		fetch(url)
+			.then(
+				function(response) {
+					if (response.status !== 200) {
+						console.log('Looks like there was a problem. Status Code: ' + response.status);
+						return;
+					}
+					response.json().then(function(data) {
+						// display jukebox requires an array of songs
+						songs = [data.songs];
+						display_jukebox(songs[0].album, songs);
+					});
+				}
+			)
+			.catch(function(err) {
+				console.log('Fetch Error: ', err);
+		});
+
+	});
+
 });

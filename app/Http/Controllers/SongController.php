@@ -176,10 +176,16 @@ class SongController extends Controller
             return ['errors' => $validator->errors(), 'status_code' => 422];
         endif;
 
-		if (isset($request->album) && isset($request->id)) {
-			// Get songs in an album by song id
-			$songs = Song::get_album_songs_by_song_id($request->id);
+		if (isset($request->id)) {
+			if (isset($request->album)) {
+				// Get songs in an album by song id
+				$songs = Song::get_album_songs_by_song_id($request->id);
+			} else {
+				// Get song
+				$songs = Song::find($request->id);
+			}
 		} else {
+			// Get all songs
 			$songs = Song::songs($request);
 		}
 

@@ -46,6 +46,7 @@
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
+                        <th>&nbsp;</th>
                     </thead>
 
                     <tbody>
@@ -72,6 +73,9 @@
                                 <td>
                                     {{ csrf_field() }}
                                     <a href="/song/{{ $song->id }}">edit</a>
+                                </td>
+                                <td>
+                                   <input type="button" class="btn btn-link btn-mysounds" name="play" id="play-{{ $song->id }}" value="play">
                                 </td>
                                 <td>
                                    <input type="button" class="btn btn-link btn-mysounds" name="play_album" id="play-album-{{ $song->id }}" value="play album">
