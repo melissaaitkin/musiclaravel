@@ -7,6 +7,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use App\Music\Artist\Artist as Artist;
 use App\Music\Song\Song as Song;
 
+use DB;
+
 class ArtistController extends Controller
 {
 
@@ -77,17 +79,21 @@ class ArtistController extends Controller
     public function search(Request $request)
     {
         $q = $request->q;
-        $artists = [];
         if ($q != "") {
-            $artists = $this->retrieve_artists($q);
+            $data = $this->retrieve_artists($q);
         } else {
-            $artists = $this->retrieve_artists(session()->get('artists_query'));
+            $data = $this->retrieve_artists(session()->get('artists_query'));
         }
-        // Artists can be returned as an array or a paginated object.
-        if (is_array($artists) && count($artists) == 0) {
-            return view('artists', ['q' => $q, 'artists' => $artists])->withMessage('No Details found. Try to search again !');
+
+        // Data object can be a view or a paginator
+        if (get_class($data) === 'Illuminate\View\View') {
+            return $data;
         } else {
-            return view('artists', ['q' => $q, 'artists' => $artists]);
+            if ($data->total() > 0) {
+                return view('artists', ['q' => $q, 'artists' => $data]);
+            } else {
+                return view('artists', ['q' => $q, 'artists' => $data])->withMessage('No Details found. Try to search again !');
+            }
         }
     }
 
@@ -123,7 +129,8 @@ class ArtistController extends Controller
         }
 
         try {
-            $artists = \DB::select($query);
+            $artists = DB::select($query);
+
         } catch (\Illuminate\Database\QueryException $ex) {
             $artists = [];
         }
@@ -133,9 +140,9 @@ class ArtistController extends Controller
         ]);
 
         if (count($artists) > 0) {
-            return view('artists', ['artists' => $paginate]);
+            return view('artists', ['q' => $query, 'artists' => $paginate]);
         } else {
-            return view('artists', ['artists' => $paginate])->withMessage('No Details found. Try to search again !');
+            return view('artists', ['q'  => $query, 'artists' => $paginate])->withMessage('No Details found. Try to search again !');
         }
     }
 
