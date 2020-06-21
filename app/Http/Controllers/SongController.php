@@ -105,16 +105,20 @@ class SongController extends Controller
     public function search(Request $request)
     {
         $q = $request->q;
-        $artists = [];
         if ($q != "") {
-            $songs = $this->retrieve_songs($q);
+            $data = $this->retrieve_songs($q);
         } else {
-            $songs = $this->retrieve_songs(session()->get('songs_query'));
+            $data = $this->retrieve_songs(session()->get('songs_query'));
         }
-        if (count($songs) > 0) {
-            return view('songs', ['q' => $q, 'songs' => $songs]);
+        // Data object can be a view or a paginator
+        if (get_class($data) === 'Illuminate\View\View') {
+            return $data;
         } else {
-            return view('songs', ['q' => $q, 'songs' => $songs])->withMessage('No Details found. Try to search again !');
+            if ($data->total() > 0) {
+                return view('songs', ['q' => $q, 'songs' => $data]);
+            } else {
+                return view('songs', ['q' => $q, 'songs' => $data])->withMessage('No songs found. Try to search again !');
+            }
         }
     }
 
@@ -127,9 +131,43 @@ class SongController extends Controller
     protected function retrieve_songs($query) {
         if ($query != "") {
             session()->put('songs_query', $query);
-            return Song::search($query);
+            if (stripos( $query, 'SELECT') === 0) {
+                return $this->admin_search($query);
+            } else {
+                return Song::search($query);
+            }
         } else {
             return Song::subset();
+        }
+    }
+
+     /**
+     * Perform admin search on songs
+     *
+     * @param  string $query
+     * @return Response
+     */
+    public function admin_search(string $query)
+    {
+        if ( stripos( $query, 'DELETE') !== false || stripos( $query, 'UPDATE') ) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        try {
+            $songs = DB::select($query);
+
+        } catch (\Illuminate\Database\QueryException $ex) {
+            $songs = [];
+        }
+        $paginate = new LengthAwarePaginator($songs, count($songs), 10, 1, [
+            'path' =>  request()->url(),
+            'query' => request()->query()
+        ]);
+
+        if (count($songs) > 0) {
+            return view('songs', ['q' => $query, 'songs' => $paginate]);
+        } else {
+            return view('songs', ['q'  => $query, 'songs' => $paginate])->withMessage('No songs found. Try to search again !');
         }
     }
 
