@@ -12,7 +12,7 @@ class Song extends Model
 
     protected $table = 'songs';
 
-	/**
+    /**
      * The primary key for the model.
      *
      * @var string
@@ -117,19 +117,19 @@ class Song extends Model
      */
     protected $notes;
 
-	/**
-	 * The attributes that aren't mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $guarded = [];
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
 
-	/**
-	 * The number of records to return for pagination.
-	 *
-	 * @var int
-	 */
-	protected $perPage = 10;
+    /**
+     * The number of records to return for pagination.
+     *
+     * @var int
+     */
+    protected $perPage = 10;
 
     /**
      * Supported file types
@@ -138,17 +138,17 @@ class Song extends Model
      */
     const FILE_TYPES = ['mp3', 'mp4', 'm4a', 'wav', 'wma'];
 
-	/**
+    /**
      * Create or update a song.
      *
-	 * @param Request $request
+     * @param Request $request
      */
     public static function store($request)
     {
         $validator = $request->validate([
-			'title'	=> 'required|max:255',
-			'album'	=> 'required|max:255',
-			'year'	=> 'required|integer'
+            'title' => 'required|max:255',
+            'album' => 'required|max:255',
+            'year'  => 'required|integer'
         ]);
 
         $song = [];
@@ -165,15 +165,15 @@ class Song extends Model
         $song['playtime'] = $request->playtime;
         $song['notes'] = $request->notes;
 
-		if (isset($request->id)) {
-			// updateOrCreate throwing duplicate error
-			Song::where('id', $request->id)->update($song);
-		} else {
-			Song::create($song);
-		}
+        if (isset($request->id)) {
+            // updateOrCreate throwing duplicate error
+            Song::where('id', $request->id)->update($song);
+        } else {
+            Song::create($song);
+        }
     }
 
-	/**
+    /**
      * Create a song via the music loading process.
      *
      * @param string path
@@ -181,7 +181,7 @@ class Song extends Model
      * @param integer artist_it
      * @param array ID3 song array
      *
-	 * @param Request $request
+     * @param Request $request
      */
     public static function dynamic_store($path, $album_name, $artist_id, $song)
     {
@@ -198,7 +198,7 @@ class Song extends Model
         $_song['composer'] = $song->composer();
         $_song['playtime'] = $song->playtime();
         $_song['notes'] = $song->notes();
-		Song::create($_song);
+        Song::create($_song);
     }
 
     /**
@@ -236,55 +236,55 @@ class Song extends Model
         return isset($song);
     }
 
-	/**
-	* Returns all song titles
-	*
-	* @param string $album Restrict via album.
-	* @return Collection Eloquent collection of song titles.
-	*/
-	public static function get_song_titles(string $album = null)
-	{
-		if ($album) {
-			return Song::where('album', '=', $album)->get(['title']);
-		} else {
-			return Song::all(['title']);
-		}
-	}
+    /**
+    * Returns all song titles
+    *
+    * @param string $album Restrict via album.
+    * @return Collection Eloquent collection of song titles.
+    */
+    public static function get_song_titles(string $album = null)
+    {
+        if ($album) {
+            return Song::where('album', '=', $album)->get(['title']);
+        } else {
+            return Song::all(['title']);
+        }
+    }
 
-	/**
-	* Remove the song
-	*
-	* @param  int  $id
-	*/
-	public static function destroy($id)
-	{
-		Song::findOrFail($id)->delete();
-	}
+    /**
+    * Remove the song
+    *
+    * @param  int  $id
+    */
+    public static function destroy($id)
+    {
+        Song::findOrFail($id)->delete();
+    }
 
-	public static function is_song($file) {
-		$extension = strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
-		return in_array($extension, self::FILE_TYPES);
-	}
+    public static function is_song($file) {
+        $extension = strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
+        return in_array($extension, self::FILE_TYPES);
+    }
 
-	public static function get_artist_albums($id) {
-		return Song::distinct('album')->where(["artist_id" => $id])->get(['album'])->toArray();
-	}
+    public static function get_artist_albums($id) {
+        return Song::distinct('album')->where(["artist_id" => $id])->get(['album'])->toArray();
+    }
 
-	/**
-	* Retrieve artist's songs.
-	*
-	* Retrieves the songs from the artist's albums and compilation albums.
-	*
-	* @param int  $id
-	* @param string $artist
-	*/
-	public static function get_artist_songs($id, $artist) {
-		return Song::select('id', 'title')
-			->where(["artist_id" => $id])
-			->orWhere(["notes" => $artist])
-			->orderBy('title')
-			->get();
-	}
+    /**
+    * Retrieve artist's songs.
+    *
+    * Retrieves the songs from the artist's albums and compilation albums.
+    *
+    * @param int  $id
+    * @param string $artist
+    */
+    public static function get_artist_songs($id, $artist) {
+        return Song::select('id', 'title')
+            ->where(["artist_id" => $id])
+            ->orWhere(["notes" => $artist])
+            ->orderBy('title')
+            ->get();
+    }
 
     /**
     * Retrieve album songs by song id.

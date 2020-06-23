@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 
 Route::get('/', function () {
-	return view('welcome');
+    return view('welcome');
 });
 
 Route::get('/404', function () {
@@ -24,77 +24,77 @@ Route::get('/404', function () {
 
 Route::middleware(['auth'])->group(function () {
 
-	// Home route
+    // Home route
 
-	Route::get('/home', 'HomeController@index');
+    Route::get('/home', 'HomeController@index');
 
-	// Utilties/Configuration Routes
+    // Utilties/Configuration Routes
 
-	Route::get("/utilities", ["uses" => "UtilitiesController@index", "middleware" => "admin"])->name('utilities.utilities');
+    Route::get("/utilities", ["uses" => "UtilitiesController@index", "middleware" => "admin"])->name('utilities.utilities');
 
-	Route::post("/load", ["uses" => "UtilitiesController@load_songs", "middleware" => "admin"])->name('utilities.load');
+    Route::post("/load", ["uses" => "UtilitiesController@load_songs", "middleware" => "admin"])->name('utilities.load');
 
-	Route::get("/settings", "SettingsController@index");
+    Route::get("/settings", "SettingsController@index");
 
-	Route::post('/settings', 'SettingsController@settings');
+    Route::post('/settings', 'SettingsController@settings');
 
-	// Song Routes
+    // Song Routes
 
-	Route::get('/songs', 'SongController@index');
+    Route::get('/songs', 'SongController@index');
 
-	Route::any('/songs/search', 'SongController@search');
+    Route::any('/songs/search', 'SongController@search');
 
-	Route::get('/song', 'SongController@create');
+    Route::get('/song', 'SongController@create');
 
-	Route::post('/song', 'SongController@store');
+    Route::post('/song', 'SongController@store');
 
-	Route::get('/song/{id}', 'SongController@edit');
+    Route::get('/song/{id}', 'SongController@edit');
 
-	Route::delete('/song/{id}', 'SongController@destroy');
+    Route::delete('/song/{id}', 'SongController@destroy');
 
-	Route::get('/song/play/{id}', 'SongController@play')->name('song.play');
+    Route::get('/song/play/{id}', 'SongController@play')->name('song.play');
 
-	// Artist Routes
+    // Artist Routes
 
-	Route::get('/artists', 'ArtistController@index');
+    Route::get('/artists', 'ArtistController@index');
 
-	Route::any('/artists/search', 'ArtistController@search');
+    Route::any('/artists/search', 'ArtistController@search');
 
-	Route::get('/artist', 'ArtistController@create');
+    Route::get('/artist', 'ArtistController@create');
 
-	Route::post('/artist', 'ArtistController@store');
+    Route::post('/artist', 'ArtistController@store');
 
-	Route::get('/artist/{id}', 'ArtistController@edit');
+    Route::get('/artist/{id}', 'ArtistController@edit');
 
-	Route::delete('/artist/{id}', 'ArtistController@destroy')->name('artist.destroy');
+    Route::delete('/artist/{id}', 'ArtistController@destroy')->name('artist.destroy');
 
-	Route::get('/artist-select-ajax', 'ArtistController@artist_ajax');
+    Route::get('/artist-select-ajax', 'ArtistController@artist_ajax');
 
-	// Playlist routes
+    // Playlist routes
 
-	Route::get('/playlists', 'PlaylistController@index');
+    Route::get('/playlists', 'PlaylistController@index');
 
-	Route::delete('/playlists/{playlist}', 'PlaylistController@destroy')->name('playlists.destroy');
+    Route::delete('/playlists/{playlist}', 'PlaylistController@destroy')->name('playlists.destroy');
 
-	// Genres routes
-	Route::get('/genres', 'GenreController@index');
+    // Genres routes
+    Route::get('/genres', 'GenreController@index');
 
 });
 
 Route::middleware(['auth'])->prefix('internalapi')->group(function () {
 
-	// Routes that can be called both internally and externally
-	Route::get('/songs', 'SongController@all');
+    // Routes that can be called both internally and externally
+    Route::get('/songs', 'SongController@all');
 
-	Route::get('/songs/{id}', 'SongController@song');
+    Route::get('/songs/{id}', 'SongController@song');
 
-	Route::get('/playlists', 'PlaylistController@playlists');
+    Route::get('/playlists', 'PlaylistController@playlists');
 
-	Route::get('/playlists/songs', 'PlaylistController@songs');
+    Route::get('/playlists/songs', 'PlaylistController@songs');
 
-	Route::post('/playlists', 'PlaylistController@save');
+    Route::post('/playlists', 'PlaylistController@save');
 
-	Route::get('/genres/songs', 'GenreController@songs');
+    Route::get('/genres/songs', 'GenreController@songs');
 
  });
 

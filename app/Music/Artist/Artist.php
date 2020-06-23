@@ -11,7 +11,7 @@ class Artist extends Model
     protected $table = 'artists';
 
 
-	/**
+    /**
      * The primary key for the model.
      *
      * @var integer
@@ -67,12 +67,12 @@ class Artist extends Model
      */
     protected $notes;
 
-	/**
-	 * The attributes that aren't mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $guarded = [];
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
 
     /**
      * The number of records to return for pagination.
@@ -81,7 +81,7 @@ class Artist extends Model
      */
     protected $perPage = 10;
 
-	/**
+    /**
      * Returns artists
      *
      * @return LengthAwarePaginator Paginated list of artists.
@@ -91,25 +91,25 @@ class Artist extends Model
         return Artist::orderBy('artist')->paginate();
     }
 
-	/**
+    /**
      * Returns all artists
      *
      * @param array $fields Specific fields to retrieve.
      * @return Collection Eloquent collection of artists.
      */
     public static function get_all_artists(array $fields = null)
-	{
-		if ($fields) {
-			return Artist::all($fields);
-		} else {
-			return Artist::all();
-		}
-	}
+    {
+        if ($fields) {
+            return Artist::all($fields);
+        } else {
+            return Artist::all();
+        }
+    }
 
-	/**
+    /**
      * Create or update an artist.
      *
-	 * @param Request $request
+     * @param Request $request
      */
     public static function store(Request $request)
     {
@@ -124,28 +124,28 @@ class Artist extends Model
         $artist['group_members'] = $request->group_members;
         $artist['notes'] = $request->notes;
 
-		if (isset($request->id)) {
-			// updateOrCreate throwing duplicate error
-			Artist::where('id', $request->id)->update($artist);
+        if (isset($request->id)) {
+            // updateOrCreate throwing duplicate error
+            Artist::where('id', $request->id)->update($artist);
         } else {
-			Artist::create($artist);
+            Artist::create($artist);
         }
     }
 
-	/**
-	* Create an artist via the music loading process.
-	*
-	* @param array $artist
-	* @return integer
-	*/
-	public static function dynamic_store(array $artist)
-	{
-		return Artist::insertGetId([
-			'artist' 	=> $artist[0],
-			'is_group' 	=> $artist[1],
-			'country' 	=> $artist[2],
-		]);
-	}
+    /**
+    * Create an artist via the music loading process.
+    *
+    * @param array $artist
+    * @return integer
+    */
+    public static function dynamic_store(array $artist)
+    {
+        return Artist::insertGetId([
+            'artist'    => $artist[0],
+            'is_group'  => $artist[1],
+            'country'   => $artist[2],
+        ]);
+    }
 
     /**
      * Does the artist exist
