@@ -58,7 +58,6 @@ class SongController extends Controller
     {
         return view('song', [
             'title'         => 'Add New Song',
-            'artists'       => Artist::get_all_artists(['id', 'artist']),
             'file_types'    => Song::FILE_TYPES,
             'song_exists'   => false,
         ]);
@@ -88,13 +87,11 @@ class SongController extends Controller
         return view('song', [
             'song'          => $song,
             'title'         => $song->title,
-            'artists'       => Artist::orderBy('artist')->get(['id', 'artist']),
+            'artist_name'   => $song->artist->artist,
             'file_types'    => Song::FILE_TYPES,
             'song_exists'   => Storage::disk(config('filesystems.partition'))->has($this->media_directory . $song->location),
         ]);
     }
-
-
 
     /**
      * Search for song.

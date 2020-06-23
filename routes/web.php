@@ -24,6 +24,12 @@ Route::get('/404', function () {
 
 Route::middleware(['auth'])->group(function () {
 
+	// Home route
+
+	Route::get('/home', 'HomeController@index');
+
+	// Utilties/Configuration Routes
+
 	Route::get("/utilities", ["uses" => "UtilitiesController@index", "middleware" => "admin"])->name('utilities.utilities');
 
 	Route::post("/load", ["uses" => "UtilitiesController@load_songs", "middleware" => "admin"])->name('utilities.load');
@@ -31,6 +37,8 @@ Route::middleware(['auth'])->group(function () {
 	Route::get("/settings", "SettingsController@index");
 
 	Route::post('/settings', 'SettingsController@settings');
+
+	// Song Routes
 
 	Route::get('/songs', 'SongController@index');
 
@@ -46,6 +54,8 @@ Route::middleware(['auth'])->group(function () {
 
 	Route::get('/song/play/{id}', 'SongController@play')->name('song.play');
 
+	// Artist Routes
+
 	Route::get('/artists', 'ArtistController@index');
 
 	Route::any('/artists/search', 'ArtistController@search');
@@ -58,18 +68,22 @@ Route::middleware(['auth'])->group(function () {
 
 	Route::delete('/artist/{id}', 'ArtistController@destroy')->name('artist.destroy');
 
-	Route::get('/home', 'HomeController@index');
+	Route::get('/artist-select-ajax', 'ArtistController@artist_ajax');
+
+	// Playlist routes
 
 	Route::get('/playlists', 'PlaylistController@index');
 
 	Route::delete('/playlists/{playlist}', 'PlaylistController@destroy')->name('playlists.destroy');
 
+	// Genres routes
 	Route::get('/genres', 'GenreController@index');
 
 });
 
 Route::middleware(['auth'])->prefix('internalapi')->group(function () {
 
+	// Routes that can be called both internally and externally
 	Route::get('/songs', 'SongController@all');
 
 	Route::get('/songs/{id}', 'SongController@song');

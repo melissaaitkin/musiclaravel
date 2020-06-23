@@ -1,5 +1,25 @@
 $(document).ready(function() {
 
+    $('.artist').select2({
+        placeholder: 'Please Select',
+        ajax: {
+          url: '/artist-select-ajax',
+          dataType: 'json',
+          delay: 250,
+          processResults: function (data) {
+            return {
+              results: data
+            };
+          },
+          cache: true
+        }
+    });
+
+    if ($("#artist_id").val() != undefined) {
+        let set_artist = $("<option selected='selected'></option>").val($("#artist_id").val()).text($("#artist_name").val());
+        $(".artist").append(set_artist).trigger('change');
+    }
+
     var playlist_url = '/internalapi/playlists';
     var song_url = APP_URL + '/song/play/';
 

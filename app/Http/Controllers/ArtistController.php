@@ -8,6 +8,7 @@ use App\Music\Artist\Artist as Artist;
 use App\Music\Song\Song as Song;
 
 use DB;
+use Log;
 
 class ArtistController extends Controller
 {
@@ -156,6 +157,22 @@ class ArtistController extends Controller
     {
         Artist::destroy($id);
         return back();
+    }
+
+    /**
+     * Return artists ajax
+     *
+     * @return Response
+     */
+    public function artist_ajax(Request $request)
+    {
+        $data = [];
+
+        if ($request->has('q')) {
+            $data = Artist::search_by_name($request->q);
+        }
+
+        return response()->json($data);
     }
 
 }

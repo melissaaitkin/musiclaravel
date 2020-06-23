@@ -65,11 +65,7 @@
             <div class="form-group">
                 <label for="artist" class="col-sm-3 control-label">Artist</label>
                 <div class="col-sm-3">
-                    <select class="form-control" name="artist_id">
-                        @foreach($artists as $artist)
-                            <option value="{{$artist->id}}" @if( ! empty($song->artist_id) && ($song->artist_id == $artist->id)) selected @endif>{{$artist->artist}}</option>
-                        @endforeach
-                    </select>
+                    <select class="artist form-control" name="artist"></select>
                 </div>
             </div>
 
@@ -129,6 +125,8 @@
                 @if( ! empty($song->id))
                     <div class="col-sm-offset-3 col-sm-6">
                         <input type="hidden" name="id" id="song-id" value="{{$song->id}}">
+                        <input type="hidden" name="artist_id" id="artist_id" value="{{$song->artist_id}}">
+                        <input type="hidden" name="artist_name" id="artist_name" value="{{$artist_name}}">
                         <button type="submit" class="btn btn-primary">Update</button>
                         <a href="{{ url()->previous() }}" class="btn btn-primary">Back</a>
                     </div>

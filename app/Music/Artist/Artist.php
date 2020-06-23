@@ -198,4 +198,15 @@ class Artist extends Model
             ->appends(['q' => $query])
             ->setPath('');
     }
+
+    /**
+    * Search for artists by name
+    *
+    * @param string $search
+    */
+    public static function search_by_name($search) {
+        return Artist::select('id', 'artist as text')
+            ->where('artist', 'LIKE', '%' . $search . '%')
+            ->get();
+    }
 }

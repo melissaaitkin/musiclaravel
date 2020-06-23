@@ -5,6 +5,8 @@ namespace App\Music\Song;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
+use App\Music\Artist\Artist;
+
 class Song extends Model
 {
 
@@ -157,7 +159,7 @@ class Song extends Model
         $song['track_no'] = $request->track_no;
         $song['genre'] = $request->genre;
         $song['location'] = $request->location;
-        $song['artist_id'] = $request->artist_id;
+        $song['artist_id'] = $request->artist;
         $song['filesize'] = $request->filesize ?? 0;
         $song['composer'] = $request->composer;
         $song['playtime'] = $request->playtime;
@@ -197,6 +199,14 @@ class Song extends Model
         $_song['playtime'] = $song->playtime();
         $_song['notes'] = $song->notes();
 		Song::create($_song);
+    }
+
+    /**
+     * Get the artist record associated with the song.
+     */
+    public function artist()
+    {
+        return $this->hasOne('App\Music\Artist\Artist', 'id', 'artist_id');
     }
 
     /**
