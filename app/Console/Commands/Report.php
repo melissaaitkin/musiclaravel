@@ -92,6 +92,11 @@ class Report extends Command {
                     $records = DB::select($query);
                     $this->createCSVReport('artist_country.csv', $records, ['Country', 'Total']);
                     break;
+                case 'cities':
+                    $query = "SELECT artist, country, notes FROM artists WHERE notes like '%Location%' ORDER BY country ASC, notes ASC, artist ASC";
+                    $records = DB::select($query);
+                    $this->createCSVReport('artist_city.csv', $records, ['Artist', 'Country', 'Location']);
+                    break;
                 default:
                     $this->error('This report type does not exist.');
             endswitch;
