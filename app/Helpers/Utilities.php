@@ -37,7 +37,12 @@ function replace_special_file_system_chars(String $s) {
     return rtrim($s, '.');
 }
 
-function validate_sql_command(String $query) {
+/**
+ * Only allow read queries
+ *
+ * @param String $query SQL query
+ */
+function is_valid_read_query(String $query) {
     if (stripos($query, 'DELETE') !== false
         || stripos( $query, 'UPDATE') !== false
         || stripos( $query, 'INSERT') !== false

@@ -125,7 +125,7 @@ class ArtistController extends Controller
      */
     public function admin_search(string $query)
     {
-        if ( stripos( $query, 'DELETE') !== false || stripos( $query, 'UPDATE') ) {
+        if (!is_valid_read_query($query)) {
             abort(403, 'Unauthorized action.');
         }
 

@@ -64,7 +64,7 @@ class Report extends Command {
 
         if(isset($options['query'])):
             $this->query = $options['query'];
-            if (!validate_sql_command($this->query)):
+            if (!is_valid_read_query($this->query)):
                 $this->error('Only read queries are authorized');
                 exit;
             endif;
