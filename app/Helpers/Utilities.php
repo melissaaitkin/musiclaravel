@@ -36,3 +36,14 @@ function replace_special_file_system_chars(String $s) {
     // Strip periods if they are at the end of the string
     return rtrim($s, '.');
 }
+
+function validate_sql_command(String $query) {
+    if (stripos($query, 'DELETE') !== false
+        || stripos( $query, 'UPDATE') !== false
+        || stripos( $query, 'INSERT') !== false
+        || stripos( $query, 'ALTER') !== false
+        || stripos( $query, 'DROP') !== false) {
+        return false;
+    }
+    return true;
+}
