@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'driver' => env('MAIL_DRIVER', 'smtp'),
+    'driver' => env('MAIL_DRIVER', 'mailgun'),
 
     /*
     |--------------------------------------------------------------------------
@@ -119,5 +119,16 @@ return [
             resource_path('views/vendor/mail'),
         ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    |Email addresses
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'admin_email' => env('ADMIN_EMAIL'),
+
+    'report_email' => env('REPORT_EMAIL'),
 
 ];
