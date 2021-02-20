@@ -82,7 +82,8 @@ return [
 
         'partitionMac' => [
             'driver' => 'local',
-            'root'   => '/var/www/',
+            // 'root'   => '/var/www/', when using Docker
+            'root'   => '/Users/Shared/',
         ],
     ],
 
