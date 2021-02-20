@@ -15455,20 +15455,40 @@ body {
   margin-right: 15px;
   font-family: Helvetica, Arial, sans-serif;
   font-size: 12px;
+  color: white;
+  background-color: black;
 }
 
 .navbar-brand {
   font-size: 14px;
+  color: white !important;
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: white;
 }
 
 .navbar-laravel {
-  background-color: #fff;
+  background-color: black;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+a {
+  color: green;
+}
+
+a:hover {
+  color: green !important;
+}
+
+.btn-link {
+  color: green;
 }
 
 .mysounds-table {
   width: 90%;
   margin-left: 15px;
+  color: white;
 }
 
 .mysound-submit-form-div {
@@ -15521,9 +15541,26 @@ body {
   padding: 30%;
 }
 
+.ui-dialog-titlebar {
+  color: white;
+  background-color: black;
+}
+
+.ui-dialog-content {
+  color: white;
+}
+
 .ui-dialog-jukebox {
-  background-color: rgba(192, 192, 192, 0.5);
-  background-image: url("/img/cds.jpg");
-  background-blend-mode: color;
+  background-color: green;
+}
+
+.next {
+  background-color: black;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.card {
+  color: black;
 }
 

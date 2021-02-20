@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Console\Command;
 
 use DB;
+use Mail;
 
 class Report extends Command {
 
@@ -40,6 +41,19 @@ class Report extends Command {
     protected $query;
 
     /**
+     * The report file name.
+     *
+     * @var string
+     */
+    protected $filename;
+
+    /**
+     * The report title.
+     *
+     * @var string
+     */
+    protected $report_title;
+    /**
      * Create a new command instance.
      *
      */
@@ -71,6 +85,9 @@ class Report extends Command {
             $this->runDynamicReport();
         endif;
 
+        // Email report
+        $this->send_file();
+
         // Validate parameters.
         if(empty($this->type) && empty($this->query)):
             $this->error('A report type or report query is required');
@@ -88,14 +105,18 @@ class Report extends Command {
 
             switch($this->type):
                 case 'countries':
-                    $query = 'SELECT country, COUNT(*) AS total FROM artists GROUP BY country ORDER BY total DESC';
+                    $query = 'SELECT country, COUNT(*) AS total FROM artists GROUP BY country ORDER BY total DESC, country ASC';
                     $records = DB::select($query);
-                    $this->createCSVReport('artist_country.csv', $records, ['Country', 'Total']);
+                    $this->filename = 'artist_country.csv';
+                    $this->report_title = "Report of Artists' Countries";
+                    $this->createCSVReport($records, ['Country', 'Total']);
                     break;
                 case 'cities':
                     $query = "SELECT artist, country, notes FROM artists WHERE notes like '%Location%' ORDER BY country ASC, notes ASC, artist ASC";
                     $records = DB::select($query);
-                    $this->createCSVReport('artist_city.csv', $records, ['Artist', 'Country', 'Location']);
+                    $this->filename = 'artist_city.csv';
+                    $this->report_title = "Report of Artists' Cities";
+                    $this->createCSVReport($records, ['Artist', 'Country', 'Location']);
                     break;
                 default:
                     $this->error('This report type does not exist.');
@@ -114,7 +135,10 @@ class Report extends Command {
         try {
 
             $records = DB::select($this->query);
-            $this->createCSVReport('report-' . date('YmdHi') . '.csv', $records);
+            $now = date('YmdHi');
+            $this->filename = 'report-' . $now . '.csv';
+            $this->report_title = 'Dynamic Report - ' . $now;
+            $this->createCSVReport($records);
 
         } catch (Exception $e) {
             $this->error("$e");
@@ -124,15 +148,19 @@ class Report extends Command {
     /**
      * Create CSV file
      *
-     * @param String $filename Name for CSV file
      * @param Array $records Report data $paramname
      * @param Array $header Report header
      */
-    protected function createCSVReport(String $filename, Array $records, Array $header = null) {
+    protected function createCSVReport(array $records, array $header = null) {
         if (isset($records[0])):
 
-            $handle = fopen($filename, 'w');
+            $handle = fopen($this->filename, 'w');
 
+            // Add  report title
+            fputcsv($handle, [$this->report_title]);
+            fputcsv($handle, []);
+
+            // Add report header
             if (!$header):
                  $header = (array) $records[0];
                  $header = array_keys($header);
@@ -140,6 +168,7 @@ class Report extends Command {
 
             fputcsv($handle, $header);
 
+            // Add report data
             foreach($records as $record):
                 $record = (array) $record;
                 fputcsv($handle, array_values($record));
@@ -152,6 +181,15 @@ class Report extends Command {
             $this->error('No records were returned by this query');
         endif;
 
+    }
+
+    protected function send_file() {
+        $data = ['report' => $this->report_title];
+        Mail::send('mail_report', $data, function($message) {
+            $message->to(config('mail.report_email'), 'Report Email Address')->subject('MyMusic Report');
+            $message->attach(base_path() . DIRECTORY_SEPARATOR . $this->filename);
+            $message->from(config('mail.admin_email'), 'MyMusic');
+        });
     }
 
 }
