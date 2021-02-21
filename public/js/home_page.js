@@ -30,7 +30,7 @@ function play_songs(title, songs) {
 	let jukebox_form = '<div class="audio">';
 	jukebox_form += '<figure>';
 	jukebox_form += '<figcaption id="song_title">' +  songs[0].title + ' - ' + songs[0].artist + '</figcaption>';
-	jukebox_form += '<audio controls src="' + song_url + songs[0].id + '">Your browser does not support the<code>audio</code> element.</audio>';
+	jukebox_form += '<audio controls src="' + song_url + songs[0].id + '" type="audio/mpeg">Your browser does not support the<code>audio</code> element.</audio>';
 	jukebox_form += '</figure>';
 	jukebox_form += '<button class="next">Next</button>';
 	jukebox_form += '</div>';
