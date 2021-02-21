@@ -48,6 +48,7 @@ function play_songs(title, songs) {
 
 		// Remove song that is already set
 		song = songs.shift();
+
 		// Play
 		let audio = $(this).find('audio').get(0);
 		audio.play();
@@ -69,7 +70,16 @@ function play_songs(title, songs) {
 				$("#song_title").text(song.title + ' - ' + song.artist);
 				audio.pause();
 				audio.load();
-				audio.play();
+				var playPromise = audio.play();
+
+				if (playPromise !== undefined) {
+					playPromise.then(function() {
+						// Automatic playback started!
+					}).catch(function(error) {
+						// Automatic playback failed.
+						next_song(audio);
+					});
+				}
 			}
 		}
 
