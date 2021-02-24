@@ -44,6 +44,10 @@ function display_jukebox(title, songs) {
 			previous_id = next_song(audio, next, previous_id);
 		});
 
+		if (songs.length == 0) {
+			$('button.next').hide();
+		}
+
 		function next_song(audio, next, previous_id) {
 			// Get next song
 			song = songs.shift();
