@@ -15564,3 +15564,7 @@ a:hover {
   color: black;
 }
 
+span.select2-results {
+  color: green;
+}
+
