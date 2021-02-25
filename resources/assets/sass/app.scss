@@ -130,3 +130,11 @@ a:hover {
 span.select2-results {
   color: green;
 }
+
+.ui-dialog-titlebar-close {
+  background: url("/images/vendor/jquery-ui/themes/base/ui-icons_444444_256x240.png") repeat scroll -93px -128px rgba(0, 0, 0, 0);
+  border: medium none;
+}
+.ui-dialog-titlebar-close:hover {
+  background: url("/images/vendor/jquery-ui/themes/base/ui-icons_444444_256x240.png") repeat scroll -93px -128px rgba(0, 0, 0, 0);
+}
