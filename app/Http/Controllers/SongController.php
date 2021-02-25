@@ -191,7 +191,7 @@ class SongController extends Controller
                 response($contents, 200)
                     ->header("Content-Type", 'audio/mpeg')
                     ->header("Content-transfer-encoding", 'binary')
-                    ->header("Accept-Range", "bytes")
+                    ->header("Accept-Ranges", "bytes")
                     ->header("Content-Length", $song->filesize);
         }
     }
