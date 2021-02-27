@@ -31,15 +31,6 @@ class LoadDatabase extends Command
     public function __construct()
     {
         parent::__construct();
-
-        $this->process = new Process(sprintf(
-            'mysql -u%s -p%s --port=%s %s < %s',
-            config('database.connections.mysql.username'),
-            config('database.connections.mysql.password'),
-            config('database.connections.mysql.port'),
-            config('database.connections.mysql.database'),
-            storage_path('backups/mymusic.sql')
-        ));
     }
 
     /**
@@ -50,6 +41,15 @@ class LoadDatabase extends Command
     public function handle()
     {
         try {
+            $this->process = new Process(sprintf(
+                'mysql -u%s -p%s --port=%s %s < %s',
+                config('database.connections.mysql.username'),
+                config('database.connections.mysql.password'),
+                config('database.connections.mysql.port'),
+                config('database.connections.mysql.database'),
+                storage_path('backups/mymusic.sql')
+            ));
+        
             $this->process->mustRun();
 
             $this->info('The database load has been processed successfully.');
