@@ -12,7 +12,7 @@
 
         @if (isset($message))
             <p>{{ $message }}</p>
-        @endif        
+        @endif
 
         <div class="col-sm-3">
             <h5>Current Artists</h5>
@@ -37,16 +37,13 @@
             <div class="panel-body">
                 <table class="table table-striped mysounds-table">
 
-                    <!-- Table Headings -->
                     <thead>
                         <th>Artist</th>
                         <th>Country</th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
-                        <th>&nbsp;</th>
                     </thead>
 
-                    <!-- Table Body -->
                     <tbody>
                         @foreach ($artists as $artist)
                             <tr class="mysounds-tr">
@@ -62,13 +59,6 @@
                                 </td>
                                 <td>
                                    <input type="button" class="btn btn-link btn-mysounds" name="play_songs" id="play-songs-{{ $artist->id }}" value="play songs">
-                                </td>
-                                <td>
-                                    <form action="/artist/{{ $artist->id }}" method="POST">
-                                        {{ csrf_field() }}
-                                        {{ method_field('DELETE') }}
-                                        <a href="javascript:;" onclick="parentNode.submit();">delete</a>
-                                    </form>
                                 </td>
                             </tr>
                         @endforeach
@@ -87,7 +77,6 @@
                 </div>
             @endif
         </div>
-
 
 @endsection
 

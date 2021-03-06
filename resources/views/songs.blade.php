@@ -46,7 +46,6 @@
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
-                        <th>&nbsp;</th>
                     </thead>
 
                     <tbody>
@@ -83,13 +82,6 @@
                                 <td>
                                    <input type="button" class="btn btn-link btn-mysounds" name="playlist" id="playlist-{{ $song->id }}" value="add to playlist">
                                 </td>
-                                <td>
-                                    <form action="/song/{{ $song->id }}" method="POST">
-                                        {{ csrf_field() }}
-                                        {{ method_field('DELETE') }}
-                                         <a href="javascript:;" onclick="parentNode.submit();">delete</a>
-                                    </form>
-                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -107,7 +99,6 @@
                 </div>
             @endif
         </div>
-
 
 @endsection
 
