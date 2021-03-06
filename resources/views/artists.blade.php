@@ -23,7 +23,7 @@
             <div class="panel-body">
                 <form action="/artists/search" method="POST" role="search">
                     {{ csrf_field() }}
-                    <div class="input-group col-sm-6">
+                    <div class="input-group col-sm-6 pb-2">
                         <input type="text" class="form-control" name="q"
                             placeholder="Search artists" @if(!empty($q)) value="{{$q}}" @endif> <span class="input-group-btn">
                             <button type="submit" class="btn btn-default">

@@ -22,7 +22,7 @@
             <div class="panel-body">
                 <form action="/songs/search" method="POST" role="search">
                     {{ csrf_field() }}
-                    <div class="input-group col-sm-6">
+                    <div class="input-group col-sm-6 pb-2">
                         <input type="text" class="form-control" name="q" placeholder="Search songs"  @if(!empty($q)) value="{{$q}}" @endif>
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-default">
@@ -43,6 +43,7 @@
                         <th>Year</th>
                         <th>Genre</th>
                         <th>Playtime</th>
+                        <th>&nbsp;</th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>

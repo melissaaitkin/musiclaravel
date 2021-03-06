@@ -138,3 +138,17 @@ span.select2-results {
 .ui-dialog-titlebar-close:hover {
   background: url("/images/vendor/jquery-ui/themes/base/ui-icons_444444_256x240.png") repeat scroll -93px -128px rgba(0, 0, 0, 0);
 }
+
+.table thead th {
+  border-bottom: 0;
+  background-color: green;
+}
+
+.page-item.active .page-link {
+    background-color: green;
+    border-color: green;
+}
+
+.page-link {
+   color: green;
+}
