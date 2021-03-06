@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class BackupDatabase extends Command
 {
@@ -50,18 +49,19 @@ class BackupDatabase extends Command
                 $stats_flag = '--column-statistics=0';
             endif;
 
-            $this->process = new Process(sprintf(
+            $command = sprintf(
                 'mysqldump -u%s -p%s --port=%s %s ' . $stats_flag . ' > %s',
                 config('database.connections.mysql.username'),
                 config('database.connections.mysql.password'),
                 config('database.connections.mysql.port'),
                 config('database.connections.mysql.database'),
                 storage_path('backups/mymusic.sql')
-            ));
+            );
 
-            $this->process->mustRun();
+            exec($command);
+
             $this->info('The backup has been proceed successfully.');
-        } catch (ProcessFailedException $e) {
+        } catch (Exception $e) {
             $this->error('The backup process has been failed: ' . $e->getMessage());
         }
     }

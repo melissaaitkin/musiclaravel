@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 use Log;
 
 class LoadDatabase extends Command
@@ -41,19 +40,19 @@ class LoadDatabase extends Command
     public function handle()
     {
         try {
-            $this->process = new Process(sprintf(
+            $command = sprintf(
                 'mysql -u%s -p%s --port=%s %s < %s',
                 config('database.connections.mysql.username'),
                 config('database.connections.mysql.password'),
                 config('database.connections.mysql.port'),
                 config('database.connections.mysql.database'),
                 storage_path('backups/mymusic.sql')
-            ));
-        
-            $this->process->mustRun();
+            );
+
+            exec($command);
 
             $this->info('The database load has been processed successfully.');
-        } catch (ProcessFailedException $exception) {
+        } catch (Exception $exception) {
             Log::info($exception);
             $this->error('The database load process has been failed.');
         }
