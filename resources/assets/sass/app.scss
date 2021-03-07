@@ -90,7 +90,7 @@ a:hover {
 }
 
 .mysounds-home-page {
-  background-image: url( '/img/nightswimming.jpg' );
+  background-image: url( '/img/nightswimming.png' );
   background-size: cover;
   border: 10px solid white;
   border-radius: 25px;
@@ -157,6 +157,7 @@ span.select2-results {
   display:block;
   width: 100%;
   height: 100%;
+  box-shadow: 10px 20px 30px rgb(0 59 92), 10px -20px 30px rgb(0 59 92);
 }
 
 #night-image {
