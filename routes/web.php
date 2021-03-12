@@ -28,15 +28,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/home', 'HomeController@index');
 
-    // Utilties/Configuration Routes
 
-    Route::get("/utilities", ["uses" => "UtilitiesController@index", "middleware" => "admin"])->name('utilities.utilities');
 
-    Route::post("/load", ["uses" => "UtilitiesController@load_songs", "middleware" => "admin"])->name('utilities.load');
 
-    Route::get("/settings", "SettingsController@index");
-
-    Route::post('/settings', 'SettingsController@settings');
 
     // Song Routes
 
@@ -97,5 +91,20 @@ Route::middleware(['auth'])->prefix('internalapi')->group(function () {
     Route::get('/genres/songs', 'GenreController@songs');
 
  });
+
+
+Route::group(['middleware' => 'role:super-user'], function() {
+
+    // Utilties/Configuration Routes
+
+    Route::get("/utilities", ["uses" => "UtilitiesController@index"])->name('utilities.utilities');
+
+    Route::post("/load", ["uses" => "UtilitiesController@load_songs"])->name('utilities.load');
+
+    Route::get("/settings", "SettingsController@index");
+
+    Route::post('/settings', 'SettingsController@settings');
+
+});
 
 Auth::routes();

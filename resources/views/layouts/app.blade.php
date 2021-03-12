@@ -79,7 +79,7 @@
                                         @csrf
                                     </form>
                                     @auth
-                                        @if ( Auth::user()->id == 1)
+                                        @if ( Auth::user()->hasRole('super-user'))
                                             <a class="dropdown-item" href="{{ url('/utilities') }}">
                                                  {{ __('Utilities') }}
                                             </a>
