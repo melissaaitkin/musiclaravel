@@ -101,7 +101,7 @@ Route::group(['middleware' => 'role:super-user'], function() {
 
     Route::get('query', 'QueryController@index');
 
-    Route::post('query', 'QueryController@query');
+    Route::post('query', 'QueryAPIController@query');
 });
 
 Auth::routes();

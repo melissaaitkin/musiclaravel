@@ -29,18 +29,17 @@
                         <div class="col-sm-1"><input type="checkbox" name="show_cols" id="show_cols" class="form-control" @if ($show_cols) checked="{{ $show_cols }}" @endif></div>
                     </div>
                     <div>
-                        <textarea name="results" id="results" class="form-control" rows="25" cols="50">@if (!empty($results)){{ $results }}@endif</textarea>
+                        <textarea name="results" id="results" class="form-control" rows="20" cols="50">@if (!empty($results)){{ $results }}@endif</textarea>
                     </div>
                 </div>
 
-            <div class="form-group">
+                <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-6">
                         <button type="submit" class="btn btn-primary">Run</button>
                     </div>
                 </div>
 
             </div>
-
 
         </form>
 
