@@ -18,7 +18,7 @@ class QueryController extends Controller
      */
     public function index(Request $request)
     {
-        return view('query');
+        return view('query', ['show_cols' => 1]);
     }
 
     /**
@@ -32,6 +32,7 @@ class QueryController extends Controller
         $myquery = '';
         $results = '';
         $count = 0;
+        $show_cols = isset($request->show_cols);
         if (isset($request->myquery)):
             $myquery = $request->myquery;
             try {
@@ -42,7 +43,10 @@ class QueryController extends Controller
                 foreach($rows as $row):
                     $row = (array) $row;
                     foreach($row as $col => $val):
-                        $results .= $col . ' ' . $val . ' ';
+                        if ($show_cols):
+                            $results .= $col . ' ';
+                        endif;
+                        $results .= $val . ' ';
                     endforeach;
                     $results .= "\n";
                     $count++;
@@ -55,6 +59,7 @@ class QueryController extends Controller
         return view('query', [
             'myquery' => $myquery,
             'results' => $results,
+            'show_cols' => $show_cols,
         ]);
     }
 

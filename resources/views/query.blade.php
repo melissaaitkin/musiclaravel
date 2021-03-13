@@ -15,13 +15,18 @@
         <form action="/query" method="POST" class="form-horizontal">
             {{ csrf_field() }}
 
-            <div class="border border-dark pt-3 ml-3 mb-4">
+            <div class="ml-3">
 
                 <div class="form-group">
-                    <label for="directory" class="col-sm-3 control-label">Query</label>
+
 
                     <div class="pb-1">
+                        <label for="myquery" class="col-sm-3 control-label">Query</label>
                         <input type="text" name="myquery" id="myquery" class="form-control" @if (!empty($myquery)) value="{{ $myquery }}" @endif>
+                    </div>
+                    <div class="row pb-1">
+                        <div class="col-sm-1"><label for="show_cols" class="control-label">Show columns</label></div>
+                        <div class="col-sm-1"><input type="checkbox" name="show_cols" id="show_cols" class="form-control" @if ($show_cols) checked="{{ $show_cols }}" @endif></div>
                     </div>
                     <div>
                         <textarea name="results" id="results" class="form-control" rows="25" cols="50">@if (!empty($results)){{ $results }}@endif</textarea>
