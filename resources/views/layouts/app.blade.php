@@ -80,6 +80,9 @@
                                     </form>
                                     @auth
                                         @if ( Auth::user()->hasRole('super-user'))
+                                            <a class="dropdown-item" href="{{ url('/query') }}">
+                                                 {{ __('Queries') }}
+                                            </a>
                                             <a class="dropdown-item" href="{{ url('/utilities') }}">
                                                  {{ __('Utilities') }}
                                             </a>
