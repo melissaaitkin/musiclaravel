@@ -22,7 +22,7 @@
 
                     <div class="pb-1">
                         <label for="myquery" class="col-sm-3 control-label">Query</label>
-                        <input type="text" name="myquery" id="myquery" class="form-control" @if (!empty($myquery)) value="{{ $myquery }}" @endif>
+                        <textarea name="myquery" id="myquery" class="form-control" rows="3" cols="50">@if (!empty($myquery)){{ $myquery }}@endif</textarea>
                     </div>
                     <div class="row pb-1">
                         <div class="col-sm-1"><label for="show_cols" class="control-label">Show columns</label></div>
