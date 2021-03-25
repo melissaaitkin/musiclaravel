@@ -187,12 +187,14 @@ class SongController extends Controller
         // TODO what to do with wma files
         if (Storage::disk(config('filesystems.partition'))->has($location)) {
             $contents = Storage::disk(config('filesystems.partition'))->get($location);
-            return
-                response($contents, 200)
-                    ->header("Content-Type", 'audio/mpeg')
-                    ->header("Content-transfer-encoding", 'binary')
-                    ->header("Accept-Ranges", "bytes")
-                    ->header("Content-Length", $song->filesize);
+            $response = response($contents, 200)
+                ->header("Content-Type", 'audio/mpeg')
+                ->header("Content-transfer-encoding", 'binary')
+                ->header("Accept-Ranges", "bytes");
+            if ($song->filesize) {
+                $response->header("Content-Length", $song->filesize);
+            }
+            return $response;
         }
     }
 
