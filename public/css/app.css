@@ -15485,6 +15485,11 @@ a:hover {
   color: green;
 }
 
+.btn-primary {
+  background-color: green;
+  border-color: green;
+}
+
 .mysounds-table {
   width: 90%;
   margin-left: 15px;
