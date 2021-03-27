@@ -54,9 +54,10 @@ class LyricAPIController extends Controller
             $xml = simplexml_load_string($response);
 
             if (isset($xml) && !empty($xml->Lyric)) {
-                echo "Track ID: " . $xml->TrackId . "</br>";
-                echo "Lyric ID: " . $xml->LyricId . "</br>";
-                echo "Cover Art: " . $xml->LyricCovertArtUrl . "</br></br>";
+                // echo "Track ID: " . $xml->TrackId . "</br>";
+                // echo "Lyric ID: " . $xml->LyricId . "</br>";
+                // echo "Cover Art: " . $xml->LyricCovertArtUrl . "</br></br>";
+                echo $request->song . "</br></br>";
                 echo $xml->Lyric;
             } else {
                 echo "SONG cannot be found";
