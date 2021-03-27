@@ -69,3 +69,27 @@ function display_jukebox(title, songs) {
       }
     })
 }
+
+function get_lyrics(artist, song) {
+    let url = LYRICS_API_URL;
+    url += "?artist=" + encodeURIComponent(artist) + "&song=" + encodeURIComponent(song);
+
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'x-rapidapi-key': LYRICS_API_KEY,
+            'x-rapidapi-host': LYRICS_API_HOST
+
+        },
+        })
+        .then(response => {
+            return response.text();
+        })
+        .then(function(xml) {
+            return $(xml).find('Lyric').text();
+        })
+        .catch(err => {
+            console.error(err);
+        });
+
+}
