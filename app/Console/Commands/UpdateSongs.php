@@ -122,8 +122,8 @@ class UpdateSongs extends Command {
     /**
      * Perform direct search via API.
      *
-     * @param $string $artist Song artist
-     * @param $string $song Song title
+     * @param string $artist Song artist
+     * @param string $song Song title
      */
     private function directSearch($artist, $song) {
         $lyric = [];
@@ -140,8 +140,8 @@ class UpdateSongs extends Command {
     /**
      * Perform broader search via API.
      *
-     * @param $string $artist Song artist
-     * @param $string $song Song title
+     * @param string $artist Song artist
+     * @param string $song Song title
      */
     private function search($artist, $song) {
         $lyric = [];
@@ -165,8 +165,8 @@ class UpdateSongs extends Command {
     /**
      * Retrieve lyric by id via API.
      *
-     * @param $string $id Chart Lyric Id
-     * @param $string $checksum Checksum
+     * @param string $id Chart Lyric Id
+     * @param string $checksum Checksum
      */
     private function getLyric($id, $checksum) {
         $lyric = [];
@@ -181,4 +181,3 @@ class UpdateSongs extends Command {
     }
 
 }
-
