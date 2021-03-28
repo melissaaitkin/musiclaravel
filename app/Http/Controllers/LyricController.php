@@ -18,7 +18,7 @@ class LyricController extends Controller
     public function show($id)
     {
         $song = Song::find($id);
-        echo $song->lyrics;
+        return view('lyrics', ['song' => $song]);
     }
 
 }
