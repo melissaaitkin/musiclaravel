@@ -85,7 +85,7 @@
                                    <input type="button" class="btn btn-link btn-mysounds" name="playlist" id="playlist-{{ $song->id }}" value="add to playlist">
                                 </td>
                                 <td>
-                                    <a target="_blank" href="/lyrics?artist={{ $song->artist }}&song={{ $song->title }}">lyrics</a>
+                                    <a target="_blank" href="/lyrics/{{ $song->id }}">lyrics</a>
                                 </td>
                             </tr>
                         @endforeach

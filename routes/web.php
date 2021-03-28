@@ -68,7 +68,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('genres', 'GenreController@index');
 
     // Lyric routes
-    Route::get('lyrics', 'LyricApIController@get_lyrics');
+    Route::get('lyrics/{id}', 'LyricController@show');
 
 });
 
