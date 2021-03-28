@@ -62,17 +62,19 @@ class UpdateSongs extends Command {
     {
 
         $songs = Song::leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
-            ->select('songs.id', 'songs.title', 'artist')
-            ->whereNull('songs.lyrics')
+            ->select('songs.id', 'songs.title', 'songs.notes','artist')
             ->get();
 
         foreach ($songs as $song):
 
             try {
-
-                $lyric = $this->directSearch($song->artist, $song->title);
+                $artist = $song->artist;
+                if ($artist == 'Compilations'):
+                    $artist = trim($song->notes);
+                endif;
+                $lyric = $this->directSearch($artist, $song->title);
                 if (empty($lyric)):
-                    $lyric = $this->search($song->artist, $song->title);
+                    $lyric = $this->search($artist, $song->title);
                 endif;
 
                 if (! empty($lyric)):
@@ -84,9 +86,7 @@ class UpdateSongs extends Command {
                 endif;
 
             } catch (Exception $e) {
-                $song->lyrics = 'unavailable';
-                $song->save();
-                Log::info($song->title . ' ' . $song->artist);
+                Log::info($song->title . ' ' . $artist);
                 Log::info($e->getMessage());
             }
 
@@ -131,7 +131,7 @@ class UpdateSongs extends Command {
         $response = $this->executeCurlRequest($this->url . "SearchLyricDirect?artist=" . urlencode($artist) . "&song=" . urlencode($song));
         $xml = simplexml_load_string($response);
         if (isset($xml) && ! empty($xml->Lyric)):
-            $lyric = ['lyric' => $xml->Lyric, 'cover_art' => $xml->LyricCovertArtUrl ?? ''];
+            $lyric = ['lyric' => (string) $xml->Lyric, 'cover_art' => (string) $xml->LyricCovertArtUrl ?? ''];
         endif;
 
         return $lyric;
