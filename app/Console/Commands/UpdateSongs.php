@@ -69,35 +69,18 @@ class UpdateSongs extends Command {
         foreach ($songs as $song):
 
             try {
-                $curl = curl_init();
 
-                curl_setopt_array($curl, [
-                    CURLOPT_URL => $this->url . "SearchLyricDirect?artist=" . urlencode($song->artist) . "&song=" . urlencode($song->title),
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_ENCODING => "",
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 30,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => "GET",
-                    CURLOPT_HTTPHEADER => array("Content-type: text/xml"),
-                ]);
+                $lyric = $this->directSearch($song->artist, $song->title);
+                if (empty($lyric)):
+                    $lyric = $this->search($song->artist, $song->title);
+                endif;
 
-                $response = curl_exec($curl);
-                $err = curl_error($curl);
-
-                curl_close($curl);
-
-                if ($err):
-                    Log::info($err);
+                if (! empty($lyric)):
+                    $song->lyrics = $lyric['lyric'];
+                    $song->cover_art = serialize(['api' => $lyric['cover_art']]);
+                    $song->save();
                 else:
-                    $xml = simplexml_load_string($response);
-                    if (isset($xml) && !empty($xml->Lyric)):
-                        $song->lyrics = $xml->Lyric;
-                        $song->save();
-                    else:
-                        throw new Exception('Not found');
-                    endif;
+                    throw new Exception('Not found');
                 endif;
 
             } catch (Exception $e) {
@@ -111,4 +94,91 @@ class UpdateSongs extends Command {
 
     }
 
+    private function executeCurlRequest($url) {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array("Content-type: text/xml"),
+        ]);
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        if ($err):
+            throw new Exception($err);
+        endif;
+
+        return $response;
+    }
+
+    /**
+     * Perform direct search via API.
+     *
+     * @param $string $artist Song artist
+     * @param $string $song Song title
+     */
+    private function directSearch($artist, $song) {
+        $lyric = [];
+
+        $response = $this->executeCurlRequest($this->url . "SearchLyricDirect?artist=" . urlencode($artist) . "&song=" . urlencode($song));
+        $xml = simplexml_load_string($response);
+        if (isset($xml) && ! empty($xml->Lyric)):
+            $lyric = ['lyric' => $xml->Lyric, 'cover_art' => $xml->LyricCovertArtUrl ?? ''];
+        endif;
+
+        return $lyric;
+    }
+
+    /**
+     * Perform broader search via API.
+     *
+     * @param $string $artist Song artist
+     * @param $string $song Song title
+     */
+    private function search($artist, $song) {
+        $lyric = [];
+
+        $response = $this->executeCurlRequest($this->url . "SearchLyric?artist=" . urlencode($artist) . "&song=" . urlencode($song));
+        $xml = simplexml_load_string($response);
+        if (isset($xml->SearchLyricResult) && ! empty($xml->SearchLyricResult)):
+
+            foreach ($xml->SearchLyricResult as $result):
+                if (strcasecmp($artist, $result->Artist) === 0):
+                    if (strcasecmp($song, $result->Song) === 0):
+                        $lyric = $this->getLyric($result->LyricId, $result->LyricChecksum);
+                    endif;
+                endif;
+            endforeach;
+        endif;
+
+        return $lyric;
+    }
+
+    /**
+     * Retrieve lyric by id via API.
+     *
+     * @param $string $id Chart Lyric Id
+     * @param $string $checksum Checksum
+     */
+    private function getLyric($id, $checksum) {
+        $lyric = [];
+
+        $response = $this->executeCurlRequest($this->url . "GetLyric?lyricId=" . $id . "&lyricCheckSum=" . $checksum);
+        $xml = simplexml_load_string($response);
+        if (isset($xml) && ! empty($xml->Lyric)):
+            $lyric = ['lyric' => (string) $xml->Lyric, 'cover_art' => (string) $xml->LyricCovertArtUrl ?? ''];
+        endif;
+
+        return $lyric;
+    }
+
 }
+
