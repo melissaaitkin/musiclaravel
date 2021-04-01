@@ -70,6 +70,8 @@ Route::middleware(['auth'])->group(function () {
     // Lyric routes
     Route::get('lyrics/{id}', 'LyricController@show');
 
+    Route::post('lyrics', 'LyricController@store');
+
 });
 
 Route::middleware(['auth'])->prefix('internalapi')->group(function () {

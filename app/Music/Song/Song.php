@@ -174,6 +174,22 @@ class Song extends Model
     }
 
     /**
+     * Update song lyrics.
+     *
+     * @param Request $request
+     */
+    public static function update_lyrics($request)
+    {
+        $validator = $request->validate([
+            'id' => 'required|max:255',
+        ]);
+
+        $song = Song::find($request->id);
+        $song->lyrics = $request->lyrics;
+        $song->save();
+    }
+
+    /**
      * Create a song via the music loading process.
      *
      * @param string path

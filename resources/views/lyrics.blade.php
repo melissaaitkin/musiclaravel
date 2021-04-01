@@ -20,6 +20,7 @@
             <div class="form-group">
                 @if( ! empty($song->id))
                     <div class="col-sm-offset-3 col-sm-6">
+                        <input type="hidden" name="id" id="id" value="{{ $song->id }}">
                         <button type="submit" class="btn btn-primary">Update</button>
                         <a href="{{ url()->previous() }}" class="btn btn-primary">Back</a>
                     </div>

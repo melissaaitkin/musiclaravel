@@ -21,4 +21,16 @@ class LyricController extends Controller
         return view('lyrics', ['song' => $song]);
     }
 
+    /**
+     * Store song lyrics in the database
+     *
+     * @param Request request
+     * @return Response
+     */
+    public function store(Request $request)
+    {
+        Song::update_lyrics($request);
+        return redirect('/songs');
+    }
+
 }
