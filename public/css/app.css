@@ -14664,3 +14664,7 @@ span.select2-results {
   background-size: 100% 100%;
   box-shadow: 25px 25px 50px 0 grey inset, -25px -25px 50px 0 grey inset;
 }
+
+.select2-container .select2-selection--single {
+  height: 33px !important;
+}

@@ -84,9 +84,13 @@ class SongController extends Controller
     public function edit($id)
     {
         $song = Song::find($id);
+        if (!empty($song->cover_art)):
+            $cover_art = unserialize($song->cover_art);
+        endif;
         return view('song', [
             'song'          => $song,
             'title'         => $song->title,
+            'cover_art'     => $cover_art['api'] ?? null,
             'artist_name'   => $song->artist->artist,
             'file_types'    => Song::FILE_TYPES,
             'song_exists'   => Storage::disk(config('filesystems.partition'))->has($this->media_directory . $song->location),
