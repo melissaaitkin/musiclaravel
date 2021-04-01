@@ -16,6 +16,7 @@ class UpdateSongs extends Command {
      */
     protected $signature = 'db:songs
                             {--lyrics : Update lyrics}
+                            {--art : Update cover art}
                             {--ids= : Comma separated list of ids}';
 
     /**
@@ -50,13 +51,19 @@ class UpdateSongs extends Command {
     {
         $options = $this->options();
 
-        if(isset($options['lyrics'])):
-            $ids = null;
-            if(! empty($options['ids'])):
-                $ids = explode(',', $options['ids']);
-            endif;
+        $ids = null;
+        if(! empty($options['ids'])):
+            $ids = explode(',', $options['ids']);
+        endif;
+
+        if(! empty($options['lyrics'])):
             $this->updateLyrics($ids);
         endif;
+
+        if(! empty($options['art'])):
+            $this->updateCoverArt($ids);
+        endif;
+
     }
 
     /**
@@ -87,6 +94,46 @@ class UpdateSongs extends Command {
 
                 if (! empty($lyric)):
                     $song->lyrics = $lyric['lyric'];
+                    $song->cover_art = serialize(['api' => $lyric['cover_art']]);
+                    $song->save();
+                else:
+                    throw new Exception('Not found');
+                endif;
+
+            } catch (Exception $e) {
+                Log::info($song->title . ' ' . $artist);
+                Log::info($e->getMessage());
+            }
+
+        endforeach;
+
+    }
+
+    /**
+     * Update cover art lyrics.
+     *
+     */
+    protected function updateCoverArt($ids)
+    {
+
+        $query = Song::leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
+            ->select('songs.id', 'songs.title', 'songs.notes','artist')
+            ->whereNull('songs.cover_art')
+            ->whereRaw('LENGTH(songs.lyrics) < 20');
+        if ($ids):
+            $query->whereIn('songs.id', $ids);
+        endif;
+        $songs = $query->get();
+
+        foreach ($songs as $song):
+
+            try {
+                $artist = $song->artist;
+                if ($artist == 'Compilations'):
+                    $artist = trim($song->notes);
+                endif;
+                $lyric = $this->directSearch($artist, $song->title);
+                if (! empty($lyric)):
                     $song->cover_art = serialize(['api' => $lyric['cover_art']]);
                     $song->save();
                 else:
