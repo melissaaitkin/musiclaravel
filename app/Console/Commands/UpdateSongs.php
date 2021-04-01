@@ -15,7 +15,8 @@ class UpdateSongs extends Command {
      * @var string
      */
     protected $signature = 'db:songs
-                            {--lyrics : Update lyrics}';
+                            {--lyrics : Update lyrics}
+                            {--ids= : Comma separated list of ids}';
 
     /**
      * The console command description.
@@ -50,7 +51,11 @@ class UpdateSongs extends Command {
         $options = $this->options();
 
         if(isset($options['lyrics'])):
-            $this->updateLyrics();
+            $ids = null;
+            if(!empty($options['ids'])):
+                $ids = explode(',', $options['ids']);
+            endif;
+            $this->updateLyrics($ids);
         endif;
     }
 
@@ -58,12 +63,15 @@ class UpdateSongs extends Command {
      * Update song lyrics.
      *
      */
-    protected function updateLyrics()
+    protected function updateLyrics($ids)
     {
 
-        $songs = Song::leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
-            ->select('songs.id', 'songs.title', 'songs.notes','artist')
-            ->get();
+        $query = Song::leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
+            ->select('songs.id', 'songs.title', 'songs.notes','artist');
+        if ($ids):
+            $query->whereIn('songs.id', $ids);
+        endif;
+        $songs = $query->get();
 
         foreach ($songs as $song):
 
