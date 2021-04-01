@@ -98,7 +98,7 @@ Route::group(['middleware' => 'role:super-user'], function() {
 
     Route::get("utilities", ["uses" => "UtilitiesController@index"])->name('utilities.utilities');
 
-    Route::post("load", ["uses" => "UtilitiesController@load_songs"])->name('utilities.load');
+    Route::post("load", ["uses" => "UtilitiesController@loadSongs"])->name('utilities.load');
 
     Route::get("settings", "SettingsController@index");
 

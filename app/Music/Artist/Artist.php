@@ -86,7 +86,7 @@ class Artist extends Model
      *
      * @return LengthAwarePaginator Paginated list of artists.
      */
-    public static function get_artists()
+    public static function getArtists()
     {
         return Artist::orderBy('artist')->paginate();
     }
@@ -97,7 +97,7 @@ class Artist extends Model
      * @param array $fields Specific fields to retrieve.
      * @return Collection Eloquent collection of artists.
      */
-    public static function get_all_artists(array $fields = null)
+    public static function getAllArtists(array $fields = null)
     {
         if ($fields) {
             return Artist::all($fields);
@@ -138,7 +138,7 @@ class Artist extends Model
     * @param array $artist
     * @return integer
     */
-    public static function dynamic_store(array $artist)
+    public static function dynamicStore(array $artist)
     {
         return Artist::insertGetId([
             'artist'    => $artist[0],
@@ -153,7 +153,7 @@ class Artist extends Model
      * @param  string $artist_name Artist name
      * @return boolean
      */
-    public static function get_id($artist_name)
+    public static function getID($artist_name)
     {
         $artist = Artist::where("artist", $artist_name)->first();
         if ($artist) {
@@ -168,7 +168,7 @@ class Artist extends Model
      * @param integer $id Artist id
      * @return boolean
      */
-    public static function is_compilation($id)
+    public static function isCompilation($id)
     {
         $artist = Artist::where(["id" => $id])->get(['artist'])->first()->toArray();
         return $artist['artist'] === 'Compilations';
@@ -204,7 +204,7 @@ class Artist extends Model
     *
     * @param string $search
     */
-    public static function search_by_name($search) {
+    public static function searchByName($search) {
         return Artist::select('id', 'artist as text')
             ->where('artist', 'LIKE', '%' . $search . '%')
             ->get();

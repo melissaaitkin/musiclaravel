@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
+use App\Permission;
 use Blade;
 use Gate;
-use App\Permission;
 use Illuminate\Support\ServiceProvider;
 
 class PermissionsServiceProvider extends ServiceProvider

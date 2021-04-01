@@ -5,10 +5,15 @@ namespace App\Music\Song;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
-use App\Music\Artist\Artist;
-
 class Song extends Model
 {
+
+    /**
+     * Supported file types
+     *
+     * @var array
+     */
+    const FILE_TYPES = ['mp3', 'mp4', 'm4a', 'wav', 'wma'];
 
     protected $table = 'songs';
 
@@ -132,13 +137,6 @@ class Song extends Model
     protected $perPage = 10;
 
     /**
-     * Supported file types
-     *
-     * @var array
-     */
-    const FILE_TYPES = ['mp3', 'mp4', 'm4a', 'wav', 'wma'];
-
-    /**
      * Create or update a song.
      *
      * @param Request $request
@@ -148,7 +146,7 @@ class Song extends Model
         $validator = $request->validate([
             'title' => 'required|max:255',
             'album' => 'required|max:255',
-            'year'  => 'required|integer'
+            'year'  => 'required|integer',
         ]);
 
         $song = [];
@@ -165,12 +163,12 @@ class Song extends Model
         $song['playtime'] = $request->playtime;
         $song['notes'] = $request->notes;
 
-        if (isset($request->id)) {
+        if(isset($request->id)):
             // updateOrCreate throwing duplicate error
             Song::where('id', $request->id)->update($song);
-        } else {
+        else:
             Song::create($song);
-        }
+        endif;
     }
 
     /**
@@ -178,7 +176,7 @@ class Song extends Model
      *
      * @param Request $request
      */
-    public static function update_lyrics($request)
+    public static function updateLyrics($request)
     {
         $validator = $request->validate([
             'id' => 'required|max:255',
@@ -199,30 +197,22 @@ class Song extends Model
      *
      * @param Request $request
      */
-    public static function dynamic_store($path, $album_name, $artist_id, $song)
+    public static function dynamicStore($path, $album_name, $artist_id, $song)
     {
         $_song = [];
         $_song['title'] = $song->title();
         $_song['album'] = $album_name;
         $_song['year'] = $song->year();
-        $_song['file_type'] = $song->file_type();
-        $_song['track_no'] = $song->track_no();
+        $_song['file_type'] = $song->fileType();
+        $_song['track_no'] = $song->trackNo();
         $_song['genre'] = $song->genre();
         $_song['location'] = $path;
         $_song['artist_id'] = $artist_id;
-        $_song['filesize'] = $song->file_size();
+        $_song['filesize'] = $song->fileSize();
         $_song['composer'] = $song->composer();
         $_song['playtime'] = $song->playtime();
         $_song['notes'] = $song->notes();
         Song::create($_song);
-    }
-
-    /**
-     * Get the artist record associated with the song.
-     */
-    public function artist()
-    {
-        return $this->hasOne('App\Music\Artist\Artist', 'id', 'artist_id');
     }
 
     /**
@@ -232,7 +222,7 @@ class Song extends Model
      * @param string $album_name Album name
      * @return boolean
      */
-    public static function does_album_exist($id, $album_name)
+    public static function doesAlbumExist($id, $album_name)
     {
         $song = Song::where(["artist_id" => $id, "album" => $album_name])->first();
         return isset($song);
@@ -245,7 +235,7 @@ class Song extends Model
      * @param string $title Song title
      * @return boolean
      */
-    public static function does_song_exist($id, $title)
+    public static function doesSongExist($id, $title)
     {
         // FIXME investigate processing of songs with no artists and remove duplication
         $song = Song::where(["artist_id" => $id, "title" => $title])->first();
@@ -258,13 +248,13 @@ class Song extends Model
     * @param string $album Restrict via album.
     * @return Collection Eloquent collection of song titles.
     */
-    public static function get_song_titles(string $album = null)
+    public static function getSongTitles(string $album = null)
     {
-        if ($album) {
+        if($album):
             return Song::where('album', '=', $album)->get(['title']);
-        } else {
+        else:
             return Song::all(['title']);
-        }
+        endif;
     }
 
     /**
@@ -277,12 +267,12 @@ class Song extends Model
         Song::findOrFail($id)->delete();
     }
 
-    public static function is_song($file) {
+    public static function isSong($file) {
         $extension = strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
         return in_array($extension, self::FILE_TYPES);
     }
 
-    public static function get_artist_albums($id) {
+    public static function getArtistAlbums($id) {
         return Song::distinct('album')->where(["artist_id" => $id])->get(['album'])->toArray();
     }
 
@@ -294,7 +284,7 @@ class Song extends Model
     * @param int  $id
     * @param string $artist
     */
-    public static function get_artist_songs($id, $artist) {
+    public static function getArtistSongs($id, $artist) {
         return Song::select('id', 'title')
             ->where(["artist_id" => $id])
             ->orWhere(["notes" => $artist])
@@ -307,7 +297,7 @@ class Song extends Model
     *
     * @param int $id
     */
-    public static function get_album_songs_by_song_id($id) {
+    public static function getAlbumSongsBySongID($id) {
         return Song::select('id', 'title', 'album')
             ->where('artist_id', function($q1) use ($id)
                 {
@@ -353,31 +343,39 @@ class Song extends Model
 
     public static function songs(Request $request)
     {
-        $model = new Song();
+        $model = new Song;
 
         $query = $model->leftJoin('artists', 'artists.id', '=', 'songs.artist_id');
-        if (isset($request->album)) {
+        if(isset($request->album)):
             $query->where('album', '=', $request->album);
-        }
+        endif;
 
-        if (isset($request->artist_id)) {
+        if(isset($request->artist_id)):
             $query->where('artist_id', '=', $request->artist_id);
-        }
+        endif;
 
-        if (isset($request->artist)) {
+        if(isset($request->artist)):
             $query->orWhere("songs.notes", '=', $request->artist);
-        }
+        endif;
 
-        if (isset($request->offset) && isset($request->limit)) {
+        if(isset($request->offset) && isset($request->limit)):
             $query->skip($request->offset)->take($request->limit);
-        }
+        endif;
 
-        if (isset($request->all)) {
+        if(isset($request->all)):
             $songs = $query->get(['songs.*', 'artist']);
-        } else {
+        else:
            $songs = $query->get(['songs.id', 'songs.title', 'artists.artist']);
-        }
+        endif;
 
         return $songs;
+    }
+
+    /**
+     * Get the artist record associated with the song.
+     */
+    public function artist()
+    {
+        return $this->hasOne('App\Music\Artist\Artist', 'id', 'artist_id');
     }
 }

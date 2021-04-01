@@ -2,20 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Music\Song\Song;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
-
-use App\Music\Song\Song;
-use App\Music\Artist\Artist;
-
+use Illuminate\Support\Facades\Validator;
 use Storage;
-use File;
-use Exception;
-use Config;
 
 class SongController extends Controller
 {
@@ -84,7 +77,7 @@ class SongController extends Controller
     public function edit($id)
     {
         $song = Song::find($id);
-        if (!empty($song->cover_art)):
+        if (! empty($song->cover_art)):
             $cover_art = unserialize($song->cover_art);
         endif;
         return view('song', [
@@ -107,9 +100,9 @@ class SongController extends Controller
     {
         $q = $request->q;
         if ($q != "") {
-            $data = $this->retrieve_songs($q);
+            $data = $this->retrieveSongs($q);
         } else {
-            $data = $this->retrieve_songs(session()->get('songs_query'));
+            $data = $this->retrieveSongs(session()->get('songs_query'));
         }
         // Data object can be a view or a paginator
         if (get_class($data) === 'Illuminate\View\View') {
@@ -129,11 +122,11 @@ class SongController extends Controller
      * @param  string $query
      * @return array
      */
-    protected function retrieve_songs($query) {
+    protected function retrieveSongs($query) {
         if ($query != "") {
             session()->put('songs_query', $query);
             if (stripos( $query, 'SELECT') === 0) {
-                return $this->admin_search($query);
+                return $this->adminSearch($query);
             } else {
                 return Song::search($query);
             }
@@ -148,9 +141,9 @@ class SongController extends Controller
      * @param  string $query
      * @return Response
      */
-    public function admin_search(string $query)
+    public function adminSearch(string $query)
     {
-        if (!is_valid_read_query($query)) {
+        if (! isValidReadQuery($query)) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -162,7 +155,7 @@ class SongController extends Controller
         }
         $paginate = new LengthAwarePaginator($songs, count($songs), 10, 1, [
             'path' =>  request()->url(),
-            'query' => request()->query()
+            'query' => request()->query(),
         ]);
 
         if (count($songs) > 0) {
@@ -225,7 +218,7 @@ class SongController extends Controller
         if (isset($request->id)) {
             if (isset($request->album)) {
                 // Get songs in an album by song id
-                $songs = Song::get_album_songs_by_song_id($request->id);
+                $songs = Song::getAlbumSongsBySongID($request->id);
             } else {
                 // Get song
                 $songs = Song::find($request->id);

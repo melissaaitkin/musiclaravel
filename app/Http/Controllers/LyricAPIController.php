@@ -21,9 +21,9 @@ class LyricAPIController extends Controller
      * @param  Request $request
      * @return Response
      */
-    public function get_lyrics(Request $request)
+    public function getLyrics(Request $request)
     {
-        if (!isset($request->artist) || !isset($request->song)) {
+        if (! isset($request->artist) || ! isset($request->song)) {
             echo "Please supply artist and song parameters";
             exit;
         }
@@ -53,7 +53,7 @@ class LyricAPIController extends Controller
             // echo $response;
             $xml = simplexml_load_string($response);
 
-            if (isset($xml) && !empty($xml->Lyric)) {
+            if (isset($xml) && ! empty($xml->Lyric)) {
                 // echo "Track ID: " . $xml->TrackId . "</br>";
                 // echo "Lyric ID: " . $xml->LyricId . "</br>";
                 // echo "Cover Art: " . $xml->LyricCovertArtUrl . "</br></br>";

@@ -52,7 +52,7 @@ class UpdateSongs extends Command {
 
         if(isset($options['lyrics'])):
             $ids = null;
-            if(!empty($options['ids'])):
+            if(! empty($options['ids'])):
                 $ids = explode(',', $options['ids']);
             endif;
             $this->updateLyrics($ids);

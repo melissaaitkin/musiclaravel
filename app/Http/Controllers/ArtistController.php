@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Music\Artist\Artist;
+use App\Music\Song\Song;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use App\Music\Artist\Artist as Artist;
-use App\Music\Song\Song as Song;
 
-use DB;
-use Log;
 
 class ArtistController extends Controller
 {
@@ -20,7 +20,7 @@ class ArtistController extends Controller
      */
     public function index()
     {
-        return view('artists', ['artists' => Artist::get_artists()]);
+        return view('artists', ['artists' => Artist::getArtists()]);
     }
 
     /**
@@ -30,7 +30,7 @@ class ArtistController extends Controller
      */
     public function create()
     {
-        return view('artist', ['title' => 'Add Artist', 'countries' => get_country_names()]);
+        return view('artist', ['title' => 'Add Artist', 'countries' => getCountryNames()]);
     }
 
     /**
@@ -59,15 +59,15 @@ class ArtistController extends Controller
         $artist = Artist::find($id);
         $albums = null;
         if ($artist->artist === 'Compilations') {
-            $albums = Song::get_artist_albums($id);
+            $albums = Song::getArtistAlbums($id);
             array_unshift($albums, array('album' => 'Please Select'));
         }
         return view('artist', [
             'title'     => $artist->artist,
             'artist'    => $artist,
             'albums'    => $albums,
-            'songs'     => Song::get_artist_songs($id, $artist->artist),
-            'countries' => get_country_names(),
+            'songs'     => Song::getArtistSongs($id, $artist->artist),
+            'countries' => getCountryNames(),
         ]);
     }
 
@@ -81,9 +81,9 @@ class ArtistController extends Controller
     {
         $q = $request->q;
         if ($q != "") {
-            $data = $this->retrieve_artists($q);
+            $data = $this->retrieveArtists($q);
         } else {
-            $data = $this->retrieve_artists(session()->get('artists_query'));
+            $data = $this->retrieveArtists(session()->get('artists_query'));
         }
 
         // Data object can be a view or a paginator
@@ -104,11 +104,11 @@ class ArtistController extends Controller
      * @param  string $query
      * @return array
      */
-    protected function retrieve_artists($query) {
+    protected function retrieveArtists($query) {
         if ($query != "") {
             session()->put('artists_query', $query);
             if ( stripos( $query, 'SELECT') === 0 ) {
-                return $this->admin_search($query);
+                return $this->adminSearch($query);
             } else {
                 return Artist::search($query);
             }
@@ -123,9 +123,9 @@ class ArtistController extends Controller
      * @param  string $query
      * @return Response
      */
-    public function admin_search(string $query)
+    public function adminSearch(string $query)
     {
-        if (!is_valid_read_query($query)) {
+        if (! isValidReadQuery($query)) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -137,7 +137,7 @@ class ArtistController extends Controller
         }
         $paginate = new LengthAwarePaginator($artists, count($artists), 10, 1, [
             'path' =>  request()->url(),
-            'query' => request()->query()
+            'query' => request()->query(),
         ]);
 
         if (count($artists) > 0) {
@@ -169,7 +169,7 @@ class ArtistController extends Controller
         $data = [];
 
         if ($request->has('q')) {
-            $data = Artist::search_by_name($request->q);
+            $data = Artist::searchByName($request->q);
         }
 
         return response()->json($data);

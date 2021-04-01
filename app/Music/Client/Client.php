@@ -3,14 +3,13 @@
 namespace App\Music\Client;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 
 class Client extends Model
 {
 
     protected $table = 'clients';
 
-	/**
+    /**
      * The primary key for the model.
      *
      * @var string
@@ -52,11 +51,11 @@ class Client extends Model
      */
     protected $updated_at;
 
-	/**
-	 * The attributes that aren't mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $guarded = ['expires'];
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = ['expires'];
 
 }

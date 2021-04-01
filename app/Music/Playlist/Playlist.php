@@ -3,7 +3,6 @@
 namespace App\Music\Playlist;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 
 class Playlist extends Model
 {
@@ -39,11 +38,11 @@ class Playlist extends Model
      */
     protected $updated_at;
 
-	/**
-	 * The attributes that aren't mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $guarded = [];
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
 
 }

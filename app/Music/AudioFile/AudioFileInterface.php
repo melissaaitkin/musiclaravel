@@ -19,18 +19,18 @@ interface AudioFileInterface {
     public function year();
 
     /**
-     * Require the file_type method is implemented.
+     * Require the fileType method is implemented.
      *
      * @return string
      */
-    public function file_type();
+    public function fileType();
 
     /**
-     * Require the track_no method is implemented.
+     * Require the trackNo method is implemented.
      *
      * @return string
      */
-    public function track_no();
+    public function trackNo();
 
     /**
      * Require the genre method is implemented.
@@ -44,7 +44,7 @@ interface AudioFileInterface {
      *
      * @return integer
      */
-    public function file_size();
+    public function fileSize();
 
     /**
      * Require the composer method is implemented.

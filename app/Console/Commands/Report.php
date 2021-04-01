@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands;
 
+use DB;
 use Exception;
 use Illuminate\Console\Command;
-
-use DB;
 use Mail;
 
 class Report extends Command {
@@ -78,7 +77,7 @@ class Report extends Command {
 
         if(isset($options['query'])):
             $this->query = $options['query'];
-            if (!is_valid_read_query($this->query)):
+            if (! isValidReadQuery($this->query)):
                 $this->error('Only read queries are authorized');
                 exit;
             endif;
@@ -86,7 +85,7 @@ class Report extends Command {
         endif;
 
         // Email report
-        $this->send_file();
+        $this->sendFile();
 
         // Validate parameters.
         if(empty($this->type) && empty($this->query)):
@@ -123,7 +122,7 @@ class Report extends Command {
             endswitch;
 
         } catch (Exception $e) {
-            $this->error("$e");
+            $this->error("{{$e}}");
         }
     }
 
@@ -141,7 +140,7 @@ class Report extends Command {
             $this->createCSVReport($records);
 
         } catch (Exception $e) {
-            $this->error("$e");
+            $this->error("{{$e}}");
         }
     }
 
@@ -161,7 +160,7 @@ class Report extends Command {
             fputcsv($handle, []);
 
             // Add report header
-            if (!$header):
+            if (! $header):
                  $header = (array) $records[0];
                  $header = array_keys($header);
             endif;
@@ -183,7 +182,7 @@ class Report extends Command {
 
     }
 
-    protected function send_file() {
+    protected function sendFile() {
         $data = ['report' => $this->report_title];
         Mail::send('mail_report', $data, function($message) {
             $message->to(config('mail.report_email'), 'Report Email Address')->subject('MyMusic Report');

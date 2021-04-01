@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Music\Client\Client as Client;
 use Exception;
 use Illuminate\Console\Command;
-use App\Music\Client\Client as Client;
 
 class CreateClient extends Command {
 
@@ -107,7 +107,7 @@ class CreateClient extends Command {
             $this->info('The client has been created successfully.');
 
         } catch (Exception $e) {
-            $this->error("$e");
+            $this->error("{{$e}}");
         }
     }
 

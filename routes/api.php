@@ -23,15 +23,15 @@ Route::group([
     ],
 ], function () {
 
-	Route::get('/songs', 'SongController@all')->name('songs');
+    Route::get('songs', 'SongController@all')->name('songs');
 
-	Route::get('/songs/{id}', 'SongController@song')->name('songs.song');
+    Route::get('songs/{id}', 'SongController@song')->name('songs.song');
 
-	Route::get('/playlists', 'PlaylistController@playlists')->name('playlists');
+    Route::get('playlists', 'PlaylistController@playlists')->name('playlists');
 
-	Route::post('/playlists', 'PlaylistController@save')->name('playlists.save');
+    Route::post('playlists', 'PlaylistController@save')->name('playlists.save');
 
-	Route::get('/playlists/songs', 'PlaylistController@songs')->name('playlists.songs');
+    Route::get('playlists/songs', 'PlaylistController@songs')->name('playlists.songs');
 
 });
 

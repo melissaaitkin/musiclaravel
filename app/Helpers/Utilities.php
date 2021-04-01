@@ -1,8 +1,8 @@
 <?php
 
-function get_country_names() 
+function getCountryNames() 
 {
-    if (!Cache::store('redis')->has('country_names')) {
+    if (! Cache::store('redis')->has('country_names')) {
         $countries = json_decode(file_get_contents( "https://restcountries.eu/rest/v2/all"));
         $country_names = [];
         foreach($countries as $country) {
@@ -25,7 +25,7 @@ function get_country_names()
 /**
  * Replaces characters file systems cannot process
  */
-function replace_special_file_system_chars(String $s) {
+function replaceSpecialFileSystemChars(String $s) {
     $s = str_replace(
         [":", "/", ";", "?", "[", "]", '"'],
         [" - ", "-", " ", "", "(", ")", "'"],
@@ -42,7 +42,7 @@ function replace_special_file_system_chars(String $s) {
  *
  * @param String $query SQL query
  */
-function is_valid_read_query(String $query) {
+function isValidReadQuery(String $query) {
     if (stripos($query, 'DELETE') !== false
         || stripos( $query, 'UPDATE') !== false
         || stripos( $query, 'INSERT') !== false

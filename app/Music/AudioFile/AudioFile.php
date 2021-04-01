@@ -29,7 +29,7 @@ class AudioFile implements AudioFileInterface {
      */
     private $file_info;
 
-	/**
+    /**
      * @param string $file_type
      * @param string $location
      * @param string $filename
@@ -73,7 +73,7 @@ class AudioFile implements AudioFileInterface {
      *
      * @return string
      */
-    public function file_type() {
+    public function fileType() {
         return $this->file_type;
     }
 
@@ -82,7 +82,7 @@ class AudioFile implements AudioFileInterface {
      *
      * @return string
      */
-    public function track_no() {
+    public function trackNo() {
         return '';
     }
 
@@ -100,7 +100,7 @@ class AudioFile implements AudioFileInterface {
      *
      * @return integer
      */
-    public function file_size() {
+    public function fileSize() {
         return $this->file_info['filesize'] ?? 0;
     }
 
@@ -145,7 +145,7 @@ class AudioFile implements AudioFileInterface {
      *
      * @return bool
      */
-    public function is_compilation() {
+    public function isCompilation() {
         return $this->is_compilation;
     }
 

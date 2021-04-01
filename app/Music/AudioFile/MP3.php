@@ -47,7 +47,7 @@ class MP3 implements AudioFileInterface {
      */
     public function title() {
         $title = $this->file_info["tags"]["id3v2"]["title"][0] ?? '';
-        return replace_special_file_system_chars($title);
+        return replaceSpecialFileSystemChars($title);
     }
 
 
@@ -58,7 +58,7 @@ class MP3 implements AudioFileInterface {
      */
     public function artist() {
         $artist = $this->file_info["tags"]["id3v2"]["artist"][0] ?? '';
-        return replace_special_file_system_chars($artist);
+        return replaceSpecialFileSystemChars($artist);
     }
 
     /**
@@ -75,7 +75,7 @@ class MP3 implements AudioFileInterface {
      *
      * @return string
      */
-    public function file_type() {
+    public function fileType() {
         return self::FILE_TYPE;
     }
 
@@ -87,11 +87,11 @@ class MP3 implements AudioFileInterface {
      */
     public function album() {
         $album = $this->file_info["tags"]["id3v2"]["album"][0] ?? 'Unknown Album';
-        if (!empty($album)) {
-            $album = replace_special_file_system_chars($album);
-        } else {
+        if(! empty($album)):
+            $album = replaceSpecialFileSystemChars($album);
+        else:
             $album = 'Unknown Album';
-        }
+        endif;
         return $album;
     }
 
@@ -100,7 +100,7 @@ class MP3 implements AudioFileInterface {
      *
      * @return string
      */
-    public function track_no() {
+    public function trackNo() {
         return $this->file_info["tags"]["id3v2"]["track_number"][0] ?? '';
     }
 
@@ -118,7 +118,7 @@ class MP3 implements AudioFileInterface {
      *
      * @return integer
      */
-    public function file_size() {
+    public function fileSize() {
         return $this->file_info["filesize"] ?? 0;
     }
 
@@ -156,9 +156,9 @@ class MP3 implements AudioFileInterface {
      */
     public function notes() {
         $notes = '';
-        if ($this->is_compilation) {
+        if($this->is_compilation):
            $notes = $this->file_info["tags"]["id3v2"]["artist"][0];
-        }
+        endif;
         return $notes;
     }
 
@@ -167,7 +167,7 @@ class MP3 implements AudioFileInterface {
      *
      * @return bool
      */
-    public function is_compilation() {
+    public function isCompilation() {
         return $this->is_compilation;
     }
 

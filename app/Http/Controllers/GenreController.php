@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Music\Song\Song as Song;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
-use App\Music\Song\Song as Song;
 
 class GenreController extends Controller
 {

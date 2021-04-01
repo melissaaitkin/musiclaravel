@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Http\Request;
-use App\Music\ClientToken\ClientToken as ClientToken;
+use App\Music\ClientToken\ClientToken;
 use Closure;
+use Illuminate\Http\Request;
 
 class ApiAuth
 {
@@ -34,7 +34,7 @@ class ApiAuth
     public function handle($request, Closure $next)
     {      
         // Validate authentication token
-        if (!$this->validAuthentication()):
+        if(! $this->validAuthentication()):
 
             // Return json response if invalid auth token is submitted (or none)
             return response()->json(['message' => 'Invalid authentication token.'], 401);
@@ -52,18 +52,18 @@ class ApiAuth
     {
         $token = $this->request->get('auth_token');
         $client_id = $this->request->get('client_id');
-        if (!$token || !$client_id || !is_numeric($client_id)) {
+        if(! $token || !$client_id || ! is_numeric($client_id)):
             return false;
-        }
+        endif;
 
         $client_token = ClientToken::where(["client_id" => $client_id])->get(['token'])->first();
-        if (!$client_token) {
+        if(! $client_token):
             return false;
-        }
+        endif;
 
-        if ($client_token->token == crypt($token, config('app.api_salt'))) {
+        if($client_token->token == crypt($token, config('app.api_salt'))):
             return true;
-        }
+        endif;
 
         return false;
     }

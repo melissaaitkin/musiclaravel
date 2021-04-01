@@ -26,7 +26,7 @@ class MP4 implements AudioFileInterface {
      */
     private $file_info;
 
-	/**
+    /**
      * @param string $location
      * @param string $filename
      * @param bool $is_compilation
@@ -47,7 +47,7 @@ class MP4 implements AudioFileInterface {
      */
     public function title() {
         $title = $this->file_info["quicktime"]["comments"]["title"][0] ?? '';
-        return replace_special_file_system_chars($title);
+        return replaceSpecialFileSystemChars($title);
     }
 
     /**
@@ -57,7 +57,7 @@ class MP4 implements AudioFileInterface {
      */
     public function artist() {
         $artist = $this->file_info["quicktime"]["comments"]["artist"][0] ?? '';
-        return replace_special_file_system_chars($artist);
+        return replaceSpecialFileSystemChars($artist);
     }
 
     /**
@@ -68,12 +68,12 @@ class MP4 implements AudioFileInterface {
     public function year() {
         //1984-01-23T08:00:00Z
         $date_str = $this->file_info["quicktime"]["comments"]["creation_date"][0] ?? '';
-        if (empty($date_str)) {
+        if(empty($date_str)):
             $year = 9999;
-        } else {
-            $date_time = new \DateTime($date_str);
+        else:
+            $date_time = new DateTime($date_str);
             $year = $date_time->format('Y');
-        }
+        endif;
         return $year;
     }
 
@@ -82,7 +82,7 @@ class MP4 implements AudioFileInterface {
      *
      * @return string
      */
-    public function file_type() {
+    public function fileType() {
         return self::FILE_TYPE;
     }
 
@@ -93,8 +93,8 @@ class MP4 implements AudioFileInterface {
      */
     public function album() {
         $album = $this->file_info["quicktime"]["comments"]["album"][0] ?? 'Unknown Album';
-        if (!empty($album)) {
-            $album = replace_special_file_system_chars($album);
+        if (! empty($album)) {
+            $album = replaceSpecialFileSystemChars($album);
         } else {
             $album = 'Unknown Album';
         }
@@ -106,7 +106,7 @@ class MP4 implements AudioFileInterface {
      *
      * @return string
      */
-    public function track_no() {
+    public function trackNo() {
         return $this->file_info["quicktime"]["comments"]["track_number"][0] ?? '';
     }
 
@@ -124,7 +124,7 @@ class MP4 implements AudioFileInterface {
      *
      * @return integer
      */
-    public function file_size() {
+    public function fileSize() {
         return $this->file_info["filesize"] ?? 0;
     }
 
@@ -169,7 +169,7 @@ class MP4 implements AudioFileInterface {
      *
      * @return bool
      */
-    public function is_compilation() {
+    public function isCompilation() {
         return $this->is_compilation;
     }
 
