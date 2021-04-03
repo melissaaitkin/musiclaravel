@@ -72,6 +72,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('lyrics', 'LyricController@store');
 
+    // Image routes
+    Route::get('cover/{id}', 'ImageAPIController@coverArt');
+
 });
 
 Route::middleware(['auth'])->prefix('internalapi')->group(function () {
