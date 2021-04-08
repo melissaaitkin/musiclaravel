@@ -42,7 +42,9 @@ class ImageAPIController extends Controller
                     endif;
                  endforeach;
              endif;
-         endif;
+        else:
+            $path = Cache::store('redis')->get('song_photo_' . $id);
+        endif;
 
         if (!$path):
             $path = Storage::disk('home')->path('img/nightswimming.png');
