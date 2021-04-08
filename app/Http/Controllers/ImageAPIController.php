@@ -40,9 +40,9 @@ class ImageAPIController extends Controller
              endforeach;
          endif;
 
-        if ($path):
-            return Response::download($path);
+        if (!$path):
+            $path = Storage::disk('home')->path('img/nightswimming.png');
         endif;
-        return '';
+        return Response::download($path);
     }
 }
