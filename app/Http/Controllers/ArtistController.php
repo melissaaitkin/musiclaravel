@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Music\Artist\Artist;
 use App\Music\Song\Song;
+use App\Traits\StoreImageTrait;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-
 class ArtistController extends Controller
 {
+
+    use StoreImageTrait;
 
     /**
      * Display artists
@@ -41,7 +42,29 @@ class ArtistController extends Controller
      */
     public function store(Request $request)
     {
-        Artist::store($request);
+        $validator = $request->validate([
+            'artist' => 'required',
+        ]);
+
+        $record = [];
+        $record['artist']           = $request->artist;
+        $record['country']          = $request->country;
+        $record['group_members']    = $request->group_members;
+        $record['location']         = $request->location;
+        $record['notes']            = $request->notes;
+        $record['is_group']         = isset($request->is_group);
+
+        $artist = Artist::updateOrCreate(['id' => $request->id ?? null], $record);
+
+        // Only save photo if save if successful
+        if ($request->hasFile('photo')):
+            $image      = $request->file('photo');
+            $file_name  = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $request->artist));
+            $file_name  .= '.' . $image->extension();
+            $this->storeImage($image, $file_name, 'artists/');
+            $artist->photo = $file_name;
+            $artist->save();
+        endif;
 
         $url = $request->only('redirects_to');
         $path = $url['redirects_to'] ?? '/artists';

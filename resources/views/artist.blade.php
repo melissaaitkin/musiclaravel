@@ -8,11 +8,17 @@
 
         @include('common.errors')
 
-        <form action="/artist" method="POST" class="form-horizontal">
+        <form action="/artist" enctype="multipart/form-data" method="POST" class="form-horizontal">
             {{ csrf_field() }}
 
             <div>
                  <input type="hidden" name="redirects_to" value="{{ URL::previous() }}"/>
+            </div>
+
+            <div class="float-right">
+               @if(isset($artist->photo))
+                    <img src="{{ asset("storage/artists/$artist->photo") }}" class="img-thumbnail img-fluid" alt="artist photo">
+                @endif
             </div>
 
             <div class="form-group">
@@ -23,24 +29,17 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="is_group" class="col-sm-3 control-label">Is Group</label>
-                <div class="col-sm-3">
-                <input type="checkbox" name="is_group" id="song-is_group" @if(!empty($artist->is_group) && ($artist->is_group)) checked @endif>
-                </div>
-            </div>
-
             @if(isset($albums))
-            <div class="form-group">
-                <label for="album" class="col-sm-6 control-label">Albums</label>
-                <div class="col-sm-6">
-                    <select class="form-control" name="album" id="album">
-                        @foreach($albums as $album)
-                            <option value="{{$album['album']}}">{{$album['album']}}</option>
-                        @endforeach
-                    </select>
+                <div class="form-group">
+                    <label for="album" class="col-sm-6 control-label">Albums</label>
+                    <div class="col-sm-6">
+                        <select class="form-control" name="album" id="album">
+                            @foreach($albums as $album)
+                                <option value="{{$album['album']}}">{{$album['album']}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-            </div>
             @endif
 
             <div class="form-group">
@@ -64,10 +63,33 @@
             </div>
 
             <div class="form-group">
+                <label for="location" class="col-sm-3 control-label">Location</label>
+
+                <div class="col-sm-6">
+                    <input name="location" id="location" class="form-control" @if(!empty($artist->location)) value="{{$artist->location}}"@endif/>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label for="notes" class="col-sm-3 control-label">Notes</label>
 
                 <div class="col-sm-6">
                     <textarea name="notes" id="artist-notes" class="form-control">@if(!empty($artist->notes)){{$artist->notes}}@endif</textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="photo" class="col-sm-6 control-label">Photo</label>
+
+                <div class="col-sm-6">
+                    <input type="file" name="photo" id="photo" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="is_group" class="col-sm-3 control-label">Is Group</label>
+                <div class="col-sm-3">
+                <input type="checkbox" name="is_group" id="song-is_group" @if(!empty($artist->is_group) && ($artist->is_group)) checked @endif>
                 </div>
             </div>
 
