@@ -4,7 +4,7 @@
 
     <div class="panel-body mysound-submit-form-div">
 
-        <h2 class="col-sm-6">{{ $title }}</h2>
+        <h2 class="col-sm-6 green">{{ $title }}</h2>
 
         @include('common.errors')
 
@@ -34,6 +34,8 @@
                 <div class="col">
                     @if (isset($artist->photo))
                         <img src="{{ asset("storage/artists/$artist->photo") }}" class="img-thumbnail img-fluid" alt="artist photo">
+                    @else
+                        <img src="{{ asset("storage/nightswimming.jpg") }}" class="img-thumbnail img-fluid" alt="app photo">
                     @endif
                 </div>
             </div>
@@ -82,7 +84,7 @@
                 </div>
             </div>
 
-            <div class="form-group row w-50">
+            <div class="form-group row w-50 ml-1">
                 <div class="col">
                     <label for="notes" class="control-label">Notes</label>
                     <textarea name="notes" id="artist-notes" class="form-control">@if (!empty($artist->notes)){{ $artist->notes }}@endif</textarea>
