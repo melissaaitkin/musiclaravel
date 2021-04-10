@@ -30,10 +30,10 @@
                 </div>
             </div>
             
-            <div class="form-group row w-50 float-right">
+            <div class="form-group row w-50 float-right pl-5">
                 <div class="col">
                     @if (isset($artist->photo))
-                        <img src="{{ asset("storage/artists/$artist->photo") }}" class="img-thumbnail img-fluid" alt="artist photo">
+                        <img src="{{ asset("storage/artists/$artist->photo") }}" class="img-thumbnail img-fluid artist-photo" alt="artist photo">
                     @else
                         <img src="{{ asset("storage/black.jpeg") }}" class="img-fluid w-50" alt="black" >
                     @endif

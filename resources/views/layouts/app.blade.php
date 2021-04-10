@@ -106,7 +106,7 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="py-1">
             @yield('content')
             @yield('scripts')
             @yield('styles')

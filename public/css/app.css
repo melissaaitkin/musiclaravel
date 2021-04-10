@@ -14555,7 +14555,6 @@ a:hover {
 .mysound-submit-form-div {
   background-color: black;
   color: white;
-  padding: 20px;
   margin-right: 15px;
   border-radius: 25px;
 }
@@ -14662,4 +14661,8 @@ span.select2-results {
 
 .no-artist-photo {
   margin-top: -25%;
+}
+
+.artist-photo {
+  max-height: 300px;
 }
