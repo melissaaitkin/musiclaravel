@@ -35,7 +35,7 @@
                     @if (isset($artist->photo))
                         <img src="{{ asset("storage/artists/$artist->photo") }}" class="img-thumbnail img-fluid" alt="artist photo">
                     @else
-                        <img src="{{ asset("storage/nightswimming.jpg") }}" class="img-thumbnail img-fluid" alt="app photo">
+                        <img src="{{ asset("storage/black.jpeg") }}" class="img-fluid w-50" alt="black" >
                     @endif
                 </div>
             </div>
@@ -92,7 +92,7 @@
             </div>
 
             @if (isset($songs) && count($songs) > 0)
-                <div class="row w-50 float-right pl-5">
+                <div class="row w-50 float-right pl-5  @if (empty($artist->photo)) no-artist-photo @endif">
                     <div class="col">
                         Songs
                         <ol id="songs" style="list-style-type:none">

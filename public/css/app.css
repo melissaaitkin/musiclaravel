@@ -14659,3 +14659,7 @@ span.select2-results {
 .green {
   color: green;
 }
+
+.no-artist-photo {
+  margin-top: -25%;
+}
