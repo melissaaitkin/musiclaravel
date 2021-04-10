@@ -43,7 +43,9 @@ class ArtistController extends Controller
     public function store(Request $request)
     {
         $validator = $request->validate([
-            'artist' => 'required',
+            'artist'    => 'required',
+            'founded'   => 'nullable|integer',
+            'disbanded' => 'nullable|integer',
         ]);
 
         $record = [];
@@ -52,6 +54,8 @@ class ArtistController extends Controller
         $record['group_members']    = $request->group_members;
         $record['location']         = $request->location;
         $record['notes']            = $request->notes;
+        $record['founded']          = $request->founded;
+        $record['disbanded']        = $request->disbanded;
         $record['is_group']         = isset($request->is_group);
 
         $artist = Artist::updateOrCreate(['id' => $request->id ?? null], $record);

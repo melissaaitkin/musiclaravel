@@ -71,6 +71,22 @@
             </div>
 
             <div class="form-group">
+                <label for="founded" class="col-sm-3 control-label">Founded</label>
+
+                <div class="col-sm-3">
+                    <input type="text" name="founded" id="founded" class="form-control" value=@if (old('founded')) {{ old('founded') }} @elseif (!empty($artist->founded)) {{ $artist->founded }} @endif>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="disbanded" class="col-sm-3 control-label">Disbanded</label>
+
+                <div class="col-sm-3">
+                    <input type="text" name="disbanded" id="disbanded" class="form-control" value=@if (old('disbanded')) {{ old('disbanded') }} @elseif (!empty($artist->disbanded)) {{ $artist->disbanded }} @endif>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label for="notes" class="col-sm-3 control-label">Notes</label>
 
                 <div class="col-sm-6">
