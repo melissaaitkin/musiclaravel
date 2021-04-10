@@ -65,7 +65,7 @@ class ArtistController extends Controller
             $image      = $request->file('photo');
             $file_name  = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $request->artist));
             $file_name  .= '.' . $image->extension();
-            $this->storeImage($image, $file_name, 'artists/');
+            $this->storeImage($image, $file_name, 'artists/', [400, 400]);
             $artist->photo = $file_name;
             $artist->save();
         endif;

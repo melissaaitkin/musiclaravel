@@ -15,7 +15,7 @@
                  <input type="hidden" name="redirects_to" value="{{ URL::previous() }}"/>
             </div>
 
-            <div class="float-right">
+            <div class="float-right pr-5 mr-5">
                @if (isset($artist->photo))
                     <img src="{{ asset("storage/artists/$artist->photo") }}" class="img-thumbnail img-fluid" alt="artist photo">
                 @endif
