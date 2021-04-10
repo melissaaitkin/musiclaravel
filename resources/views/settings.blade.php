@@ -8,7 +8,7 @@
 
         @include('common.errors')
 
-        @if(isset($msg))
+        @if (isset($msg))
             <div>{{ $msg }}</div>
         @endif
 
@@ -23,7 +23,7 @@
                     <label for="directory" class="col-sm-3 control-label">Media Directory</label>
 
                     <div class="col-sm-6">
-                        <input type="text" name="media_directory" id="media_directory" class="form-control" @if (!empty($media_directory)) value="{{$media_directory}}" @endif>
+                        <input type="text" name="media_directory" id="media_directory" class="form-control" @if (!empty($media_directory)) value="{{ $media_directory }}" @endif>
                     </div>
                 </div>
 

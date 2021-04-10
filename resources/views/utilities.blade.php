@@ -8,11 +8,11 @@
 
         @include('common.errors')
 
-        @if(isset($msg))
+        @if (isset($msg))
             <div class="alert alert-success">{{ $msg }}</div>
         @endif
 
-        @if(session()->has('msg'))
+        @if (session()->has('msg'))
             <div class="alert alert-success">
                 {{ session()->get('msg') }}
             </div>
@@ -26,14 +26,14 @@
                 <h6 class="col-sm-6">Load Songs from Media Library</h6>
 
                 <div class="form-group pt-1">
-                    <label for="directory" class="col-sm-6 control-label">Media Library: @if (!empty($media_directory)) {{$media_directory}} @endif</label>
+                    <label for="directory" class="col-sm-6 control-label">Media Library: @if (!empty($media_directory)) {{ $media_directory }} @endif</label>
                 </div>
 
                 <div class="form-group">
                     <label for="directory" class="col-sm-3 control-label">Artist Directory</label>
 
                     <div class="col-sm-6">
-                        <input type="text" name="artist_directory" id="artist_directory" class="form-control" @if(session()->has('artist_directory')) value=" {{ session()->get('artist_directory') }}" @endif>
+                        <input type="text" name="artist_directory" id="artist_directory" class="form-control" @if (session()->has('artist_directory')) value=" {{ session()->get('artist_directory') }}" @endif>
                     </div>
                 </div>
 
@@ -62,7 +62,7 @@
                     <label for="directory" class="col-sm-3 control-label">Directory</label>
 
                     <div class="col-sm-6">
-                        <input type="text" name="random_directory" id="random_directory" class="form-control"@if(session()->has('random_directory')) value=" {{ session()->get('random_directory') }}" @endif>
+                        <input type="text" name="random_directory" id="random_directory" class="form-control"@if (session()->has('random_directory')) value=" {{ session()->get('random_directory') }}" @endif>
                     </div>
                 </div>
 
