@@ -62,6 +62,18 @@
                             </div>
                         </div>
                     @endif
+                    @if (isset($albums))
+                        <div class="row pb-2">
+                            <div class="col">
+                                <label for="album" class="control-label">Albums</label>
+                                <select class="form-control" name="album" id="album">
+                                    @foreach ($albums as $album)
+                                        <option value="{{ $album['album'] }}">{{ $album['album'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @endif
                     <div class="row pb-2">
                         <div class="col">
                             <label for="notes" class="control-label">Notes</label>
@@ -112,20 +124,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- FIXME -->
-            @if (isset($albums))
-                <div class="form-group">
-                    <label for="album" class="col-sm-6 control-label">Albums</label>
-                    <div class="col-sm-6">
-                        <select class="form-control" name="album" id="album">
-                            @foreach ($albums as $album)
-                                <option value="{{ $album['album'] }}">{{ $album['album'] }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            @endif
 
         </form>
     </div>

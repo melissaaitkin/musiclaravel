@@ -12,12 +12,12 @@ $(document).ready(function() {
                         return;
                     }
                     response.json().then(function(data) {
-                        var ol = '<ol id="artist-songs">';
+                        var ol = '<ol id="songs" style="list-style-type:none">';
                         $.each(data.songs, function(k, song) {
                             ol += '<li><a href="/song/' + song.id + '">' + song.title + '</a></li>';
                         });
                         ol += '</ol>';
-                        $("#artist-songs").replaceWith(ol);
+                        $("#songs").replaceWith(ol);
                     });
                 }
             )
