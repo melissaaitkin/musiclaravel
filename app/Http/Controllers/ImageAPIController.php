@@ -29,7 +29,11 @@ class ImageAPIController extends Controller
     public function coverArt($id) {
         if (! Cache::store('redis')->has('song_photo_' . $id)):
             $song = Song::find($id);
-            $location = explode(DIRECTORY_SEPARATOR, $song->location);
+            $location = explode('/', $song->location);
+            // Handle MAC and Win directory structures.
+            if (count($location) < 2):
+                $location = explode('\\', $song->location);
+            endif;
             $location = $this->media_directory . $location[0] . DIRECTORY_SEPARATOR . $location[1];
             $files = Storage::disk(config('filesystems.partition'))->files($location);
             $path = null;
