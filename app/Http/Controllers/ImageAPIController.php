@@ -47,7 +47,7 @@ class ImageAPIController extends Controller
         endif;
 
         if (!$path):
-            $path = Storage::disk('home')->path('img/nightswimming.png');
+            $path = Storage::disk('public')->path('black.jpeg');
         endif;
         return Response::download($path);
     }
