@@ -221,4 +221,7 @@ return [
 
     'api_salt' => env('API_SALT'),
 
+    'x_rapid_api_key' => env('X_RAPID_API_KEY'),
+    'deezer_host' => env('DEEZER_HOST'),
+
 ];
