@@ -54,12 +54,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row pb-2">
-                        <div class="col">
-                            <label for="group_members" class="control-label">Group Members</label>
-                            <textarea name="group_members" id="artist-group_members" class="form-control">@if (!empty($artist->group_members)){{ $artist->group_members }}@endif</textarea>
+                    @if (!empty($artist->is_group) && ($artist->is_group))
+                        <div class="row pb-2">
+                            <div class="col">
+                                <label for="group_members" class="control-label">Group Members</label>
+                                <textarea name="group_members" id="artist-group_members" class="form-control">@if (!empty($artist->group_members)){{ $artist->group_members }}@endif</textarea>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                     <div class="row pb-2">
                         <div class="col">
                             <label for="notes" class="control-label">Notes</label>
@@ -88,17 +90,15 @@
                 </div>
 
                 <!-- second column -->
-                <div class="col">
-                    <div class="row">
+                <div class="col pt-4 pl-5">
+                    <div class="row pl-5">
                         <div class="col">
                             @if (isset($artist->photo))
                                 <img src="{{ asset("storage/artists/$artist->photo") }}" class="img-thumbnail img-fluid artist-photo" alt="artist photo">
-                            @else
-                                <img src="{{ asset("storage/black.jpeg") }}" class="img-fluid w-50" alt="black" >
                             @endif
                         </div>
                     </div>
-                    <div class="row pt-5">
+                    <div class="row pt-5 pl-5">
                         @if (isset($songs) && count($songs) > 0)
                             <div class="col">
                                 Songs
