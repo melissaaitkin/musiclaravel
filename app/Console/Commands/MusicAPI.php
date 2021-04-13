@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Music\Artist\Artist;
 use App\Music\Song\Song;
+use DB;
 use Exception;
 use Illuminate\Console\Command;
 use Log;
@@ -16,6 +18,7 @@ class MusicAPI extends Command {
      */
     protected $signature = 'api:music
                             {--years : Get song years}
+                            {--photos : Get song photos}
                             {--ids= : Comma separated list of song ids}';
 
     /**
@@ -67,6 +70,10 @@ class MusicAPI extends Command {
         if(! empty($options['years'])):
             $this->updateSongYear($ids);
         endif;
+
+        if(! empty($options['photos'])):
+            $this->updatePhotos($ids);
+        endif;
     }
 
     /**
@@ -75,7 +82,6 @@ class MusicAPI extends Command {
      */
     protected function updateSongYear($ids)
     {
-
         $query = Song::leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
             ->select('songs.id', 'songs.title', 'artist')
             ->where('songs.year', 9999);
@@ -89,7 +95,6 @@ class MusicAPI extends Command {
             try {
                 $track = $this->search($song->title, $song->artist);
                 if ($track):
-                    $track_info = $this->track($track->id);
                     if ($track_info):
                         if (isset($track_info->release_date) && isset($track_info->album->release_date)):
                             if (strlen($track_info->release_date) == 10 && strlen($track_info->album->release_date) == 10):
@@ -118,6 +123,45 @@ class MusicAPI extends Command {
 
         endforeach;
 
+    }
+
+    /**
+     * Update artist photos and genres.
+     *
+     */
+    protected function updatePhotos($ids)
+    {
+        $query = "SELECT a.id, artist, (SELECT s.title FROM songs as s WHERE s.artist_id = a.id or s.notes = a.artist LIMIT 1) as title FROM artists a where genres is null";
+        $artists = DB::select(DB::raw($query));
+
+        foreach ($artists as $artist):
+            Log::info($artist->artist . ':' . $artist->title);
+            try {
+                $track = $this->search($artist->title, $artist->artist);
+                if ($track):
+                    Log::info("Track");
+                    Log::info(print_r($track,true));
+                    $photo = $track->artist->picture_big ?? '';
+                    $album_info = $this->album($track->album->id);
+                    Log::info("Album");
+                    Log::info(print_r($album_info,true));
+                    $genres = [];
+                    if (isset($album_info->genres->data)):
+                        foreach($album_info->genres->data as $genre):
+                            $genres[] = $genre->name;
+                        endforeach;
+                    endif;
+                    if (!empty($photo) || !empty($genres)):
+                        $a = Artist::find($artist->id);
+                        $a->photo = $photo;
+                        $a->genres = implode(',', $genres);
+                        $a->save();
+                    endif;
+                endif;
+            } catch (Exception $e) {
+                Log::info($e->getMessage());
+            }
+        endforeach;
     }
 
     private function executeCurlRequest($url) {
@@ -175,6 +219,24 @@ class MusicAPI extends Command {
      */
     private function track($id) {
         return $this->executeCurlRequest('https://' . $this->deezer_host . '/track/' . $id);
+    }
+
+    /**
+     * Get album info via API.
+     *
+     * @param int $id Track id
+     */
+    private function album($id) {
+        return $this->executeCurlRequest('https://' . $this->deezer_host . '/album/' . $id);
+    }
+
+    /**
+     * Get artist info via API.
+     *
+     * @param int $id Track id
+     */
+    private function artist($id) {
+        return $this->executeCurlRequest('https://' . $this->deezer_host . '/artist/' . $id);
     }
 
 }

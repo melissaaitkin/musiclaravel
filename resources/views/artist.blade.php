@@ -106,7 +106,7 @@
                     <div class="row pl-5">
                         <div class="col">
                             @if (isset($artist->photo))
-                                <img src="{{ asset("storage/artists/$artist->photo") }}" class="img-thumbnail img-fluid artist-photo" alt="artist photo">
+                                <img src="{{ $artist->photo }}" class="img-thumbnail img-fluid artist-photo" alt="artist photo">
                             @endif
                         </div>
                     </div>
