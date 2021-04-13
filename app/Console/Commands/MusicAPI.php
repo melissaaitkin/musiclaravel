@@ -19,7 +19,10 @@ class MusicAPI extends Command {
     protected $signature = 'api:music
                             {--years : Get song years}
                             {--photos : Get song photos}
-                            {--ids= : Comma separated list of song ids}';
+                            {--ids= : Comma separated list of song ids}
+                            {--id= : Artist id}
+                            {--artist= : Artist}
+                            {--track= : Track}';
 
     /**
      * The console command description.
@@ -72,7 +75,14 @@ class MusicAPI extends Command {
         endif;
 
         if(! empty($options['photos'])):
-            $this->updatePhotos($ids);
+            if(! empty($options['id'])):
+                $id = $options['id'];
+                $artist = $options['artist'];
+                $track = $options['track'];
+                $this->getPhotoForArtist($id, $artist, $track);
+            else:
+                $this->updatePhotos($ids);
+            endif;
         endif;
     }
 
@@ -136,32 +146,36 @@ class MusicAPI extends Command {
 
         foreach ($artists as $artist):
             Log::info($artist->artist . ':' . $artist->title);
-            try {
-                $track = $this->search($artist->title, $artist->artist);
-                if ($track):
-                    Log::info("Track");
-                    Log::info(print_r($track,true));
-                    $photo = $track->artist->picture_big ?? '';
-                    $album_info = $this->album($track->album->id);
-                    Log::info("Album");
-                    Log::info(print_r($album_info,true));
-                    $genres = [];
-                    if (isset($album_info->genres->data)):
-                        foreach($album_info->genres->data as $genre):
-                            $genres[] = $genre->name;
-                        endforeach;
-                    endif;
-                    if (!empty($photo) || !empty($genres)):
-                        $a = Artist::find($artist->id);
-                        $a->photo = $photo;
-                        $a->genres = implode(',', $genres);
-                        $a->save();
-                    endif;
-                endif;
-            } catch (Exception $e) {
-                Log::info($e->getMessage());
-            }
+            $this->getPhotoForArtist($artist->id, $artist->artist, $artist->title);
         endforeach;
+    }
+
+    protected function getPhotoForArtist($id, $artist, $title) {
+        try {
+            $track = $this->search($title, $artist);
+            if ($track):
+                Log::info("Track");
+                Log::info(print_r($track,true));
+                $photo = $track->artist->picture_big ?? '';
+                $album_info = $this->album($track->album->id);
+                Log::info("Album");
+                Log::info(print_r($album_info,true));
+                $genres = [];
+                if (isset($album_info->genres->data)):
+                    foreach($album_info->genres->data as $genre):
+                        $genres[] = $genre->name;
+                    endforeach;
+                endif;
+                if (!empty($photo) || !empty($genres)):
+                    $a = Artist::find($id);
+                    $a->photo = $photo;
+                    $a->genres = implode(',', $genres);
+                    $a->save();
+                endif;
+            endif;
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
+        }
     }
 
     private function executeCurlRequest($url) {
