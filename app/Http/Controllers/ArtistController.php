@@ -8,6 +8,7 @@ use App\Traits\StoreImageTrait;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use URL;
 
 class ArtistController extends Controller
 {
@@ -85,10 +86,15 @@ class ArtistController extends Controller
     {
         $artist = Artist::find($id);
         $albums = null;
-        if ($artist->artist === 'Compilations') {
+        if ($artist->artist === 'Compilations'):
             $albums = Song::getArtistAlbums($id);
             array_unshift($albums, array('album' => 'Please Select'));
-        }
+        endif;
+        if (!empty($artist->photo)):
+            if (strpos($artist->photo, 'cdn') === false):
+                $artist->photo = URL::to('/') . '/storage/artists/' . $artist->photo;
+            endif;
+        endif;
         return view('artist', [
             'title'     => $artist->artist,
             'artist'    => $artist,
