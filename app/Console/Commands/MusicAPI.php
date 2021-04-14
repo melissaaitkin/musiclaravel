@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Music\Artist\Artist;
 use App\Music\Song\Song;
-use DB;
 use Exception;
 use Illuminate\Console\Command;
 use Log;
@@ -141,12 +140,58 @@ class MusicAPI extends Command {
      */
     protected function updatePhotos($ids)
     {
-        $query = "SELECT a.id, artist, (SELECT s.title FROM songs as s WHERE s.artist_id = a.id or s.notes = a.artist LIMIT 1) as title FROM artists a where genres is null";
-        $artists = DB::select(DB::raw($query));
+        $records = Artist::select('id', 'artist')->whereNull('photo')->get();
+        $artists = [];
+        foreach ($records as $record):
+            $songs = Song::select('title')->where('artist_id', $record->id)->limit(5)->get();
+            if (count($songs) > 0):
+                $artists[$record->id] = ['artist' => $record->artist, 'songs' => []];
+                foreach ($songs as $song):
+                    $artists[$record->id]['songs'][] = $song->title;
+                endforeach;
+            endif;
+        endforeach;
 
-        foreach ($artists as $artist):
-            Log::info($artist->artist . ':' . $artist->title);
-            $this->getPhotoForArtist($artist->id, $artist->artist, $artist->title);
+        foreach ($artists as $id => $artist):
+            echo " " . strtoupper($artist['artist']);
+            $continue = true;
+            while($continue):
+                if (! empty($artist['songs'])):
+                    $song = array_pop($artist['songs']);
+                else:
+                    $continue = false;
+                endif;
+                if ($continue):
+                    try {
+                        Log::info($artist['artist'] . ':' . $song);
+                        $track = $this->search($song, $artist['artist']);
+                        if ($track):
+                            Log::info("Track");
+                            Log::info(print_r($track,true));
+                            $photo = $track->artist->picture_big ?? '';
+                            $album_info = $this->album($track->album->id);
+                            Log::info("Album");
+                            Log::info(print_r($album_info,true));
+                            $genres = [];
+                            if (isset($album_info->genres->data)):
+                                foreach($album_info->genres->data as $genre):
+                                    $genres[] = $genre->name;
+                                endforeach;
+                            endif;
+                            if (! empty($photo) || ! empty($genres)):
+                                echo " GOTCHA!!! ";
+                                $continue = false;
+                                $a = Artist::find($id);
+                                $a->photo = $photo;
+                                $a->genres = implode(',', $genres);
+                                $a->save();
+                            endif;
+                        endif;
+                    } catch (Exception $e) {
+                        Log::info($e->getMessage());
+                    }
+                endif;
+            endwhile;
         endforeach;
     }
 
@@ -166,7 +211,7 @@ class MusicAPI extends Command {
                         $genres[] = $genre->name;
                     endforeach;
                 endif;
-                if (!empty($photo) || !empty($genres)):
+                if (! empty($photo) || ! empty($genres)):
                     $a = Artist::find($id);
                     $a->photo = $photo;
                     $a->genres = implode(',', $genres);
