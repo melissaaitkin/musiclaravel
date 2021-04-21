@@ -1,24 +1,33 @@
 <?php
 
+use Illuminate\Support\Facades\Http;
+use Log;
+
 function getCountryNames() 
 {
-    if (! Cache::store('redis')->has('country_names')) {
-        $countries = executeCurlRequest("https://restcountries.eu/rest/v2/all");
-        $country_names = [];
-        foreach($countries as $country) {
-            $country_names[] = $country->name;
-        }
-        $country_names[] = 'England';
-        $country_names[] = 'Scotland';
-        $country_names[] = 'Wales';
-        $country_names[] = 'Northern Ireland';
-        $country_names[] = 'Multiple';
-        $country_names[] = 'Not Applicable';
-        $country_names[] = 'Unknown';
-        asort($country_names);
-        array_unshift($country_names, 'Please Select');
-        Cache::store('redis')->put('country_names', $country_names, 10080);
-    }
+    if (! Cache::store('redis')->has('country_names')):
+        $response = Http::get("https://restcountries.eu/rest/v2/all");
+        if ($response->ok()):
+            $countries = $response->json();
+            $country_names = [];
+            foreach($countries as $country) {
+                $country_names[] = $country->name;
+            }
+            $country_names[] = 'England';
+            $country_names[] = 'Scotland';
+            $country_names[] = 'Wales';
+            $country_names[] = 'Northern Ireland';
+            $country_names[] = 'Multiple';
+            $country_names[] = 'Not Applicable';
+            $country_names[] = 'Unknown';
+            asort($country_names);
+            array_unshift($country_names, 'Please Select');
+            Cache::store('redis')->put('country_names', $country_names, 10080);
+        else:
+            Log::error($response);
+            return array();
+        endif;
+    endif;
     return Cache::store('redis')->get('country_names');
 }
 
