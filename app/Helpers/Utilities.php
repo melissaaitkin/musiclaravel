@@ -11,7 +11,7 @@ function getCountryNames()
             $countries = $response->json();
             $country_names = [];
             foreach($countries as $country) {
-                $country_names[] = $country->name;
+                $country_names[] = $country['name'];
             }
             $country_names[] = 'England';
             $country_names[] = 'Scotland';
