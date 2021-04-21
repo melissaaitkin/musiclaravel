@@ -53,6 +53,7 @@ class SongController extends Controller
             'title'         => 'Add New Song',
             'file_types'    => Song::FILE_TYPES,
             'song_exists'   => false,
+            'cover_art'     => false,
         ]);
     }
 
