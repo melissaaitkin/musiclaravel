@@ -89,6 +89,7 @@ class SongController extends Controller
             'song'          => $song,
             'title'         => $song->title,
             'cover_art'     => $cover_art,
+            'artists'       => json_encode($song->artists),
             'artist_name'   => $song->artist->artist,
             'file_types'    => Song::FILE_TYPES,
             'song_exists'   => Storage::disk(config('filesystems.partition'))->has($this->media_directory . $song->location),

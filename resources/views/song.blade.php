@@ -37,9 +37,8 @@
 
                     <label for="artist" class="control-label">Artist</label>
                     <div class="pb-1">
-                        <select class="artist form-control" name="artist"></select>
+                        <select class="artists form-control" multiple="multiple" name="artists[]" id="artists"></select>
                     </div>
-
                     <label for="year" class="control-label">Year</label>
                     <div class="pb-4">
                         <input type="text" name="year" id="song-year" class="form-control" @if ( ! empty($song->year)) value="{{ $song->year }}" @endif>
@@ -134,8 +133,7 @@
                 <div class="col">
                     @if ( ! empty($song->id))
                         <input type="hidden" name="id" id="song-id" value="{{ $song->id }}">
-                        <input type="hidden" name="artist_id" id="artist_id" value="{{ $song->artist_id }}">
-                        <input type="hidden" name="artist_name" id="artist_name" value="{{ $artist_name }}">
+                        <input type="hidden" name="artist_json" id="artist_json" value="{{ $artists }}">
                         <button type="submit" class="btn btn-primary">Update</button>
                         <a href="{{ url()->previous() }}" class="btn btn-primary">Back</a>
                     @else

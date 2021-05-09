@@ -136,6 +136,11 @@ class Song extends Model
      */
     protected $perPage = 10;
 
+    public function artists()
+    {
+        return $this->belongsToMany('App\Music\Artist\Artist');
+    }
+
     /**
      * Create or update a song.
      *
@@ -157,18 +162,34 @@ class Song extends Model
         $song['track_no'] = $request->track_no;
         $song['genre'] = $request->genre;
         $song['location'] = $request->location;
-        $song['artist_id'] = $request->artist;
         $song['filesize'] = $request->filesize ?? 0;
         $song['composer'] = $request->composer;
         $song['playtime'] = $request->playtime;
         $song['notes'] = $request->notes;
 
-        if(isset($request->id)):
-            // updateOrCreate throwing duplicate error
-            Song::where('id', $request->id)->update($song);
-        else:
-            Song::create($song);
+        if (isset($request->id)):
+            $song['id'] = $request->id;
         endif;
+
+        $updated_song = Song::updateOrCreate($song);
+
+        // Make any updates to artist/s
+        $existing_artists = [];
+        foreach($updated_song->artists as $artist) {
+            $existing_artists[] = $artist->id;
+        }
+        if (empty($request->artists)):
+            $request->artists = [];
+        endif;
+        $inserts = array_diff($request->artists, $existing_artists);
+        foreach($inserts as $artist):
+            $updated_song->artists()->attach(['artist' => $artist]);
+        endforeach;
+        $deletes = array_diff($existing_artists, $request->artists);
+        foreach($deletes as $artist):
+            $updated_song->artists()->detach(['artist' => $artist]);
+        endforeach;
+
     }
 
     /**
