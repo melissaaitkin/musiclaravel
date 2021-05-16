@@ -33,12 +33,9 @@ class SongController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $songs = Song::leftJoin('artists', 'songs.artist_id', '=', 'artists.id')
-            ->select('songs.*','artist')
-            ->paginate(10);
-
+        $songs = Song::paginate(10);
         return view('songs', ['songs' => $songs]);
     }
 
@@ -90,7 +87,6 @@ class SongController extends Controller
             'title'         => $song->title,
             'cover_art'     => $cover_art,
             'artists'       => json_encode($song->artists),
-            'artist_name'   => $song->artist->artist,
             'file_types'    => Song::FILE_TYPES,
             'song_exists'   => Storage::disk(config('filesystems.partition'))->has($this->media_directory . $song->location),
         ]);
@@ -136,8 +132,6 @@ class SongController extends Controller
             } else {
                 return Song::search($query);
             }
-        } else {
-            return Song::subset();
         }
     }
 

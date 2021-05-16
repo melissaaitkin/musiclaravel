@@ -81,6 +81,11 @@ class Artist extends Model
      */
     protected $perPage = 10;
 
+    public function songs()
+    {
+        return $this->belongsToMany('App\Music\Song\Song');
+    }
+
     /**
      * Returns artists
      *

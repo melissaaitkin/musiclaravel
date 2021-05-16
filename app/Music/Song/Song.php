@@ -2,8 +2,10 @@
 
 namespace App\Music\Song;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Log;
 
 class Song extends Model
 {
@@ -93,13 +95,6 @@ class Song extends Model
      * @var integer
      */
     protected $filesize;
-
-    /**
-     * The artist id.
-     *
-     * @var integer
-     */
-    protected $artist_id;
 
     /**
      * Created date.
@@ -228,12 +223,14 @@ class Song extends Model
         $_song['track_no'] = $song->trackNo();
         $_song['genre'] = $song->genre();
         $_song['location'] = $path;
-        $_song['artist_id'] = $artist_id;
         $_song['filesize'] = $song->fileSize();
         $_song['composer'] = $song->composer();
         $_song['playtime'] = $song->playtime();
         $_song['notes'] = $song->notes();
-        Song::create($_song);
+
+        $new_song = Song::create($_song);
+
+        $new_song->artists()->attach(['artist' => $artist_id]);
     }
 
     /**
@@ -245,7 +242,11 @@ class Song extends Model
      */
     public static function doesAlbumExist($id, $album_name)
     {
-        $song = Song::where(["artist_id" => $id, "album" => $album_name])->first();
+        $song = Song::where('album', $album_name)
+            ->with(['artists' => function($q) use ($id) {
+                $q->where('artist_id', '=', $id);
+            }])
+            ->first();
         return isset($song);
     }
 
@@ -259,7 +260,11 @@ class Song extends Model
     public static function doesSongExist($id, $title)
     {
         // FIXME investigate processing of songs with no artists and remove duplication
-        $song = Song::where(["artist_id" => $id, "title" => $title])->first();
+        $song = Song::where('title', $title)
+            ->with(['artists' => function($q) use ($id) {
+                $q->where('artist_id', '=', $id);
+            }])
+            ->first();
         return isset($song);
     }
 
@@ -302,12 +307,14 @@ class Song extends Model
     *
     * Retrieves the songs from the artist's albums and compilation albums.
     *
-    * @param int  $id
+    * @param int $id
     * @param string $artist
     */
     public static function getArtistSongs($id, $artist) {
         return Song::select('id', 'title')
-            ->where(["artist_id" => $id])
+            ->whereHas('artists', function($q) use ($id) {
+                $q->where('artist_id', '=', $id);
+            })
             ->orWhere(["notes" => $artist])
             ->orderBy('title')
             ->get();
@@ -319,14 +326,8 @@ class Song extends Model
     * @param int $id
     */
     public static function getAlbumSongsBySongID($id) {
+        // FIXME handle common album names like Greatest Hits
         return Song::select('id', 'title', 'album')
-            ->where('artist_id', function($q1) use ($id)
-                {
-                    $q1->from('songs')
-                      ->select('artist_id')
-                      ->where('id', '=', $id);
-
-                })
             ->where('album', function($q2)  use ($id)
                 {
                     $q2->from('songs')
@@ -342,10 +343,11 @@ class Song extends Model
     * @param string $query
     */
     public static function search($query) {
-        return Song::select('songs.*', 'artist')
-            ->leftJoin('artists', 'artists.id', '=', 'songs.artist_id')
-            ->where('title', 'LIKE', '%' . $query . '%')
-            ->orWhere('artist', 'LIKE', '%' . $query . '%')
+        return Song::select('songs.*')
+            ->whereHas('artists', function($q) use($query) {
+                $q->where('artist', 'LIKE', '%' . $query . '%');
+            })
+            ->orWhere('title', 'LIKE', '%' . $query . '%')
             ->orWhere('album', 'LIKE', '%' . $query . '%')
             ->orWhere('songs.notes', 'LIKE', '%' . $query . '%')
             ->paginate()
@@ -353,26 +355,23 @@ class Song extends Model
             ->setPath('');
     }
 
-    /**
-    * Retrieve subset of songs
-    */
-    public static function subset() {
-        return Song::select('songs.*', 'artist')
-            ->leftJoin('artists', 'artists.id', '=', 'songs.artist_id')
-            ->paginate();
-    }
-
     public static function songs(Request $request)
     {
-        $model = new Song;
+        if (isset($request->all)):
+            $query = Song::select('songs.*')->with('artists:artist');
+        else:
+            $query = Song::select('id', 'title')->with('artists:artist');
+        endif;
 
-        $query = $model->leftJoin('artists', 'artists.id', '=', 'songs.artist_id');
         if(isset($request->album)):
             $query->where('album', '=', $request->album);
         endif;
 
         if(isset($request->artist_id)):
-            $query->where('artist_id', '=', $request->artist_id);
+            $artist_id = $request->artist_id;
+            $query = Song::with(['artists' => function($q) use ($artist_id) {
+                $q->where('artist_id', '=', $artist_id);
+            }]);
         endif;
 
         if(isset($request->artist)):
@@ -383,20 +382,7 @@ class Song extends Model
             $query->skip($request->offset)->take($request->limit);
         endif;
 
-        if(isset($request->all)):
-            $songs = $query->get(['songs.*', 'artist']);
-        else:
-           $songs = $query->get(['songs.id', 'songs.title', 'artists.artist']);
-        endif;
-
-        return $songs;
+        return $query->get();
     }
 
-    /**
-     * Get the artist record associated with the song.
-     */
-    public function artist()
-    {
-        return $this->hasOne('App\Music\Artist\Artist', 'id', 'artist_id');
-    }
 }
