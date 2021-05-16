@@ -166,7 +166,7 @@ class Song extends Model
             $song['id'] = $request->id;
         endif;
 
-        $updated_song = Song::updateOrCreate($song);
+        $updated_song = Song::updateOrCreate(['id' => $request->id ?? null], $song);
 
         // Make any updates to artist/s
         $existing_artists = [];
