@@ -34,7 +34,7 @@
                     </div>
                     <div class="row pb-2">
                         <div class="col">
-                            <label for="location" class="control-label">Based</label>
+                            <label for="location" class="control-label"> @if (!empty($artist->is_group) && ($artist->is_group))Based @else Born @endif</label>
                             <input name="location" id="location" class="form-control" @if (!empty($artist->location)) value="{{ $artist->location }}"@endif/>
                         </div>
                     </div>
