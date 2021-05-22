@@ -14557,7 +14557,7 @@ a:hover {
   color: white;
   margin-right: 15px;
   border-radius: 25px;
-  padding-left:25px;
+  padding-left: 25px;
 }
 
 .form-control {
@@ -14654,6 +14654,10 @@ span.select2-results {
 
 .select2-container .select2-selection--single {
   height: 33px !important;
+}
+
+.select2-container .select2-selection__choice {
+  background-color: green !important;
 }
 
 .green {
