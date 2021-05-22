@@ -92,6 +92,8 @@ Route::middleware(['auth'])->prefix('internalapi')->group(function () {
 
     Route::get('genres/songs', 'GenreController@songs');
 
+    Route::get('artist/songs/{id}', 'ArtistController@songs');
+
  });
 
 

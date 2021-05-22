@@ -208,4 +208,12 @@ class ArtistController extends Controller
         return response()->json($data);
     }
 
+    public function songs($id) {
+        $artist = Artist::where('id', $id)
+            ->with(['songs' => function($q) use ($id) {
+                $q->select('id', 'title')->where('artist_id', '=', $id);
+            }])->get();
+        return $artist[0]->songs;
+    }
+
 }

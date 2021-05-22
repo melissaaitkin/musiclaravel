@@ -32,7 +32,7 @@ $(document).ready(function() {
         artist_id = artist_id.replace("play-songs-", "");
         let artist = $(this).closest('tr').find('div[name="artist_name"]').text();
 
-        let url = '/internalapi/songs?artist_id=' + artist_id + '&artist=' + encodeURIComponent(artist);
+        let url = '/internalapi/artist/songs/' + artist_id;
 
         fetch(url)
             .then(
@@ -41,8 +41,8 @@ $(document).ready(function() {
                         console.log('Looks like there was a problem. Status Code: ' + response.status);
                         return;
                     }
-                    response.json().then(function(data) {
-                        display_jukebox(artist, data.songs);
+                    response.json().then(function(songs) {
+                        display_jukebox(artist, songs);
                     });
                 }
             )
