@@ -54,7 +54,7 @@
                             </div>
                         </div>
                     </div>
-                    @if (!empty($artist->is_group) && ($artist->is_group))
+                    @if (empty($artist->id) || (!empty($artist->is_group) && ($artist->is_group)))
                         <div class="row pb-2">
                             <div class="col">
                                 <label for="group_members" class="control-label">Group Members</label>
