@@ -11,7 +11,9 @@
         @endif
 
         @if (isset($message))
-            <p>{{ $message }}</p>
+            <div class="alert alert-warning ml-3 w-25" role="alert">
+                {{ $message }}
+            </div>
         @endif
 
         <div class="col-sm-3">
@@ -35,35 +37,37 @@
             </div> 
 
             <div class="panel-body">
-                <table class="table table-striped mysounds-table">
+                @if ($artists->count() > 0)
+                    <table class="table table-striped mysounds-table">
 
-                    <thead>
-                        <th>Artist</th>
-                        <th>Country</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                    </thead>
+                        <thead>
+                            <th>Artist</th>
+                            <th>Country</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                        </thead>
 
-                    <tbody>
-                        @foreach ($artists as $artist)
-                            <tr class="mysounds-tr">
-                                <td class="table-text">
-                                    <div name="artist_name">{{ $artist->artist }}</div>
-                                </td>
-                                <td class="table-text">
-                                    <div>{{ $artist->country }}</div>
-                                </td>
-                                <td>
-                                    {{ csrf_field() }}
-                                    <a href="/artist/{{ $artist->id }}">edit</a>
-                                </td>
-                                <td>
-                                   <input type="button" class="btn btn-link btn-mysounds" name="play_songs" id="play-songs-{{ $artist->id }}" value="play songs">
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        <tbody>
+                            @foreach ($artists as $artist)
+                                <tr class="mysounds-tr">
+                                    <td class="table-text">
+                                        <div name="artist_name">{{ $artist->artist }}</div>
+                                    </td>
+                                    <td class="table-text">
+                                        <div>{{ $artist->country }}</div>
+                                    </td>
+                                    <td>
+                                        {{ csrf_field() }}
+                                        <a href="/artist/{{ $artist->id }}">edit</a>
+                                    </td>
+                                    <td>
+                                       <input type="button" class="btn btn-link btn-mysounds" name="play_songs" id="play-songs-{{ $artist->id }}" value="play songs">
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
                 {{ $artists->links() }} 
             </div>
         </div>

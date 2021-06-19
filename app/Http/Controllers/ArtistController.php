@@ -126,7 +126,7 @@ class ArtistController extends Controller
             if ($data->total() > 0) {
                 return view('artists', ['q' => $q, 'artists' => $data]);
             } else {
-                return view('artists', ['q' => $q, 'artists' => $data])->withMessage('No Details found. Try to search again !');
+                return view('artists', ['q' => $q, 'artists' => $data])->withMessage('No artists found. Try to search again!');
             }
         }
     }
@@ -176,7 +176,7 @@ class ArtistController extends Controller
         if (count($artists) > 0) {
             return view('artists', ['q' => $query, 'artists' => $paginate]);
         } else {
-            return view('artists', ['q'  => $query, 'artists' => $paginate])->withMessage('No Details found. Try to search again !');
+            return view('artists', ['q'  => $query, 'artists' => $paginate])->withMessage('No artists found. Try to search again!');
         }
     }
 

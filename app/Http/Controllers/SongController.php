@@ -113,7 +113,7 @@ class SongController extends Controller
             if ($data->total() > 0) {
                 return view('songs', ['q' => $q, 'songs' => $data]);
             } else {
-                return view('songs', ['q' => $q, 'songs' => $data])->withMessage('No songs found. Try to search again !');
+                return view('songs', ['q' => $q, 'songs' => $data])->withMessage('No songs found. Try to search again!');
             }
         }
     }
@@ -161,7 +161,7 @@ class SongController extends Controller
         if (count($songs) > 0) {
             return view('songs', ['q' => $query, 'songs' => $paginate]);
         } else {
-            return view('songs', ['q'  => $query, 'songs' => $paginate])->withMessage('No songs found. Try to search again !');
+            return view('songs', ['q'  => $query, 'songs' => $paginate])->withMessage('No songs found. Try to search again!');
         }
     }
 

@@ -11,7 +11,9 @@
         @endif
 
         @if (isset($message))
-            <p>{{ $message }}</p>
+            <div class="alert alert-warning ml-3 w-25" role="alert">
+                {{ $message }}
+            </div>
         @endif
 
         <div class="col-sm-3">
@@ -34,65 +36,67 @@
             </div>
 
             <div class="panel-body">
-                <table class="table table-striped mysounds-table">
+                @if ($songs->count() > 0)
+                    <table class="table table-striped mysounds-table">
 
-                    <thead>
-                        <th>Title</th>
-                        <th>Artist</th>
-                        <th>Album</th>
-                        <th>Year</th>
-                        <th>Genre</th>
-                        <th>Playtime</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                    </thead>
+                        <thead>
+                            <th>Title</th>
+                            <th>Artist</th>
+                            <th>Album</th>
+                            <th>Year</th>
+                            <th>Genre</th>
+                            <th>Playtime</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                        </thead>
 
-                    <tbody>
-                        @foreach ($songs as $song)
-                            <tr class="mysounds-tr">
-                                <td class="table-text">
-                                    <div>{{ $song->title }}</div>
-                                </td>
-                                <td class="table-text">
-                                    <div>
-                                        <a href="/artist/{{ $song->artists[0]->id }}">{{ $song->artists[0]->artist }} @if($song->artists[0]->artist == 'Compilations') - {{ $song->notes}} @endif</a>
-                                    </div>
-                                </td>
-                                <td class="table-text">
-                                    <div>{{ $song->album }}</div>
-                                </td>
-                                <td class="table-text">
-                                    <div>{{ $song->year }}</div>
-                                </td>
-                                <td class="table-text">
-                                    <div>{{ $song->genre }}</div>
-                                </td>
-                                <td class="table-text">
-                                    <div>{{ $song->playtime }}</div>
-                                </td>
-                                <td>
-                                    {{ csrf_field() }}
-                                    <a href="/song/{{ $song->id }}">edit</a>
-                                </td>
-                                <td>
-                                   <input type="button" class="btn btn-link btn-mysounds" name="play" id="play-{{ $song->id }}" value="play">
-                                </td>
-                                <td>
-                                   <input type="button" class="btn btn-link btn-mysounds" name="play_album" id="play-album-{{ $song->id }}" value="play album">
-                                </td>
-                                <td>
-                                   <input type="button" class="btn btn-link btn-mysounds" name="playlist" id="playlist-{{ $song->id }}" value="add to playlist">
-                                </td>
-                                <td>
-                                    <a target="_blank" href="/lyrics/{{ $song->id }}">lyrics</a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        <tbody>
+                            @foreach ($songs as $song)
+                                <tr class="mysounds-tr">
+                                    <td class="table-text">
+                                        <div>{{ $song->title }}</div>
+                                    </td>
+                                    <td class="table-text">
+                                        <div>
+                                            <a href="/artist/{{ $song->artists[0]->id }}">{{ $song->artists[0]->artist }} @if($song->artists[0]->artist == 'Compilations') - {{ $song->notes}} @endif</a>
+                                        </div>
+                                    </td>
+                                    <td class="table-text">
+                                        <div>{{ $song->album }}</div>
+                                    </td>
+                                    <td class="table-text">
+                                        <div>{{ $song->year }}</div>
+                                    </td>
+                                    <td class="table-text">
+                                        <div>{{ $song->genre }}</div>
+                                    </td>
+                                    <td class="table-text">
+                                        <div>{{ $song->playtime }}</div>
+                                    </td>
+                                    <td>
+                                        {{ csrf_field() }}
+                                        <a href="/song/{{ $song->id }}">edit</a>
+                                    </td>
+                                    <td>
+                                       <input type="button" class="btn btn-link btn-mysounds" name="play" id="play-{{ $song->id }}" value="play">
+                                    </td>
+                                    <td>
+                                       <input type="button" class="btn btn-link btn-mysounds" name="play_album" id="play-album-{{ $song->id }}" value="play album">
+                                    </td>
+                                    <td>
+                                       <input type="button" class="btn btn-link btn-mysounds" name="playlist" id="playlist-{{ $song->id }}" value="add to playlist">
+                                    </td>
+                                    <td>
+                                        <a target="_blank" href="/lyrics/{{ $song->id }}">lyrics</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
                 {{ $songs->links() }}
             </div>
         </div>
