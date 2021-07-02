@@ -10,7 +10,6 @@ class Artist extends Model
 
     protected $table = 'artists';
 
-
     /**
      * The primary key for the model.
      *
@@ -80,11 +79,6 @@ class Artist extends Model
      * @var int
      */
     protected $perPage = 10;
-
-    public function songs()
-    {
-        return $this->belongsToMany('App\Music\Song\Song');
-    }
 
     /**
      * Returns artists
@@ -214,4 +208,13 @@ class Artist extends Model
             ->where('artist', 'LIKE', '%' . $search . '%')
             ->get();
     }
+
+    /**
+     * Artist songs
+     */
+    public function songs()
+    {
+        return $this->belongsToMany('App\Music\Song\Song');
+    }
+
 }

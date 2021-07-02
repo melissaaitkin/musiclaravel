@@ -2,10 +2,8 @@
 
 namespace App\Music\Song;
 
-use DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Log;
 
 class Song extends Model
 {
@@ -131,10 +129,7 @@ class Song extends Model
      */
     protected $perPage = 10;
 
-    public function artists()
-    {
-        return $this->belongsToMany('App\Music\Artist\Artist');
-    }
+
 
     /**
      * Create or update a song.
@@ -383,6 +378,14 @@ class Song extends Model
         endif;
 
         return $query->get();
+    }
+
+    /**
+    * Song artists
+    */
+    public function artists()
+    {
+        return $this->belongsToMany('App\Music\Artist\Artist');
     }
 
 }
