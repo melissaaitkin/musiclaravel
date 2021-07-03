@@ -142,6 +142,10 @@ class Words extends Command {
             'Brooklyn',
             'Bronx',
             'Sunset',
+            'Chicago',
+            'Orleans',
+            'Napoli',
+            'Siberia',
         ];
     }
 
