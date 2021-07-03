@@ -17,6 +17,7 @@ class LyricDataFix extends Command {
     protected $signature = 'db:lyric
                             {--df : Data fix}
                             {--s= : String to find}
+                            {--id= : Song to find}
                             {--c : Clean lyric}';
 
     /**
@@ -43,9 +44,8 @@ class LyricDataFix extends Command {
     public function handle()
     {
         $options = $this->options();
-
         if(! empty($options['df'])):
-            $this->getLyric($options['s'], isset($options['c']));
+            $this->getLyric($options['s'], $options['c'], $options['id']);
         endif;
     }
 
@@ -53,35 +53,39 @@ class LyricDataFix extends Command {
      * Find and clean lyrics
      *
      */
-    protected function getLyric($str, $clean)
+    protected function getLyric($str, $clean, $id = NULL)
     {
-        // $query = Song::select('id', 'title', 'lyrics')->where('id', 143);
-        $query = Song::select('id', 'title', 'lyrics')->where('lyrics', 'LIKE', "%$str%");
+        if ($id):
+            $query = Song::select('id', 'title', 'lyrics')->where('id', $id);
+        else:
+            $query = Song::select('id', 'title', 'lyrics')->where('lyrics', 'LIKE', "%$str%");
+        endif;
         $songs = $query->get()->toArray();
-        
+
         foreach ($songs as $song):
             try {
-                Log::info($song['lyrics']);
                 $offset = 0;
                 $lyric = $song['lyrics'];
                 while ($pos = strpos($lyric, $str, $offset)):
-                    // Log::info($pos);
                     $start = strrpos(substr($lyric, 0, $pos), PHP_EOL);
-                    // Log::info($start);
                     $end = stripos(substr($lyric, $pos), PHP_EOL);
-                    // Log::info($end);
+                    //FIXME if last word in song:
+                    // $end = strlen($lyric);
                     $target = substr($lyric, $start, $end + ($pos - $start));
-                    // Log::info($target);
                     $lyric = str_replace($target, '', $lyric);
                     $offset = $pos + 1;
                 endwhile;
-                Log::info($lyric);
             } catch (Exception $e) {
                 Log::info($e->getMessage());
             }
+
+            Log::info($song);
+            Log::info($lyric);
+
             if ($clean):
                 Song::where('id', $song['id'])->update(['lyrics' => $lyric]);
             endif;
+
             exit;
         endforeach;
     }

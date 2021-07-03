@@ -74,8 +74,6 @@ class Words extends Command {
         endif;
 
         if(! empty($options['cloud'])):
-            // $song_ids = [4410,4411,4412,4413,4414];
-            // $song_ids = [4410,4411,4412,4413,4414,4415,4416];
             $this->getWordCloud($song_ids, $artist_ids);
         endif;
     }
@@ -140,6 +138,10 @@ class Words extends Command {
             'Anaheim',
             'Reno',
             'Winnemucca',
+            'L.A',
+            'Brooklyn',
+            'Bronx',
+            'Sunset',
         ];
     }
 
@@ -228,6 +230,8 @@ class Words extends Command {
             'Alice',
             'Allison',
             'Alma',
+            'Roxie',
+            'Chino',
         ];
     }
 
@@ -276,8 +280,6 @@ class Words extends Command {
      *
      */
     public function processWord($word) {
-        // TODO create script that grabs chunks around Chorus and aaaah to work out how to fix them
-        // Re run without trims to pick up what alwaysalways actually looks like, to fix
         // Ignore non-Latin words.
         if (preg_match('/^\p{Latin}+$/', $word)):
             // strip 's off the end of a word
