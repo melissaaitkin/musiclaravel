@@ -141,11 +141,22 @@ class Words extends Command {
             'L.A',
             'Brooklyn',
             'Bronx',
-            'Sunset',
             'Chicago',
             'Orleans',
             'Napoli',
             'Siberia',
+            'Ebudae',
+            'Khartoum',
+            'Bissau',
+            'Palau',
+            'Avalon',
+            'Fiji',
+            'Tiree',
+            'Bablyon',
+            'Peru',
+            'Cebu',
+            'Bali',
+            'Macquarie',
         ];
     }
 
@@ -236,6 +247,18 @@ class Words extends Command {
             'Alma',
             'Roxie',
             'Chino',
+            'Jack',
+            'Horner',
+            'Dickins',
+            'Ross',
+            'Bobby',
+            'MTV',
+            'NBC',
+            'ABC',
+            'CBS',
+            'NRA',
+            'Coca',
+            'Giuseppe',
         ];
     }
 
@@ -255,7 +278,10 @@ class Words extends Command {
     protected function getWordCloud($song_ids, $artist_ids)
     {
 
-        $query = Song::select('title', 'lyrics')->whereNotIn('lyrics', ['unavailable', 'Instrumental']);
+        $query = Song::select('title', 'lyrics')
+            ->join('artist_song', 'songs.id', '=', 'artist_song.song_id')
+            ->whereNotIn('artist_song.artist_id', [23, 197, 280, 607, 802, 821, 846])
+            ->whereNotIn('lyrics', ['unavailable', 'Instrumental']);
         if ($song_ids):
             $query->whereIn('songs.id', $song_ids);
         endif;
