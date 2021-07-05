@@ -333,11 +333,7 @@ class Words extends Command {
                 $words = explode(' ', $lyric);
 
                 foreach ($words as $word):
-                    $checks = ['allison', 'als' , 'ama', 'amo', 'ana', 'ane', 'ano', 'ar', 'amoureux', 'arbeiten'];
-                    if (in_array(strtolower($word), $checks)):
-                        Log::info($song['id'] . ' ' . $song['title'] . ' ' . $word);
-                    endif;
-                    $this->processWord($word);
+                    $this->processWord($word, $song['id']);
                   endforeach;
             } catch (Exception $e) {
                 Log::info($e->getMessage());
@@ -352,7 +348,7 @@ class Words extends Command {
      * Get word cloud.
      *
      */
-    public function processWord($word) {
+    public function processWord($word, $id) {
         // Ignore non-Latin words.
         if (preg_match('/^\p{Latin}+$/', $word)):
             // strip 's off the end of a word
@@ -372,10 +368,17 @@ class Words extends Command {
             // Retain capitilisation for countries, months, names etc
             $word = $this->setCase($word);
             if (! empty($word)):
-                if (isset($this->word_cloud[$word])):
-                    $this->word_cloud[$word] += 1;
+                if (!isset($this->word_cloud[$word])):
+                    $this->word_cloud[$word] = [];
+                endif;
+                if (is_array($this->word_cloud[$word])):
+                    if (count($this->word_cloud[$word]) == 20):
+                        $this->word_cloud[$word] = 21;
+                    else:
+                        $this->word_cloud[$word][] = $id;
+                    endif;
                 else:
-                    $this->word_cloud[$word] = 1;
+                    $this->word_cloud[$word] += 1;
                 endif;
             endif;
         endif;
