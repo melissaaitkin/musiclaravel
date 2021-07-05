@@ -86,6 +86,7 @@ class Words extends Command {
         $this->countries[] = 'Africa';
         $this->countries[] = 'Afrika';
         $this->countries[] = 'Asia';
+        $this->countries[] = 'Europe';
     }
 
     private function isCountry($word) {
@@ -157,6 +158,9 @@ class Words extends Command {
             'Cebu',
             'Bali',
             'Macquarie',
+            'Alabama',
+            'Alaska',
+            'Angeles',
         ];
     }
 
@@ -259,6 +263,30 @@ class Words extends Command {
             'NRA',
             'Coca',
             'Giuseppe',
+            'Maria',
+            // 'Al',
+            'Capone',
+            'Kevin',
+            'Hugh',
+            'Carla',
+            'William',
+            'Dave',
+            'Popeye',
+            'Allan',
+            'Alvin',
+            'Amanda',
+            'Ana',
+            'Angelica',
+            'Anna',
+            'Annabelle',
+            'Anne',
+            'Annie',
+            'Anton',
+            'Antone',
+            'Apepig',
+            'Gavrilo',
+            'Princip',
+            'Sophia',
         ];
     }
 
@@ -277,23 +305,38 @@ class Words extends Command {
      */
     protected function getWordCloud($song_ids, $artist_ids)
     {
-
-        $query = Song::select('title', 'lyrics')
+        $query = Song::select('songs.id', 'title', 'lyrics')
             ->join('artist_song', 'songs.id', '=', 'artist_song.song_id')
-            ->whereNotIn('artist_song.artist_id', [23, 197, 280, 607, 802, 821, 846])
+            ->whereNotIn('songs.id', [
+                819, 908, 911, 1273, 1314, 1425, 2133, 2225, 2344, 2601, 3156, 3165, 3198, 3965, 3968, 4145, 4261, 4892, 5737, 6218, 6502, 8036, 8587, 9143, 9183, 9762,
+            ])
+            // this shouldn't be returning anyway
+            ->whereNotIn('songs.id', [3053])
+            ->whereNotIn('artist_song.artist_id', [
+                23, 84, 107, 197, 209, 211, 248, 280, 469, 607, 611, 802, 821, 838, 841, 846, 1317, 1453,
+            ])
+            ->whereNotIn('album', [
+                'Turkish Groove', 'African Women', 'Bocelli Greatest Hits', 'Buena Vista Social Club', 'Everything Is Possible!',
+                "Edith Piaf - 20 'French' Hit Singles",
+            ])
             ->whereNotIn('lyrics', ['unavailable', 'Instrumental']);
+
         if ($song_ids):
             $query->whereIn('songs.id', $song_ids);
         endif;
         $lyrics = $query->get()->toArray();
-        
-        foreach ($lyrics as $lyric):
+
+        foreach ($lyrics as $song):
             try {
-                $lyric = str_replace([PHP_EOL], [' '], $lyric['lyrics']);
+                $lyric = str_replace([PHP_EOL], [' '], $song['lyrics']);
                 // $lyric = str_replace([PHP_EOL, ',', '. ', '?', '(', ')'], [' ', '', ' ', '', '', ''], $lyric['lyrics']);
                 $words = explode(' ', $lyric);
 
                 foreach ($words as $word):
+                    $checks = ['allison', 'als' , 'ama', 'amo', 'ana', 'ane', 'ano', 'ar', 'amoureux', 'arbeiten'];
+                    if (in_array(strtolower($word), $checks)):
+                        Log::info($song['id'] . ' ' . $song['title'] . ' ' . $word);
+                    endif;
                     $this->processWord($word);
                   endforeach;
             } catch (Exception $e) {
@@ -339,8 +382,9 @@ class Words extends Command {
     }
 
     public function setCase($word) {
-        if ($this->isCountry($word) || $this->isPlace($word)  || $this->isMonth($word)  || $this->isName($word)):
-            return ucfirst($word);
+        $tmp_word = ucfirst(strtolower($word));
+        if ($this->isCountry($tmp_word) || $this->isPlace($tmp_word)  || $this->isMonth($tmp_word)  || $this->isName($tmp_word)):
+            return $tmp_word;
         else:
             return strtolower($word);
         endif;
