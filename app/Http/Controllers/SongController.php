@@ -75,6 +75,11 @@ class SongController extends Controller
     public function edit($id)
     {
         $song = Song::find($id);
+
+        if (!$song):
+            return view('song');
+        endif;
+
         if (! empty($song->cover_art)):
             $cover_art = unserialize($song->cover_art);
             $cover_art = $cover_art['api'];

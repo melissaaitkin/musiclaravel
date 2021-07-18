@@ -4,6 +4,12 @@
 
     <div class="panel-body mysound-submit-form-div">
 
+    @if(empty($song))
+        <div class="alert alert-danger ml-5 w-50" role="alert">
+            Song does not exist
+        </div>
+    @else
+
         <h2 class="col-sm-12">{{ $title }}</h2>
 
         @include('common.errors')
@@ -143,7 +149,7 @@
             </div>
 
         </form>
-
+    @endif
     </div>
 @endsection
 
