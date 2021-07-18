@@ -41,6 +41,8 @@ class Words extends Command {
 
     protected $names = [];
 
+    protected $brands = [];
+
     /**
      * Create a new command instance.
      *
@@ -51,6 +53,7 @@ class Words extends Command {
         $this->setPlaces();
         $this->setMonths();
         $this->setNames();
+        $this->setBrands();
         parent::__construct();
     }
 
@@ -83,84 +86,100 @@ class Words extends Command {
         $this->countries[] = 'U.S';
         $this->countries[] = 'USA';
         $this->countries[] = 'America';
+        $this->countries[] = 'American';
+        $this->countries[] = 'Americana';
         $this->countries[] = 'Africa';
         $this->countries[] = 'Afrika';
+        $this->countries[] = 'Arab';
+        $this->countries[] = 'Arabs';
+        $this->countries[] = 'Argentines';
         $this->countries[] = 'Asia';
+        $this->countries[] = 'Asian';
+        $this->countries[] = 'Asiatic';
         $this->countries[] = 'Europe';
+        $this->countries[] = 'Russian';
+        unset($this->countries['Multipe']);
+        unset($this->countries['Unknown']);
     }
 
     private function isCountry($word) {
-        foreach ($this->countries as $country):
-            if (strpos($word, $country) === 0):
-                return true;
-            endif;
-        endforeach;
-        return false;
+        return in_array($word, $this->countries);
     }
 
     private function setPlaces() {
-        // Cannot handle West Memphis or New York City Great Britain, Lake Charles
+        // Cannot handle West Memphis or New York City Great Britain, Lake Charles, Los Angeles, Buenos Aires
         $this->places = [
-            'Rockville',
-            'Slidell',
-            'Memphis',
-            'Boston',
-            'PA',
-            'Montague',
-            'Melbourne',
-            'Sydney',
-            'Hobart',
-            'Perth',
-            'Greenville',
-            'Brasilia',
-            'Trenton',
             'Aberdeen',
+            'Aberdine',
+            'Acapulco',
+            'Accrington',
+            'Aires',
+            'Alabama',
             'Alaska',
             'Alberta',
             'Albuquerque',
             'Algiers',
             'Allentown',
-            'Amsterdam',
-            'Antarctic',
-            'Arkansas',
-            'Fitzroy',
-            'Athens',
-            'Avalon',
-            'Galveston',
-            'Galilee',
-            'Acapulco',
-            'Accrington',
             'Amazon',
-            'Mississippi',
-            'Rosedale',
-            'Alabamba',
-            'Bangkok',
-            'Calgary',
+            'Amazonians',
+            'Amsterdam',
             'Anaheim',
-            'Reno',
-            'Winnemucca',
-            'L.A',
+            'Andalusia',
+            'Angeles',
+            'Annan',
+            'Antarctic',
+            'Appalachia',
+            'Appel',
+            'Argonauts',
+            'Arizona',
+            'Arkansas',
+            'Athens',
+            'Atlanta',
+            'Atlantic',
+            'Atlantis',
+            'Avalon',
+            'Bablyon',
+            'Bali',
+            'Bangkok',
+            'Bissau',
+            'Boston',
+            'Brasilia',
             'Brooklyn',
             'Bronx',
-            'Chicago',
-            'Orleans',
-            'Napoli',
-            'Siberia',
-            'Ebudae',
-            'Khartoum',
-            'Bissau',
-            'Palau',
-            'Avalon',
-            'Fiji',
-            'Tiree',
-            'Bablyon',
-            'Peru',
+            'Calgary',
             'Cebu',
-            'Bali',
+            'Chicago',
+            'Detroit',
+            'Ebudae',
+            'Fitzroy',
+            'Galveston',
+            'Galilee',
+            'Greenville',
+            'Guantanamo',
+            'Hobart',
+            'Khartoum',
+            'L.A',
             'Macquarie',
-            'Alabama',
-            'Alaska',
-            'Angeles',
+            'Melbourne',
+            'Memphis',
+            'Mississippi',
+            'Montague',
+            'Moscow',
+            'Napoli',
+            'Orleans',
+            'PA',
+            'Palau',
+            'Perth',
+            'Peru',
+            'Reno',
+            'Rockville',
+            'Rosedale',
+            'Siberia',
+            'Slidell',
+            'Sydney',
+            'Tiree',
+            'Trenton',
+            'Winnemucca',
         ];
     }
 
@@ -186,117 +205,141 @@ class Words extends Command {
     }
 
     private function isMonth($word) {
+        // May is complex, will often be a word
         return in_array($word, $this->months);
     }
 
     private function setNames() {
         $this->names = [
-            'Andy',
-            'Peter',
-            'Kaufman',
-            'Fred',
-            'Blassie',
-            'Elvis',
-            'Charles',
-            'Darwin',
-            'Matt',
-            'Mott',
-            'Hoople',
-            'Moses',
-            'John',
-            'Tartanella',
-            'Joe',
-            'Erin',
-            'Rod',
-            'Laver',
-            'God',
-            'Thatcher',
-            'Rayvon',
-            'Shaggy',
-            'Dooler',
-            'Seavers',
-            'Mohamed',
             'Aaliyah',
-            'Abigail',
-            'Abraham',
-            'Confusious',
-            'Adam',
-            'Agamemnon',
-            'Alexander',
-            'Alexandra',
-            'Alison',
-            'Alma',
-            'Amy',
-            'Antonio',
-            'Antony',
-            'Aristophanes',
-            'Arthur',
-            'Astrid',
-            'Athena',
-            'Galileo',
             'Abdul',
             'Abe',
-            'Thomas',
-            'Edison',
-            'Johnson',
+            'Abel',
+            'Abigail',
+            'Abraham',
+            'Adam',
+            'Agamemnon',
+            'Ajax',
+            'Al',
             'Alan',
             'Albert',
+            'Aldous',
             'Alec',
-            'Eiffel',
             'Alejandro',
             'Alex',
+            'Alexander',
+            'Alexandra',
             'Alfie',
+            'Ali',
             'Alice',
-            'Allison',
-            'Alma',
-            'Roxie',
-            'Chino',
-            'Jack',
-            'Horner',
-            'Dickins',
-            'Ross',
-            'Bobby',
-            'MTV',
-            'NBC',
-            'ABC',
-            'CBS',
-            'NRA',
-            'Coca',
-            'Giuseppe',
-            'Maria',
-            // 'Al',
-            'Capone',
-            'Kevin',
-            'Hugh',
-            'Carla',
-            'William',
-            'Dave',
-            'Popeye',
+            'Alison',
             'Allan',
             'Alvin',
+            'Allison',
+            'Alma',
+            'Amadeus',
             'Amanda',
+            'Amy',
+            'Andre',
+            'Andy',
             'Ana',
             'Angelica',
+            'Ann',
             'Anna',
             'Annabelle',
             'Anne',
             'Annie',
+            'Anthony',
             'Anton',
             'Antone',
+            'Antonio',
+            'Antony',
             'Apepig',
+            'Apollo', // also a place
+            'Aristophanes',
+            'Arthur',
+            'Astaire',
+            'Astrid',
+            'Athena',
+            'Blassie',
+            'Bobby',
+            'Capone',
+            'Carla',
+            'Charles',
+            'Chino',
+            'Confusious',
+            'Darwin',
+            'Dave',
+            'Dickins',
+            'Dooler',
+            'Edison',
+            'Elvis',
+            'Erin',
+            'Fred',
+            'Galileo',
             'Gavrilo',
+            'God',
+            'Giuseppe',
+            'Hoople',
+            'Horner',
+            'Hugh',
+            'Jack',
+            'Joe',
+            'John',
+            'Johnson',
+            'Kaufman',
+            'Kevin',
+            'Laver',
+            'Matt',
+            'Maria',
+            'Mohamed',
+            'Moses',
+            'Mott',
+            'Muhammad',
+            'Peter',
+            'Popeye',
             'Princip',
+            'Rayvon',
+            'Rod',
+            'Ross',
+            'Roxie',
+            'Sadie',
+            'Sally',
+            'Samantha',
+            'Samson',
+            'Seavers',
+            'Shaggy',
             'Sophia',
+            'Tartanella',
+            'Thatcher',
+            'Thomas',
+            'William',
         ];
     }
 
     private function isName($word) {
-        foreach ($this->names as $name):
-            if (strpos($word, $name) === 0):
-                return true;
-            endif;
-        endforeach;
-        return false;
+        return in_array($word, $this->names);
+    }
+
+    private function setBrands() {
+        $this->names = [
+            'ABC',
+            'Adidas',
+            'Amtracks',
+            'Armalite',
+            'Armani',
+            'Bacardi',
+            'CBS',
+            'Coca',
+            'Coke',
+            'MTV',
+            'NBC',
+            'NRA',
+        ];
+    }
+
+    private function isBrand($word) {
+        return in_array($word, $this->brands);
     }
 
     /**
@@ -308,18 +351,18 @@ class Words extends Command {
         $query = Song::select('songs.id', 'title', 'lyrics')
             ->join('artist_song', 'songs.id', '=', 'artist_song.song_id')
             ->whereNotIn('songs.id', [
-                819, 908, 911, 1273, 1314, 1425, 2133, 2225, 2344, 2601, 3156, 3165, 3198, 3965, 3968, 4145, 4261, 4892, 5737, 6218, 6502, 8036, 8587, 9143, 9183, 9762,
+                404, 712, 819, 908, 911, 1273, 1314, 1425, 1477, 2133, 2206, 2225, 2344, 2601, 3156, 3165, 3198, 3427, 3965, 3966, 3968, 4145, 4261, 4892, 5621, 5727, 5728, 5737, 6218, 6502, 8036, 8587, 9143, 9183, 9473, 9550, 9762,
             ])
             // this shouldn't be returning anyway
-            ->whereNotIn('songs.id', [3053])
+            // ->whereNotIn('songs.id', [3053])
             ->whereNotIn('artist_song.artist_id', [
-                23, 84, 107, 197, 209, 211, 248, 280, 469, 607, 611, 802, 821, 838, 841, 846, 1317, 1453,
+                23, 84, 107, 197, 209, 211, 248, 280, 469, 607, 611, 763, 802, 821, 838, 841, 846, 1317, 1453,
             ])
             ->whereNotIn('album', [
                 'Turkish Groove', 'African Women', 'Bocelli Greatest Hits', 'Buena Vista Social Club', 'Everything Is Possible!',
                 "Edith Piaf - 20 'French' Hit Singles",
             ])
-            ->whereNotIn('lyrics', ['unavailable', 'Instrumental']);
+            ->whereNotIn('lyrics', ['unavailable', 'Instrumental', 'inapplicable']);
 
         if ($song_ids):
             $query->whereIn('songs.id', $song_ids);
@@ -329,7 +372,6 @@ class Words extends Command {
         foreach ($lyrics as $song):
             try {
                 $lyric = str_replace([PHP_EOL], [' '], $song['lyrics']);
-                // $lyric = str_replace([PHP_EOL, ',', '. ', '?', '(', ')'], [' ', '', ' ', '', '', ''], $lyric['lyrics']);
                 $words = explode(' ', $lyric);
 
                 foreach ($words as $word):
@@ -351,20 +393,6 @@ class Words extends Command {
     public function processWord($word, $id) {
         // Ignore non-Latin words.
         if (preg_match('/^\p{Latin}+$/', $word)):
-            // strip 's off the end of a word
-            // $word = str_replace(["'s", '!'], ['', ''], $word);
-            // Remove trailing period
-            // $word = rtrim($word, '.');
-            // Remove trailing or prefixed single quotation marks
-            // $word = trim($word, "'");
-            // $word = ltrim($word, "~");
-            // $word = ltrim($word, "{");
-            // $word = rtrim($word, "}");
-            // $word = ltrim($word, "[");
-            // $word = rtrim($word, "]");
-            // $word = trim($word, '"');
-            // $word = trim($word, '-');
-            // $word = trim($word);
             // Retain capitilisation for countries, months, names etc
             $word = $this->setCase($word);
             if (! empty($word)):
@@ -386,7 +414,7 @@ class Words extends Command {
 
     public function setCase($word) {
         $tmp_word = ucfirst(strtolower($word));
-        if ($this->isCountry($tmp_word) || $this->isPlace($tmp_word)  || $this->isMonth($tmp_word)  || $this->isName($tmp_word)):
+        if ($this->isCountry($tmp_word) || $this->isPlace($tmp_word) || $this->isMonth($tmp_word) || $this->isName($tmp_word) || $this->isBrand($tmp_word)):
             return $tmp_word;
         else:
             return strtolower($word);

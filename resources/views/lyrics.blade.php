@@ -4,7 +4,7 @@
 
     <div class="panel-body mysound-submit-form-div">
 
-        <h2 class="col-sm-12">{{ $song->title }}</h2>
+        <h2 class="col-sm-12">{{ $song->title }} - {{ $song->artists[0]->artist }}</h2>
 
         @include('common.errors')
 
