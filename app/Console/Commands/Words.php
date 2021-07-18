@@ -96,8 +96,11 @@ class Words extends Command {
         $this->countries[] = 'Asia';
         $this->countries[] = 'Asian';
         $this->countries[] = 'Asiatic';
+        $this->countries[] = 'Belgians';
         $this->countries[] = 'Europe';
         $this->countries[] = 'Russian';
+        $this->countries[] = 'Zulu';
+        $this->countries[] = 'Zulus';
         unset($this->countries['Multipe']);
         unset($this->countries['Unknown']);
     }
@@ -107,12 +110,13 @@ class Words extends Command {
     }
 
     private function setPlaces() {
-        // Cannot handle West Memphis or New York City Great Britain, Lake Charles, Los Angeles, Buenos Aires
+        // Cannot handle West Memphis or New York City Great Britain, Lake Charles, Los Angeles, Buenos Aires, Tel Aviv, Baton Rouge, Las Vegas
         $this->places = [
             'Aberdeen',
             'Aberdine',
             'Acapulco',
             'Accrington',
+            'Agadir',
             'Aires',
             'Alabama',
             'Alaska',
@@ -137,19 +141,39 @@ class Words extends Command {
             'Atlanta',
             'Atlantic',
             'Atlantis',
+            'Austin', // also a name
             'Avalon',
-            'Bablyon',
+            'Aviv',
+            'Azul',
+            'Babylon',
+            'Baghdad',
+            'Bahama',
             'Bali',
+            'Balie',
+            'Bally',
+            'Baltic',
+            'Baltimore',
             'Bangkok',
+            'Barcelona',
+            'Barrington',
+            'Barstow',
+            'Baton',
+            'Beale',
+            'Beijing',
+            'Beirut',
+            'Belfast',
             'Bissau',
             'Boston',
             'Brasilia',
+            'Brighton',
             'Brooklyn',
             'Bronx',
             'Calgary',
             'Cebu',
+            'Cerro',
             'Chicago',
             'Detroit',
+            'Dohini',
             'Ebudae',
             'Fitzroy',
             'Galveston',
@@ -157,29 +181,42 @@ class Words extends Command {
             'Greenville',
             'Guantanamo',
             'Hobart',
+            'Hoovre',
+            'Huntington',
             'Khartoum',
             'L.A',
+            'Laguna',
+            'Louvre',
             'Macquarie',
+            'Madison',
+            'Malibu',
             'Melbourne',
             'Memphis',
+            'Michigan',
             'Mississippi',
             'Montague',
             'Moscow',
             'Napoli',
+            'Olomouc',
             'Orleans',
             'PA',
             'Palau',
             'Perth',
-            'Peru',
             'Reno',
             'Rockville',
             'Rosedale',
+            'Rouge',
             'Siberia',
             'Slidell',
+            'Soho',
             'Sydney',
+            'Taroudant',
+            'Tel',
             'Tiree',
             'Trenton',
+            'Tucson',
             'Winnemucca',
+            'Zelda',
         ];
     }
 
@@ -261,16 +298,34 @@ class Words extends Command {
             'Astaire',
             'Astrid',
             'Athena',
+            'Ayhern',
+            'Babar',
+            'Bacall',
+            'Bambaataa',
+            'Bandini',
+            'Barbara',
+            'Barbarella',
+            'Barratt',
+            'Barry',
+            'Bart',
+            'Beethoven',
+            'Behan',
+            'Belinda',
+            'Belisha',
             'Blassie',
             'Bobby',
+            'Camilla',
             'Capone',
             'Carla',
             'Charles',
             'Chino',
             'Confusious',
+            'Cronkite',
             'Darwin',
             'Dave',
+            'David',
             'Dickins',
+            'Disney',
             'Dooler',
             'Edison',
             'Elvis',
@@ -290,15 +345,20 @@ class Words extends Command {
             'Kaufman',
             'Kevin',
             'Laver',
+            'Louis',
+            'Luther',
             'Matt',
             'Maria',
+            'Martin',
             'Mohamed',
             'Moses',
             'Mott',
             'Muhammad',
+            'Norman',
             'Peter',
             'Popeye',
             'Princip',
+            'Rachaminoff',
             'Rayvon',
             'Rod',
             'Ross',
@@ -313,6 +373,7 @@ class Words extends Command {
             'Tartanella',
             'Thatcher',
             'Thomas',
+            'Whitfield',
             'William',
         ];
     }
@@ -322,6 +383,7 @@ class Words extends Command {
     }
 
     private function setBrands() {
+        // Things
         $this->names = [
             'ABC',
             'Adidas',
@@ -329,12 +391,21 @@ class Words extends Command {
             'Armalite',
             'Armani',
             'Bacardi',
+            'Baileys',
+            'Batego',
+            'Beatlemania',
+            'BBC',
             'CBS',
             'Coca',
             'Coke',
+            'Guici',
+            'Moschino',
             'MTV',
             'NBC',
             'NRA',
+            'Reebok',
+            'Vanetto',
+            'Woody',
         ];
     }
 
@@ -351,12 +422,12 @@ class Words extends Command {
         $query = Song::select('songs.id', 'title', 'lyrics')
             ->join('artist_song', 'songs.id', '=', 'artist_song.song_id')
             ->whereNotIn('songs.id', [
-                404, 712, 819, 908, 911, 1273, 1314, 1425, 1477, 2133, 2206, 2225, 2344, 2601, 3156, 3165, 3198, 3427, 3965, 3966, 3968, 4145, 4261, 4892, 5621, 5727, 5728, 5737, 6218, 6502, 8036, 8587, 9143, 9183, 9473, 9550, 9762,
+                404, 712, 819, 908, 911, 1273, 1314, 1425, 1477, 1758, 2133, 2206, 2225, 2344, 2601, 3156, 3165, 3198, 3427, 3965, 3966, 3968, 3994, 4145, 4146, 4261, 4732, 4892, 5621, 5709, 5727, 5728, 5737, 6218, 6502, 8036, 8587, 8993, 9143, 9183, 9473, 9550, 9762,
             ])
             // this shouldn't be returning anyway
             // ->whereNotIn('songs.id', [3053])
             ->whereNotIn('artist_song.artist_id', [
-                23, 84, 107, 197, 209, 211, 248, 280, 469, 607, 611, 763, 802, 821, 838, 841, 846, 1317, 1453,
+                23, 84, 107, 197, 209, 211, 248, 280, 469, 510, 607, 611, 763, 802, 821, 838, 841, 846, 1317, 1453,
             ])
             ->whereNotIn('album', [
                 'Turkish Groove', 'African Women', 'Bocelli Greatest Hits', 'Buena Vista Social Club', 'Everything Is Possible!',
