@@ -77,7 +77,7 @@ class SongController extends Controller
         $song = Song::find($id);
 
         if (!$song):
-            return view('song');
+            abort(404);
         endif;
 
         if (! empty($song->cover_art)):
